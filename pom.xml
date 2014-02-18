@@ -153,7 +153,7 @@ V praxi by se jpa modul mohl pouzit i jinde, proto by bylo i pod jinym pomem - t
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.0</version>
+          <version>3.1</version>
           <configuration>
             <fork>true</fork>
             <compilerVersion>1.7</compilerVersion>

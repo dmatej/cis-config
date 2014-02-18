@@ -1,0 +1,50 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>config-war</artifactId>
+  <packaging>war</packaging>
+  <name>CIS User Interface - web application</name>
+
+  <parent>
+    <groupId>cz.i.cis.config</groupId>
+    <artifactId>config-pom</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>..</relativePath>
+  </parent>
+
+  <properties>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>cz.i.cis.config</groupId>
+      <artifactId>config-ejb</artifactId>
+      <version>${project.version}</version>
+      <type>ejb</type>
+      <scope>provided</scope>
+    </dependency>
+   <dependency>
+      <groupId>javax.faces</groupId>
+      <artifactId>javax.faces-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.faces</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+  </build>
+</project>

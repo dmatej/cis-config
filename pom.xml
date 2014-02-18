@@ -1,0 +1,224 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>cz.i.cis.config</groupId>
+  <artifactId>config-pom</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>POM of the cis-config</name>
+
+<!--
+Duvod pojmenovani - nejdulezitejsi (distribuovany) artefakt v koreni repository, mel by mit i nejjednodussi nazev.
+V praxi by se jpa modul mohl pouzit i jinde, proto by bylo i pod jinym pomem - toto je vsak jiz refaktorovatelne!
+-->
+  <modules>
+    <module>cis-config-ejb</module>
+    <module>cis-config-war</module>
+    <module>cis-config-ear</module>
+  </modules>
+
+  <properties>
+    <ejb.ejbVersion>3.1</ejb.ejbVersion>
+    <maven.ear.skinnyWars>true</maven.ear.skinnyWars>
+    <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+    <JET.repository.directory>${basedir}/maven-repo</JET.repository.directory>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+
+    <cis.db.host>localhost</cis.db.host>
+    <cis.db.server>localhost</cis.db.server>
+    <cis.db.port>1520</cis.db.port>
+    <cis.db.name>cis</cis.db.name>
+    <cis.db.user>informix</cis.db.user>
+    <cis.db.password>localcis</cis.db.password>
+    <cis.db.locale>cs_cz.912@sis</cis.db.locale>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>javax</groupId>
+        <artifactId>javaee-api</artifactId>
+        <version>7.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax</groupId>
+        <artifactId>javaee-web-api</artifactId>
+        <version>7.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.2.1</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.4</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.persistence</groupId>
+        <artifactId>eclipselink</artifactId>
+        <version>2.5.1</version>
+        <scope>provided</scope>
+        <exclusions>
+          <exclusion>
+          <artifactId>commonj.sdo</artifactId>
+          <groupId>commonj.sdo</groupId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.persistence</groupId>
+        <artifactId>javax.persistence</artifactId>
+        <version>2.1.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>9.1-901.jdbc4</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.6</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.17</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.7.6</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax.faces</groupId>
+        <artifactId>javax.faces-api</artifactId>
+        <version>2.2</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish</groupId>
+        <artifactId>javax.faces</artifactId>
+        <version>2.2.5</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
+  <repositories>
+    <repository>
+      <id>JET</id>
+      <url>file://${JET.repository.directory}</url>
+    </repository>
+    <repository>
+      <id>central</id>
+      <url>http://repo1.maven.org/maven2</url>
+    </repository>
+    <repository>
+      <id>Eclipselink</id>
+      <name>Eclipselink repository</name>
+      <url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
+    </repository>
+  </repositories>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
+    </plugins>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.0</version>
+          <configuration>
+            <fork>true</fork>
+            <compilerVersion>1.7</compilerVersion>
+            <compilerArguments>
+              <encoding>${project.build.sourceEncoding}</encoding>
+              <verbose />
+            </compilerArguments>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.13</version>
+          <inherited>true</inherited>
+          <configuration>
+            <useSystemClassLoader>false</useSystemClassLoader>
+            <trimStackTrace>false</trimStackTrace>
+            <failIfNoTests>false</failIfNoTests>
+            <verbose>true</verbose>
+            <argLine></argLine>
+            <excludes>
+              <exclude>**/*ITest.java</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.13</version>
+          <executions>
+            <execution>
+              <id>integration-test</id>
+              <goals>
+                <goal>integration-test</goal>
+              </goals>
+              <configuration>
+                <useSystemClassLoader>false</useSystemClassLoader>
+                <trimStackTrace>false</trimStackTrace>
+                <failIfNoTests>false</failIfNoTests>
+                <verbose>true</verbose>
+                <encoding>${project.build.sourceEncoding}</encoding>
+                <argLine> </argLine>
+                <includes>
+                  <include>**/*ITest.java</include>
+                </includes>
+              </configuration>
+            </execution>
+            <execution>
+              <id>verify</id>
+              <goals>
+                <goal>verify</goal>
+              </goals>
+              <configuration>
+                <useSystemClassLoader>false</useSystemClassLoader>
+                <trimStackTrace>false</trimStackTrace>
+                <failIfNoTests>false</failIfNoTests>
+                <verbose>true</verbose>
+                <argLine> </argLine>
+                <includes>
+                  <include>**/*ITest.java</include>
+                </includes>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
+

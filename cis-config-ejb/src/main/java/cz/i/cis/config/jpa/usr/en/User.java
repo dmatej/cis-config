@@ -14,11 +14,16 @@ import javax.persistence.*;
 public class User implements Serializable {
 
 
+  /**
+	 * 
+	 */
+  private static final long serialVersionUID = 7483386111744622220L;
   private String login;
   private String firstName;
   private String lastName;
   @Temporal(TemporalType.DATE)
   private Date birthDate;
+  @Id
   private Integer id;
 
   public User() {

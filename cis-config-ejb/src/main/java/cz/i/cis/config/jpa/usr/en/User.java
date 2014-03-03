@@ -6,29 +6,28 @@ import java.lang.String;
 import java.util.Date;
 import javax.persistence.*;
 
+
 /**
  * Entity implementation class for Entity: User
- *
  */
 @Entity
 public class User implements Serializable {
-
-
-  /**
-	 * 
-	 */
   private static final long serialVersionUID = 7483386111744622220L;
+  
+  @Id
+  private Integer id;
+  @Temporal(TemporalType.DATE)
+  private Date birthDate;
   private String login;
   private String firstName;
   private String lastName;
-  @Temporal(TemporalType.DATE)
-  private Date birthDate;
-  @Id
-  private Integer id;
 
+  
   public User() {
     super();
   }
+  
+  
   public String getLogin() {
     return this.login;
   }
@@ -64,5 +63,4 @@ public class User implements Serializable {
   public void setId(Integer id) {
     this.id = id;
   }
-
 }

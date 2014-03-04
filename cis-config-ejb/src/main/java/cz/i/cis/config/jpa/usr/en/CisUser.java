@@ -8,12 +8,12 @@ import javax.persistence.*;
 
 
 /**
- * Entity implementation class for Entity: User
+ * Entity implementation class for Entity: CisUser
  */
 @Entity
-public class User implements Serializable {
+public class CisUser implements Serializable {
   private static final long serialVersionUID = 7483386111744622220L;
-  
+
   @Id
   private Integer id;
   @Temporal(TemporalType.DATE)
@@ -22,12 +22,12 @@ public class User implements Serializable {
   private String firstName;
   private String lastName;
 
-  
-  public User() {
+
+  public CisUser() {
     super();
   }
-  
-  
+
+
   public String getLogin() {
     return this.login;
   }

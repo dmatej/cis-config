@@ -18,7 +18,7 @@ public class ConfigurationItem implements Serializable {
 	private Integer id;
 	@Column(unique=true)
 	private String key;
-	private Object value;
+	private String value;
 	private Type type;
 	private static final long serialVersionUID = 1L;
 
@@ -39,11 +39,11 @@ public class ConfigurationItem implements Serializable {
 	public void setKey(String key) {
 		this.key = key;
 	}
-	public Object getValue() {
+	public String getValue() {
 		return this.value;
 	}
 
-	public void setValue(Object value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 	public Object getType() {

@@ -1,5 +1,7 @@
 package cz.i.cis.config.jpa.usr.en;
 
+import cz.i.cis.config.jpa.usr.en.CisUser;
+
 import java.io.Serializable;
 import java.lang.String;
 import java.util.Date;
@@ -7,23 +9,22 @@ import java.util.Date;
 import javax.persistence.*;
 
 /**
- * Entity implementation class for Entity: ConfigurationItem
+ * Entity implementation class for Entity: ConfigurationProfile
  */
 @Entity
-@Table(name = "configuration_item")
-public class ConfigurationItem implements Serializable {
+@Table(name = "configuration_profile")
+public class ConfigurationProfile implements Serializable {
 
   @Id
   @Column(nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private long id;
 
-  @ManyToOne
-  @JoinColumn(name = "key_id", nullable = false)
-  private ConfigurationItemKey key;
+  @Column(nullable = false)
+  private String name;
 
-  @Column(name = "item_value", nullable = false)
-  private String value;
+  @Column(nullable = false)
+  private String description = "";
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false)
@@ -36,43 +37,43 @@ public class ConfigurationItem implements Serializable {
   private static final long serialVersionUID = 1L;
 
 
-  public ConfigurationItem() {
+  public ConfigurationProfile() {
     super();
   }
 
 
-  public Long getId() {
-    return id;
+  public long getId() {
+    return this.id;
   }
 
 
-  public void setId(Long id) {
+  public void setId(long id) {
     this.id = id;
   }
 
 
-  public ConfigurationItemKey getKey() {
-    return key;
+  public String getName() {
+    return this.name;
   }
 
 
-  public void setKey(ConfigurationItemKey key) {
-    this.key = key;
+  public void setName(String name) {
+    this.name = name;
   }
 
 
-  public String getValue() {
-    return value;
+  public String getDescription() {
+    return this.description;
   }
 
 
-  public void setValue(String value) {
-    this.value = value;
+  public void setDescription(String description) {
+    this.description = description;
   }
 
 
   public Date getUpdate() {
-    return update;
+    return this.update;
   }
 
 
@@ -82,11 +83,12 @@ public class ConfigurationItem implements Serializable {
 
 
   public CisUser getUser() {
-    return user;
+    return this.user;
   }
 
 
   public void setUser(CisUser user) {
     this.user = user;
   }
+
 }

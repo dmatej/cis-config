@@ -1,4 +1,4 @@
-package cz.i.cis.config.jpa.usr.en;
+package cz.i.cis.config.jpa;
 
 public enum Type {
   Text, URL, Path, Date, Integer

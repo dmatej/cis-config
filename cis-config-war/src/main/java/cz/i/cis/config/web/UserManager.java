@@ -7,7 +7,7 @@ import javax.faces.bean.RequestScoped;
 import javax.inject.Named;
 
 import cz.i.cis.config.ejb.UserDao;
-import cz.i.cis.config.jpa.usr.en.CisUser;
+import cz.i.cis.config.jpa.CisUser;
 
 @Named(value = "userManager")
 @RequestScoped

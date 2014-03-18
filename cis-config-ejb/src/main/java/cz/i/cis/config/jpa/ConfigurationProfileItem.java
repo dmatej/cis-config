@@ -1,7 +1,7 @@
-package cz.i.cis.config.jpa.usr.en;
+package cz.i.cis.config.jpa;
 
-import cz.i.cis.config.jpa.usr.en.ConfigurationItemKey;
-import cz.i.cis.config.jpa.usr.en.ConfigurationProfile;
+import cz.i.cis.config.jpa.ConfigurationItemKey;
+import cz.i.cis.config.jpa.ConfigurationProfile;
 
 import java.io.Serializable;
 import java.lang.Long;

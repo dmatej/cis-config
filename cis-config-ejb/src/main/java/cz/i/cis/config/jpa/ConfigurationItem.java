@@ -1,4 +1,4 @@
-package cz.i.cis.config.jpa.usr.en;
+package cz.i.cis.config.jpa;
 
 import java.io.Serializable;
 import java.lang.String;

@@ -1,7 +1,8 @@
-package cz.i.cis.config.jpa.usr.en;
+package cz.i.cis.config.jpa;
 
 import java.io.Serializable;
 import java.lang.String;
+import java.util.Collection;
 
 import javax.persistence.*;
 
@@ -19,6 +20,9 @@ public class ConfigurationItemCategory implements Serializable {
 
   @Column(nullable = false)
   private String name;
+
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
+  private Collection<ConfigurationItemKey> configurationItemKeys;
 
   private static final long serialVersionUID = 1L;
 
@@ -45,5 +49,15 @@ public class ConfigurationItemCategory implements Serializable {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+
+  public Collection<ConfigurationItemKey> getConfigurationItemKeys() {
+    return configurationItemKeys;
+  }
+
+
+  public void setConfigurationItemKeys(Collection<ConfigurationItemKey> configurationItemKeys) {
+    this.configurationItemKeys = configurationItemKeys;
   }
 }

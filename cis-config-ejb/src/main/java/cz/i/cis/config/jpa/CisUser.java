@@ -1,4 +1,4 @@
-package cz.i.cis.config.jpa.usr.en;
+package cz.i.cis.config.jpa;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,10 +14,10 @@ public class CisUser implements Serializable {
 
   @Id
   @Column(nullable = false, updatable = false)
-  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String login;
 
   @Column(nullable = false)
@@ -30,12 +30,13 @@ public class CisUser implements Serializable {
   @Column(nullable = false)
   private Date birthDate;
 
-  private static final long serialVersionUID = 7483386111744622220L;
+  private static final long serialVersionUID = 1L;
 
 
   public CisUser() {
     super();
   }
+
 
   public Integer getId() {
     return this.id;
@@ -45,7 +46,8 @@ public class CisUser implements Serializable {
   public void setId(Integer id) {
     this.id = id;
   }
-  
+
+
   public String getLogin() {
     return this.login;
   }

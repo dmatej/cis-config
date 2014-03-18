@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import cz.i.cis.config.jpa.usr.en.CisUser;
+import cz.i.cis.config.jpa.CisUser;
 
 
 /**

@@ -13,7 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import cz.i.cis.config.ejb.UserDao;
-import cz.i.cis.config.jpa.usr.en.CisUser;
+import cz.i.cis.config.jpa.CisUser;
 
 
 /**

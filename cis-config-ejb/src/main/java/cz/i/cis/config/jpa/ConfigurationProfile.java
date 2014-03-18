@@ -1,9 +1,10 @@
-package cz.i.cis.config.jpa.usr.en;
+package cz.i.cis.config.jpa;
 
-import cz.i.cis.config.jpa.usr.en.CisUser;
+import cz.i.cis.config.jpa.CisUser;
 
 import java.io.Serializable;
 import java.lang.String;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.*;
@@ -30,7 +31,10 @@ public class ConfigurationProfile implements Serializable {
   @Column(nullable = false)
   private Date update;
 
-  @ManyToOne
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
+  private Collection<ConfigurationProfileItem> configurationProfileItems;
+
+  @ManyToOne(optional = false)
   @JoinColumn(name = "user_id", nullable = false)
   private CisUser user;
 
@@ -91,4 +95,11 @@ public class ConfigurationProfile implements Serializable {
     this.user = user;
   }
 
+  public Collection<ConfigurationProfileItem> getConfigurationProfileItems() {
+    return configurationProfileItems;
+  }
+
+  public void setConfigurationProfileItems(Collection<ConfigurationProfileItem> configurationProfileItems) {
+    this.configurationProfileItems = configurationProfileItems;
+  }
 }

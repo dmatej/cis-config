@@ -8,6 +8,10 @@ import java.util.List;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -20,6 +24,7 @@ import cz.i.cis.config.jpa.CisUser;
  */
 @Local
 @Stateless
+@TransactionManagement(TransactionManagementType.CONTAINER)
 public class UserDao {
 
   @PersistenceContext(name="cis-jta")
@@ -34,10 +39,9 @@ public class UserDao {
     return query.getResultList();
   }
 
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addUser(CisUser user) {
-    this.em.getTransaction().begin();
     this.em.persist(user);
-    this.em.getTransaction().commit();
   }
 
   public void removeUser(CisUser user) {

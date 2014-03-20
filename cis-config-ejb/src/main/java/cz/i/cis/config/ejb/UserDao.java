@@ -3,7 +3,6 @@
  */
 package cz.i.cis.config.ejb;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Local;
@@ -34,7 +33,8 @@ public class UserDao {
   }
 
   public List<CisUser> listUsers() {
-    final TypedQuery<CisUser> query = this.em.createQuery("select user from CisUser user", CisUser.class);
+		final TypedQuery<CisUser> query = this.em.createQuery(
+				"select user from CisUser user", CisUser.class);
 
     return query.getResultList();
   }
@@ -52,15 +52,5 @@ public class UserDao {
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public CisUser updateUser(CisUser user) {
     return this.em.merge(user);
-  }
-
-  public static CisUser createUser(String login, String firstName, String lastName, Date birthDate) {
-    CisUser user = new CisUser();
-    user.setLogin(login);
-    user.setFirstName(firstName);
-    user.setLastName(lastName);
-    user.setBirthDate(birthDate);
-
-    return user;
   }
 }

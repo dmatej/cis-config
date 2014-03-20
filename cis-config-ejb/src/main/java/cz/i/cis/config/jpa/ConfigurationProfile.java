@@ -4,7 +4,6 @@ import cz.i.cis.config.jpa.CisUser;
 
 import java.io.Serializable;
 import java.lang.String;
-import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.*;
@@ -16,90 +15,141 @@ import javax.persistence.*;
 @Table(name = "configuration_profile")
 public class ConfigurationProfile implements Serializable {
 
-  @Id
-  @Column(nullable = false, updatable = false)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+	@Id
+	@Column(nullable = false, updatable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @Column(nullable = false)
-  private String name;
+	@Column(nullable = false)
+	private String name;
 
-  @Column(nullable = false)
-  private String description = "";
+	@Column(nullable = false)
+	private String description = "";
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @Column(nullable = false)
-  private Date update;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false)
+	private Date update;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
-  private Collection<ConfigurationProfileItem> configurationProfileItems;
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "user_id", nullable = false)
+	private CisUser user;
 
-  @ManyToOne(optional = false)
-  @JoinColumn(name = "user_id", nullable = false)
-  private CisUser user;
+	private static final long serialVersionUID = 1L;
 
-  private static final long serialVersionUID = 1L;
+	public ConfigurationProfile() {
+		super();
+	}
 
+	public Long getId() {
+		return this.id;
+	}
 
-  public ConfigurationProfile() {
-    super();
-  }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
+	public String getName() {
+		return this.name;
+	}
 
-  public long getId() {
-    return this.id;
-  }
+	public void setName(String name) {
+		this.name = name;
+	}
 
+	public String getDescription() {
+		return this.description;
+	}
 
-  public void setId(long id) {
-    this.id = id;
-  }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
+	public Date getUpdate() {
+		return this.update;
+	}
 
-  public String getName() {
-    return this.name;
-  }
+	public void setUpdate(Date update) {
+		this.update = update;
+	}
 
+	public CisUser getUser() {
+		return this.user;
+	}
 
-  public void setName(String name) {
-    this.name = name;
-  }
+	public void setUser(CisUser user) {
+		this.user = user;
+	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
 
-  public String getDescription() {
-    return this.description;
-  }
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((update == null) ? 0 : update.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 
+		return result;
+	}
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
 
+		if (obj == null) {
+			return false;
+		}
 
-  public Date getUpdate() {
-    return this.update;
-  }
+		if (!(obj instanceof ConfigurationProfile)) {
+			return false;
+		}
 
+		ConfigurationProfile other = (ConfigurationProfile) obj;
+		if (description == null) {
+			if (other.description != null) {
+				return false;
+			}
+		} else if (!description.equals(other.description)) {
+			return false;
+		}
 
-  public void setUpdate(Date update) {
-    this.update = update;
-  }
+		if (id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!id.equals(other.id)) {
+			return false;
+		}
 
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
+			return false;
+		}
 
-  public CisUser getUser() {
-    return this.user;
-  }
+		if (update == null) {
+			if (other.update != null) {
+				return false;
+			}
+		} else if (!update.equals(other.update)) {
+			return false;
+		}
 
+		if (user == null) {
+			if (other.user != null) {
+				return false;
+			}
+		} else if (!user.equals(other.user)) {
+			return false;
+		}
 
-  public void setUser(CisUser user) {
-    this.user = user;
-  }
+		return true;
+	}
 
-  public Collection<ConfigurationProfileItem> getConfigurationProfileItems() {
-    return configurationProfileItems;
-  }
-
-  public void setConfigurationProfileItems(Collection<ConfigurationProfileItem> configurationProfileItems) {
-    this.configurationProfileItems = configurationProfileItems;
-  }
 }

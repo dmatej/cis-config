@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author David Matějček
  */
+@SuppressWarnings("unused")
 @RunWith(Arquillian.class)
 public abstract class ArquillianITest {
 

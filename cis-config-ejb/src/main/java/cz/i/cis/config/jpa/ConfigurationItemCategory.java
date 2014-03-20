@@ -2,7 +2,6 @@ package cz.i.cis.config.jpa;
 
 import java.io.Serializable;
 import java.lang.String;
-import java.util.Collection;
 
 import javax.persistence.*;
 
@@ -13,51 +12,79 @@ import javax.persistence.*;
 @Table(name = "configuration_item_category")
 public class ConfigurationItemCategory implements Serializable {
 
-  @Id
-  @Column(nullable = false, updatable = false)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+	@Id
+	@Column(nullable = false, updatable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-  @Column(nullable = false)
-  private String name;
+	@Column(nullable = false)
+	private String name;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
-  private Collection<ConfigurationItemKey> configurationItemKeys;
+	private static final long serialVersionUID = 1L;
 
-  private static final long serialVersionUID = 1L;
+	public ConfigurationItemCategory() {
+		super();
+	}
 
+	public Integer getId() {
+		return this.id;
+	}
 
-  public ConfigurationItemCategory() {
-    super();
-  }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
+	public String getName() {
+		return this.name;
+	}
 
-  public Integer getId() {
-    return this.id;
-  }
+	public void setName(String name) {
+		this.name = name;
+	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 
+		return result;
+	}
 
-  public String getName() {
-    return this.name;
-  }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
 
+		if (obj == null) {
+			return false;
+		}
 
-  public void setName(String name) {
-    this.name = name;
-  }
+		if (!(obj instanceof ConfigurationItemCategory)) {
+			return false;
+		}
 
+		ConfigurationItemCategory other = (ConfigurationItemCategory) obj;
+		if (id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!id.equals(other.id)) {
+			return false;
+		}
 
-  public Collection<ConfigurationItemKey> getConfigurationItemKeys() {
-    return configurationItemKeys;
-  }
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
+			return false;
+		}
 
+		return true;
+	}
 
-  public void setConfigurationItemKeys(Collection<ConfigurationItemKey> configurationItemKeys) {
-    this.configurationItemKeys = configurationItemKeys;
-  }
 }

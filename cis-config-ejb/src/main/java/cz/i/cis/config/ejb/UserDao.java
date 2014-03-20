@@ -44,18 +44,14 @@ public class UserDao {
     this.em.persist(user);
   }
 
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeUser(CisUser user) {
-    this.em.getTransaction().begin();
     this.em.remove(user);
-    this.em.getTransaction().commit();
   }
 
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public CisUser updateUser(CisUser user) {
-    this.em.getTransaction().begin();
-    CisUser merged = this.em.merge(user);
-    this.em.getTransaction().commit();
-
-    return merged;
+    return this.em.merge(user);
   }
 
   public static CisUser createUser(String login, String firstName, String lastName, Date birthDate) {

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
-        http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
->
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 
   <persistence-unit name="cis-jta" transaction-type="JTA">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
@@ -11,7 +9,6 @@
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="eclipselink.weaving" value="static"/>
-      <property name="eclipselink.cache.shared.default" value="false"/>
       <property name="eclipselink.jdbc.uppercase-columns" value="true"/>
       <property name="eclipselink.jdbc.exclusive-connection.mode" value="Transactional"/>
       <property name="javax.persistence.lock.timeout" value="60000"/>

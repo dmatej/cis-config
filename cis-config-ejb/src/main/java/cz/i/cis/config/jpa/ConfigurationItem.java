@@ -6,12 +6,14 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+
 /**
  * Entity implementation class for Entity: ConfigurationItem
  */
 @Entity
 @Table(name = "configuration_item")
 public class ConfigurationItem implements Serializable {
+  private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(nullable = false, updatable = false)
@@ -33,11 +35,11 @@ public class ConfigurationItem implements Serializable {
 	@JoinColumn(name = "user_id", nullable = false)
 	private CisUser user;
 
-	private static final long serialVersionUID = 1L;
 
 	public ConfigurationItem() {
 		super();
 	}
+
 
 	public Long getId() {
 		return id;

@@ -8,12 +8,14 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+
 /**
  * Entity implementation class for Entity: ConfigurationProfile
  */
 @Entity
 @Table(name = "configuration_profile")
 public class ConfigurationProfile implements Serializable {
+  private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(nullable = false, updatable = false)
@@ -34,11 +36,11 @@ public class ConfigurationProfile implements Serializable {
 	@JoinColumn(name = "user_id", nullable = false)
 	private CisUser user;
 
-	private static final long serialVersionUID = 1L;
 
 	public ConfigurationProfile() {
 		super();
 	}
+
 
 	public Long getId() {
 		return this.id;
@@ -151,5 +153,4 @@ public class ConfigurationProfile implements Serializable {
 
 		return true;
 	}
-
 }

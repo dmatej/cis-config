@@ -8,12 +8,14 @@ import java.lang.String;
 
 import javax.persistence.*;
 
+
 /**
  * Entity implementation class for Entity: ConfigurationItemKey
  */
 @Entity
 @Table(name = "configuration_item_key")
 public class ConfigurationItemKey implements Serializable {
+  private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(nullable = false, updatable = false)
@@ -34,11 +36,11 @@ public class ConfigurationItemKey implements Serializable {
 	@Column(nullable = false)
 	private String description = "";
 
-	private static final long serialVersionUID = 1L;
 
 	public ConfigurationItemKey() {
 		super();
 	}
+
 
 	public Long getId() {
 		return this.id;
@@ -147,5 +149,4 @@ public class ConfigurationItemKey implements Serializable {
 
 		return true;
 	}
-
 }

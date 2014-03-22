@@ -8,6 +8,7 @@ import javax.persistence.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.time.DateUtils;
 
+
 /**
  * Entity implementation class for Entity: CisUser
  */
@@ -34,9 +35,11 @@ public class CisUser implements Serializable {
 	@Column(nullable = false)
 	private Date birthDate;
 
+
 	public CisUser() {
 		super();
 	}
+
 
 	public Integer getId() {
 		return this.id;

@@ -5,12 +5,14 @@ import java.lang.String;
 
 import javax.persistence.*;
 
+
 /**
  * Entity implementation class for Entity: ConfigurationItemCategory
  */
 @Entity
 @Table(name = "configuration_item_category")
 public class ConfigurationItemCategory implements Serializable {
+  private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(nullable = false, updatable = false)
@@ -20,11 +22,11 @@ public class ConfigurationItemCategory implements Serializable {
 	@Column(nullable = false)
 	private String name;
 
-	private static final long serialVersionUID = 1L;
 
 	public ConfigurationItemCategory() {
 		super();
 	}
+
 
 	public Integer getId() {
 		return this.id;
@@ -86,5 +88,4 @@ public class ConfigurationItemCategory implements Serializable {
 
 		return true;
 	}
-
 }

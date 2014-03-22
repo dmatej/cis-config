@@ -1,4 +1,4 @@
-package cz.i.cis.config.ejb;
+package cz.i.cis.config.ejb.dao;
 
 import java.util.List;
 
@@ -12,38 +12,41 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import cz.i.cis.config.jpa.ConfigurationProfile;
+import cz.i.cis.config.jpa.ConfigurationItemCategory;
+
 
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
-public class ConfigurationProfileDao {
+public class ConfigurationCategoryDao {
 	@PersistenceContext(name = "cis-jta")
 	private EntityManager em;
 
-	public ConfigurationProfileDao() {
+	
+	public ConfigurationCategoryDao() {
 	}
 
-	public List<ConfigurationProfile> listItems() {
-		final TypedQuery<ConfigurationProfile> query = this.em.createQuery(
-				"select profile from ConfigurationProfile profile",
-				ConfigurationProfile.class);
+	
+	public List<ConfigurationItemCategory> listCategorys() {
+		final TypedQuery<ConfigurationItemCategory> query = this.em.createQuery(
+				"select category from ConfigurationItemCategory category",
+				ConfigurationItemCategory.class);
 
 		return query.getResultList();
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void addItem(ConfigurationProfile profile) {
-		this.em.persist(profile);
+	public void addCategory(ConfigurationItemCategory category) {
+		this.em.persist(category);
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void removeItem(ConfigurationProfile profile) {
-		this.em.remove(profile);
+	public void removeCategory(ConfigurationItemCategory category) {
+		this.em.remove(category);
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public ConfigurationProfile updateItem(ConfigurationProfile profile) {
-		return this.em.merge(profile);
+	public ConfigurationItemCategory updateCategory(ConfigurationItemCategory category) {
+		return this.em.merge(category);
 	}
 }

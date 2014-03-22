@@ -9,12 +9,14 @@ import java.lang.String;
 
 import javax.persistence.*;
 
+
 /**
  * Entity implementation class for Entity: ConfigurationProfileItem
  */
 @Entity
 @Table(name = "configuration_profile_item")
 public class ConfigurationProfileItem implements Serializable {
+  private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(nullable = false, updatable = false)
@@ -32,11 +34,11 @@ public class ConfigurationProfileItem implements Serializable {
 	@Column(name = "item_value", nullable = false)
 	private String value;
 
-	private static final long serialVersionUID = 1L;
 
 	public ConfigurationProfileItem() {
 		super();
 	}
+
 
 	public Long getId() {
 		return this.id;
@@ -132,5 +134,4 @@ public class ConfigurationProfileItem implements Serializable {
 
 		return true;
 	}
-
 }

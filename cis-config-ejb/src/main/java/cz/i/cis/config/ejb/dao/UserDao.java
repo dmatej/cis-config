@@ -1,7 +1,7 @@
 /**
  *
  */
-package cz.i.cis.config.ejb;
+package cz.i.cis.config.ejb.dao;
 
 import java.util.List;
 
@@ -29,8 +29,10 @@ public class UserDao {
   @PersistenceContext(name="cis-jta")
   private EntityManager em;
 
+
   public UserDao() {
   }
+
 
   public List<CisUser> listUsers() {
 		final TypedQuery<CisUser> query = this.em.createQuery(
@@ -50,7 +52,18 @@ public class UserDao {
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void removeUser(Integer id) {
+    CisUser user = getUser(id);
+    removeUser(user);
+  }
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public CisUser updateUser(CisUser user) {
     return this.em.merge(user);
+  }
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public CisUser getUser(Integer id){
+    return em.find(CisUser.class, id);
   }
 }

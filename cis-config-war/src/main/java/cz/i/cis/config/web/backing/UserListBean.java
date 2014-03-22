@@ -10,7 +10,7 @@ import cz.i.cis.config.ejb.dao.UserDao;
 import cz.i.cis.config.jpa.CisUser;
 
 
-@Named(value = "userListBean")
+@Named(value = "userList")
 @ViewScoped
 public class UserListBean {
 
@@ -27,7 +27,7 @@ public class UserListBean {
 
   public String actionDeleteUser(){
     userDao.removeUser(userID);
-    return "user-list";
+    return "user-list?faces-redirect=true";
   }
 
 

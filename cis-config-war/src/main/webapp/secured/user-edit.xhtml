@@ -3,30 +3,49 @@
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-  <head>
-    <title>CIS config - Edit user</title>
-  </head>
-  <body>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>CIS config - Edit user</title>
+</head>
+
+<body>
+  <h:form>
     <h:panelGrid columns="2" border="1">
-      <h:panelGroup>ID</h:panelGroup>
-      <h:panelGroup>Linux</h:panelGroup>
-
-      <h:panelGroup>Datum narození</h:panelGroup>
-      <h:panelGroup>30</h:panelGroup>
-
       <h:panelGroup>Jméno</h:panelGroup>
-      <h:panelGroup>30 GB</h:panelGroup>
+      <h:panelGroup>
+        <h:inputText required="true" requiredMessage="Není vyplněno jméno" value="#{userEdit.name}" />
+      </h:panelGroup>
 
       <h:panelGroup>Příjmení</h:panelGroup>
-      <h:panelGroup>2 GB</h:panelGroup>
+      <h:panelGroup>
+        <h:inputText required="true" requiredMessage="Není vyplněno příjmení" value="#{userEdit.surname}" />
+      </h:panelGroup>
 
       <h:panelGroup>Login</h:panelGroup>
-      <h:panelGroup>2 GB</h:panelGroup>
-    </h:panelGrid>
+      <h:panelGroup>
+        <h:inputText required="true" requiredMessage="Není vyplněn login" value="#{userEdit.login}" />
+      </h:panelGroup>
 
-    <ul>
-      <li><a href="/cis/login/logout">Odhlásit</a></li>
-    </ul>
-  </body>
+      <h:panelGroup>Datum narození</h:panelGroup>
+      <h:panelGroup>
+        <h:inputText required="true" requiredMessage="Není vyplněno datum narození" value="#{userEdit.birthDate}" label="d-M-yyyy">
+          <f:convertDateTime pattern="d-M-yyyy" />
+        </h:inputText>
+      </h:panelGroup>
+
+
+      <h:panelGroup>
+        <h:commandButton type="reset" value="Reset" />
+      </h:panelGroup>
+      <h:panelGroup>
+        <h:commandButton action="#{userEdit.actionUpdateUser}" type="submit" value="Uložit" />
+      </h:panelGroup>
+    </h:panelGrid>
+  </h:form>
+
+  <ul>
+    <li><a href="/cis/login/logout">Odhlásit</a></li>
+  </ul>
+</body>
 </html>
 

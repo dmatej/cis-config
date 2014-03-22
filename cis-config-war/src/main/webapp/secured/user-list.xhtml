@@ -4,6 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>CIS config - Top secret list</title>
 </head>
 
@@ -11,7 +12,7 @@
   <a href="/cis/secured/user-edit.xhtml">Vytvořit nového uživatele</a>
 
   <h:form>
-    <h:dataTable value="#{userListBean.allUsers}" var="cisUser">
+    <h:dataTable value="#{userList.allUsers}" var="cisUser">
       <h:column>
         <f:facet name="header">id</f:facet>
         <h:outputText value="#{cisUser.id}"/>
@@ -35,8 +36,8 @@
 
       <h:column>
         <f:facet name="header">delete</f:facet>
-        <h:commandLink action="#{userListBean.actionDeleteUser}" value="delete">
-          <f:setPropertyActionListener target="#{userListBean.userID}" value="#{cisUser.id}" />
+        <h:commandLink action="#{userList.actionDeleteUser}" value="delete">
+          <f:setPropertyActionListener target="#{userList.userID}" value="#{cisUser.id}" />
         </h:commandLink>
       </h:column>
       <h:column>

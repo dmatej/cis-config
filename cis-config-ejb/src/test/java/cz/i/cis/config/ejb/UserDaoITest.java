@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.i.cis.config.ejb.dao.UserDao;
+import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.test.ArquillianITest;
 
@@ -29,7 +29,7 @@ public class UserDaoITest extends ArquillianITest {
 
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/UserDao")
-  private UserDao dao;
+  private CisUserDao dao;
 
 
   @Test

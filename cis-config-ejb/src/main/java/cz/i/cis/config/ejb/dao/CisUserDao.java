@@ -24,13 +24,13 @@ import cz.i.cis.config.jpa.CisUser;
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
-public class UserDao {
+public class CisUserDao {
 
   @PersistenceContext(name="cis-jta")
   private EntityManager em;
 
 
-  public UserDao() {
+  public CisUserDao() {
   }
 
 

@@ -8,7 +8,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import cz.i.cis.config.ejb.dao.UserDao;
+import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.web.FacesUtils;
 
@@ -18,7 +18,7 @@ import cz.i.cis.config.web.FacesUtils;
 public class UserCreateBean {
 
   @EJB
-  private UserDao userDao;
+  private CisUserDao userDao;
 
   private String name;
   private String surname;

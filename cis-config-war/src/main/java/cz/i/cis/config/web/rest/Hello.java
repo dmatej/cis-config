@@ -12,7 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import cz.i.cis.config.ejb.dao.UserDao;
+import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.jpa.CisUser;
 
 
@@ -24,7 +24,7 @@ import cz.i.cis.config.jpa.CisUser;
 public class Hello {
 
   @EJB
-  private UserDao userDao;
+  private CisUserDao userDao;
 
   @GET
   @Produces(MediaType.TEXT_PLAIN)

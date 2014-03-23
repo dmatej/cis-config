@@ -1,6 +1,6 @@
 package cz.i.cis.config.ejb;
 
-import javax.faces.bean.ApplicationScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 

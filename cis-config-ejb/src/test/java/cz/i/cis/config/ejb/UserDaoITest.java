@@ -28,7 +28,7 @@ public class UserDaoITest extends ArquillianITest {
   private static final Logger LOG = LoggerFactory.getLogger(UserDaoITest.class);
 
 
-  @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/UserDao")
+  @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/CisUserDao")
   private CisUserDao dao;
 
 

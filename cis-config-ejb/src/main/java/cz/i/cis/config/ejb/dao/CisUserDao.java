@@ -11,8 +11,10 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.i.cis.config.jpa.CisUser;
@@ -35,15 +37,20 @@ public class CisUserDao {
 
 
   public List<CisUser> listUsers() {
-		final TypedQuery<CisUser> query = this.em.createQuery(
-				"select user from CisUser user", CisUser.class);
+    final TypedQuery<CisUser> query = this.em.createQuery(
+        "select user from CisUser user", CisUser.class);
 
     return query.getResultList();
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void addUser(CisUser user) {
-    this.em.persist(user);
+  public void addUser(CisUser user) throws UserAlreadyExistsException {
+    try {
+      this.em.persist(user);
+      em.flush();
+    } catch (PersistenceException e) {
+      throw new UserAlreadyExistsException("User " + user.getLogin() + " already exists!", e);
+    }
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)

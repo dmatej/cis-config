@@ -11,14 +11,12 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import cz.i.cis.config.jpa.CisUser;
-
 
 /**
  * @author David Matějček
@@ -28,7 +26,7 @@ import cz.i.cis.config.jpa.CisUser;
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class CisUserDao {
 
-  @PersistenceContext(name="cis-jta")
+  @PersistenceContext(name = "cis-jta")
   private EntityManager em;
 
 
@@ -37,26 +35,29 @@ public class CisUserDao {
 
 
   public List<CisUser> listUsers() {
-    final TypedQuery<CisUser> query = this.em.createQuery(
-        "select user from CisUser user", CisUser.class);
+    final TypedQuery<CisUser> query = this.em.createQuery("select user from CisUser user", CisUser.class);
 
     return query.getResultList();
   }
+
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addUser(CisUser user) throws UserAlreadyExistsException {
     try {
       this.em.persist(user);
       em.flush();
-    } catch (PersistenceException e) {
-      throw new UserAlreadyExistsException("User " + user.getLogin() + " already exists!", e);
+    } catch (PersistenceException exc) {
+      throw new UserAlreadyExistsException("User " + user.getLogin() + " already exists!", exc);
     }
   }
 
+
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeUser(CisUser user) {
-    this.em.remove(user);
+    user.setStatus(new Integer(1));
+    updateUser(user);
   }
+
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeUser(Integer id) {
@@ -64,13 +65,15 @@ public class CisUserDao {
     removeUser(user);
   }
 
+
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public CisUser updateUser(CisUser user) {
     return this.em.merge(user);
   }
 
+
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public CisUser getUser(Integer id){
+  public CisUser getUser(Integer id) {
     return em.find(CisUser.class, id);
   }
 }

@@ -42,6 +42,9 @@ public class CisUser implements Serializable {
   @Column(nullable = false)
   private Date birthDate;
 
+  @Column(nullable = false)
+  private Integer status = new Integer(0);
+
 
   public CisUser() {
     super();
@@ -95,6 +98,16 @@ public class CisUser implements Serializable {
 
   public void setBirthDate(Date birthDate) {
     this.birthDate = birthDate;
+  }
+
+
+  public Integer getStatus() {
+    return status;
+  }
+
+
+  public void setStatus(Integer status) {
+    this.status = status;
   }
 
 
@@ -162,6 +175,14 @@ public class CisUser implements Serializable {
         return false;
       }
     } else if (!login.equals(other.login)) {
+      return false;
+    }
+
+    if (status == null) {
+      if (other.status != null) {
+        return false;
+      }
+    } else if (!status.equals(other.status)) {
       return false;
     }
 

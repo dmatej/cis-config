@@ -27,7 +27,7 @@ public class ConfigurationCategoryDao {
 	}
 
 	
-	public List<ConfigurationItemCategory> listCategorys() {
+	public List<ConfigurationItemCategory> listCategories() {
 		final TypedQuery<ConfigurationItemCategory> query = this.em.createQuery(
 				"select category from ConfigurationItemCategory category",
 				ConfigurationItemCategory.class);

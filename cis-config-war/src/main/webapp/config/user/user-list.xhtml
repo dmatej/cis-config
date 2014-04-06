@@ -2,19 +2,21 @@
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-<head>
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <title>CIS config - Top secret list</title>
-</head>
+  <title>CIS config - Seznam uživatelů</title>
+  <h:outputStylesheet library="style" name="main.css" />
+</h:head>
 
-<body>
+<h:body>
   <h1>Seznam uživatelů</h1>
 
   <p><h:link outcome="user-create" value="Vytvořit nového uživatele" /></p>
 
   <h:form>
-    <h:dataTable value="#{userList.allUsers}" var="cisUser">
+    <h:dataTable value="#{userList.allUsers}" var="cisUser" rowClasses="#{userList.rowClasses}">
       <h:column>
         <f:facet name="header">id</f:facet>
         <a id="user-#{cisUser.id}"><h:outputText value="#{cisUser.id}"/></a>
@@ -36,30 +38,33 @@
         <h:outputText value="#{cisUser.birthDate}"/>
       </h:column>
 
-      <h:column>
-        <f:facet name="header">delete</f:facet>
-        <h:commandLink action="#{userList.actionDeleteUser}" value="delete">
-          <f:setPropertyActionListener target="#{userList.userID}" value="#{cisUser.id}" />
-        </h:commandLink>
+      <h:column><!-- kurva nefunguje to, idiot nezavolá tu metodu... -->
+        <c:if test="#{cisUser.valid}">
+          <h:commandLink action="#{userList.actionDeleteUser}" value="delete">
+            <f:setPropertyActionListener target="#{userList.userID}" value="#{cisUser.id}" />
+          </h:commandLink>
+        </c:if>
       </h:column>
       <h:column>
-        <f:facet name="header">edit</f:facet>
-        <h:link outcome="user-edit" value="edit">
-          <f:param name="id" value="#{cisUser.id}" />
-        </h:link>
+        <c:if test="#{cisUser.valid}">
+          <h:link outcome="user-edit" value="edit">
+            <f:param name="id" value="#{cisUser.id}" />
+          </h:link>
+        </c:if>
+      </h:column>
+      <h:column>
+        <c:if test="#{cisUser.deleted}">
+          <h:commandLink action="#{userList.actionRestoreUser}" value="restore">
+            <f:setPropertyActionListener target="#{userList.userID}" value="#{cisUser.id}" />
+          </h:commandLink>
+        </c:if>
       </h:column>
     </h:dataTable>
   </h:form>
 
   <ul>
-    <li><a href="/cis/login/logout">Odhlásit</a></li>
+    <li><a href="/cis/config">Zpět</a></li>
   </ul>
-
-  <hr />
-  <ul>
-    <li>#{infoManager.jsfImplementation}</li>
-    <li>#{infoManager.jsfVersion}</li>
-  </ul>
-</body>
+</h:body>
 </html>
 

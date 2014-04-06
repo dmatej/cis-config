@@ -21,9 +21,12 @@ public class UserListBean {
 
   private Integer userID;
 
+  private List<CisUser> allUsers;
+
 
   public List<CisUser> getAllUsers() {
-    return userDao.listUsers();
+    if(allUsers == null) allUsers = userDao.listUsers();
+    return allUsers;
   }
 
 
@@ -38,7 +41,28 @@ public class UserListBean {
     return null;
   }
 
+  public String actionRestoreUser(){
+    try{
+      userDao.restoreUser(userID);
+      return "user-list?faces-redirect=true";
+    }
+    catch(Exception e){
+      FacesUtils.addMessage(FacesMessage.SEVERITY_ERROR, "Nepodařilo se obnovit uživatele: " + FacesUtils.getRootMessage(e));
+    }
+    return null;
+  }
 
+
+  public String getRowClasses() {
+    StringBuilder classes = new StringBuilder();
+    for (CisUser user : getAllUsers()) {
+        classes.append(user.getStatus() == CisUser.STATUS_DELETED ? "deleted," : ",");
+    }
+    if (classes.length() > 0){
+      classes.deleteCharAt(classes.length() - 1);
+    }
+    return classes.toString();
+  }
 
   public void setUserID(Integer userID) {
     this.userID = userID;

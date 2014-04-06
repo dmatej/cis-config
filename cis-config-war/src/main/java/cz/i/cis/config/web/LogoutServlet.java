@@ -20,6 +20,6 @@ public class LogoutServlet extends HttpServlet {
   @Override
   protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     request.logout();
-    response.sendRedirect("/cis/index.xhtml");
+    response.sendRedirect("/cis");
   }
 }

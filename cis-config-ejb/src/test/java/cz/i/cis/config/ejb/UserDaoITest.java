@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.CisUserDao;
-import cz.i.cis.config.ejb.dao.UserAlreadyExistsException;
+import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.test.ArquillianITest;
 

@@ -16,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
+import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
 import cz.i.cis.config.jpa.CisUser;
 
 /**
@@ -40,7 +41,6 @@ public class CisUserDao {
     return query.getResultList();
   }
 
-
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addUser(CisUser user) throws UserAlreadyExistsException {
     try {
@@ -51,13 +51,10 @@ public class CisUserDao {
     }
   }
 
-
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeUser(CisUser user) {
-    user.setStatus(new Integer(1));
-    updateUser(user);
+    updateUserStatus(user, CisUser.STATUS_DELETED);
   }
-
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeUser(Integer id) {
@@ -65,15 +62,33 @@ public class CisUserDao {
     removeUser(user);
   }
 
-
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public CisUser updateUser(CisUser user) {
     return this.em.merge(user);
   }
 
-
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public CisUser getUser(Integer id) {
     return em.find(CisUser.class, id);
+  }
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void restoreUser(CisUser user) {
+    if(user.getStatus() != CisUser.STATUS_DELETED){
+      throw new IllegalStateException("User is not deleted: " + user);
+    }
+    updateUserStatus(user, CisUser.STATUS_VALID);
+  }
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void restoreUser(Integer id) {
+    CisUser user = getUser(id);
+    restoreUser(user);
+  }
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void updateUserStatus(CisUser user, Integer newStatus) {
+    user.setStatus(newStatus);
+    updateUser(user);
   }
 }

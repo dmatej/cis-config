@@ -30,7 +30,7 @@
 
     <error-page>
         <error-code>404</error-code>
-        <location>/index.xhtml</location>
+        <location>/errors/404.xhtml</location>
     </error-page>
 
     <security-constraint>
@@ -38,7 +38,7 @@
         <web-resource-collection>
             <web-resource-name>All application</web-resource-name>
             <description/>
-            <url-pattern>/secured/*</url-pattern>
+            <url-pattern>/config/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description/>

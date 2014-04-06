@@ -1,7 +1,7 @@
-package cz.i.cis.config.ejb.dao;
+package cz.i.cis.config.ejb.dao.exceptions;
+
 
 public class UserAlreadyExistsException extends Exception {
-
   private static final long serialVersionUID = 1L;
 
 
@@ -9,16 +9,13 @@ public class UserAlreadyExistsException extends Exception {
     super();
   }
 
-
   public UserAlreadyExistsException(String message, Throwable cause) {
     super(message, cause);
   }
 
-
   public UserAlreadyExistsException(String message) {
     super(message);
   }
-
 
   public UserAlreadyExistsException(Throwable cause) {
     super(cause);

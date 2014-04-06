@@ -38,26 +38,20 @@
         <h:outputText value="#{cisUser.birthDate}"/>
       </h:column>
 
-      <h:column><!-- kurva nefunguje to, idiot nezavolá tu metodu... -->
-        <c:if test="#{cisUser.valid}">
-          <h:commandLink action="#{userList.actionDeleteUser}" value="delete">
-            <f:setPropertyActionListener target="#{userList.userID}" value="#{cisUser.id}" />
-          </h:commandLink>
-        </c:if>
+      <h:column>
+        <h:commandLink action="#{userList.actionDeleteUser}" value="delete" rendered="#{cisUser.valid}">
+          <f:setPropertyActionListener target="#{userList.userID}" value="#{cisUser.id}" />
+        </h:commandLink>
       </h:column>
       <h:column>
-        <c:if test="#{cisUser.valid}">
-          <h:link outcome="user-edit" value="edit">
+          <h:link outcome="user-edit" value="edit" rendered="#{cisUser.valid}">
             <f:param name="id" value="#{cisUser.id}" />
           </h:link>
-        </c:if>
       </h:column>
       <h:column>
-        <c:if test="#{cisUser.deleted}">
-          <h:commandLink action="#{userList.actionRestoreUser}" value="restore">
-            <f:setPropertyActionListener target="#{userList.userID}" value="#{cisUser.id}" />
-          </h:commandLink>
-        </c:if>
+        <h:commandLink action="#{userList.actionRestoreUser}" value="restore" rendered="#{cisUser.deleted}">
+          <f:setPropertyActionListener target="#{userList.userID}" value="#{cisUser.id}" />
+        </h:commandLink>
       </h:column>
     </h:dataTable>
   </h:form>

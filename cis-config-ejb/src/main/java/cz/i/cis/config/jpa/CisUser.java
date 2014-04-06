@@ -65,7 +65,6 @@ public class CisUser implements Serializable {
 
 
   public String getLogin() {
-    System.out.println("getLogin");
     return this.login;
   }
 
@@ -115,17 +114,10 @@ public class CisUser implements Serializable {
   }
 
   public boolean isValid(){
-    System.out.println("isValid");
-    return status == STATUS_VALID;
-  }
-
-  public boolean getValid(){  //TODO
-    System.out.println("getValid");
     return status == STATUS_VALID;
   }
 
   public boolean isDeleted(){
-    System.out.println("isDeleted");
     return status == STATUS_DELETED;
   }
 

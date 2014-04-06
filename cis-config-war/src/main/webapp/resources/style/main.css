@@ -1,5 +1,9 @@
 @CHARSET "UTF-8";
 
 .deleted {
-	background-color: grey;
+	background-color: lightgrey;
+}
+
+table{
+	border-collapse: collapse;
 }

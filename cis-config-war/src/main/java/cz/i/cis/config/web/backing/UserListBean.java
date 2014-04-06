@@ -56,7 +56,7 @@ public class UserListBean {
   public String getRowClasses() {
     StringBuilder classes = new StringBuilder();
     for (CisUser user : getAllUsers()) {
-        classes.append(user.getStatus() == CisUser.STATUS_DELETED ? "deleted," : ",");
+        classes.append(user.getStatus() == CisUser.STATUS_DELETED ? "deleted," : "none,");
     }
     if (classes.length() > 0){
       classes.deleteCharAt(classes.length() - 1);

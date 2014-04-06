@@ -1,4 +1,4 @@
-package cz.i.cis.config.web.backing;
+package cz.i.cis.config.web.backing.user;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class UserListBean {
   public String actionDeleteUser(){
     try{
       userDao.removeUser(userID);
-      return "user-list?faces-redirect=true";
+      return "list?faces-redirect=true";
     }
     catch(Exception e){
       FacesUtils.addMessage(FacesMessage.SEVERITY_ERROR, "Nepodařilo se smazat uživatele: " + FacesUtils.getRootMessage(e));
@@ -44,7 +44,7 @@ public class UserListBean {
   public String actionRestoreUser(){
     try{
       userDao.restoreUser(userID);
-      return "user-list?faces-redirect=true";
+      return "list?faces-redirect=true";
     }
     catch(Exception e){
       FacesUtils.addMessage(FacesMessage.SEVERITY_ERROR, "Nepodařilo se obnovit uživatele: " + FacesUtils.getRootMessage(e));

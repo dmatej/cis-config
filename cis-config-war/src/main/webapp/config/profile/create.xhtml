@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>CIS config - Tvorba profilu</title>
+</head>
+
+<body>
+  <h1>Tvorba nového konfiguračního profilu</h1>
+  <h:form>
+    <h:panelGrid columns="2" border="1">
+      <h:panelGroup>Název</h:panelGroup>
+      <h:panelGroup>
+        <h:inputText required="true" requiredMessage="Není vyplněn název" value="#{profileCreate.name}"
+                     size="40" />
+      </h:panelGroup>
+
+      <h:panelGroup>Popis</h:panelGroup>
+      <h:panelGroup>
+        <h:inputTextarea required="true" requiredMessage="Není vyplněn popis" value="#{profileCreate.description}"
+                         rows="4" cols="40" />
+      </h:panelGroup>
+
+
+      <h:panelGroup>
+        <h:commandButton type="reset" value="Reset" />
+      </h:panelGroup>
+      <h:panelGroup>
+        <h:commandButton action="#{profileCreate.actionAddProfile}" type="submit" value="Uložit" />
+      </h:panelGroup>
+    </h:panelGrid>
+  </h:form>
+
+  <ul>
+    <li><h:link outcome="list" value="Zpět na seznam" /></li>
+    <li><a href="/cis/login/logout">Odhlásit</a></li>
+  </ul>
+</body>
+</html>
+

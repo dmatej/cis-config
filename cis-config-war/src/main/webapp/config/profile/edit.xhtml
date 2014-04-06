@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>CIS config - Úprava profilu</title>
+  <f:metadata>
+    <f:viewParam name="id" value="#{profileEdit.id}" required="true" requiredMessage="Pro editaci profilu je nutné zadat parametr id." />
+    <f:viewAction action="#{profileEdit.init}" />
+  </f:metadata>
+</head>
+
+<body>
+  <h1>Úprava konfiguračního profilu</h1>
+  <h:form>
+    <h:panelGrid columns="2" border="1">
+      <h:panelGroup>Název</h:panelGroup>
+      <h:panelGroup>
+        <h:inputText required="true" requiredMessage="Není vyplněn název" value="#{profileEdit.name}"
+                     size="40" />
+      </h:panelGroup>
+
+      <h:panelGroup>Popis</h:panelGroup>
+      <h:panelGroup>
+        <h:inputTextarea required="true" requiredMessage="Není vyplněn popis" value="#{profileEdit.description}"
+                         rows="4" cols="40" />
+      </h:panelGroup>
+
+
+      <h:panelGroup>
+        <h:commandButton type="reset" value="Reset" />
+      </h:panelGroup>
+      <h:panelGroup>
+        <h:commandButton action="#{profileEdit.actionUpdateProfileMetadata}" type="submit" value="Uložit metadata" />
+      </h:panelGroup>
+    </h:panelGrid>
+  </h:form>
+
+  <h:form>
+    //TODO formulář na přidání nové položky
+  </h:form>
+
+  //TODO přidat tlačítko na uložení položek profilu
+
+  <h:form>
+    //TODO seznam položek s možností mazání
+    <!-- h:dataTable value="#{profileList.allProfiles}" var="profile">
+      <h:column>
+        <f:facet name="header">ID</f:facet>
+        <a id="profile-#{profile.id}"><h:outputText value="#{profile.id}"/></a>
+      </h:column>
+      <h:column>
+        <f:facet name="header">Název</f:facet>
+        <h:outputText value="#{profile.name}"/>
+      </h:column>
+      <h:column>
+        <f:facet name="header">Naposledy změněno</f:facet>
+        <h:outputText value="#{profile.update}"/>
+      </h:column>
+      <h:column>
+        <f:facet name="header">Poslední úpravce</f:facet>
+        <h:outputText value="#{profile.user.login}"/>
+      </h:column>
+
+      <h:column>
+        <h:commandLink action="#{profileList.actionDeleteProfile}" value="smazat">
+          <f:setPropertyActionListener target="#{profileList.profileID}" value="#{profile.id}" />
+        </h:commandLink>
+      </h:column>
+      <h:column>
+        <h:link outcome="edit" value="upravit">
+          <f:param name="id" value="#{profile.id}" />
+        </h:link>
+      </h:column>
+      <h:column>
+        <h:commandLink action="#{profileList.actionActivateProfile}" value="aktivovat">
+          <f:setPropertyActionListener target="#{profileList.profileID}" value="#{profile.id}" />
+        </h:commandLink>
+      </h:column>
+    </h:dataTable-->
+  </h:form>
+
+  <ul>
+    <li><h:link outcome="list" value="Zpět na seznam" /></li>
+    <li><a href="/cis/login/logout">Odhlásit</a></li>
+  </ul>
+</body>
+</html>
+

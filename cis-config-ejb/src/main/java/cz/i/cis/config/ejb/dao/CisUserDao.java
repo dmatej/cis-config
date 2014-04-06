@@ -73,6 +73,13 @@ public class CisUserDao {
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public CisUser getUser(String login) {
+    final TypedQuery<CisUser> query = this.em.createQuery("select user from CisUser user where user.login = :login", CisUser.class);
+    query.setParameter("login", login);
+    return query.getSingleResult();
+  }
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void restoreUser(CisUser user) {
     if(user.getStatus() != CisUser.STATUS_DELETED){
       throw new IllegalStateException("User is not deleted: " + user);

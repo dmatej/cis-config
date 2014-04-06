@@ -27,7 +27,7 @@ public class ConfigurationProfileDao {
 	}
 
 
-	public List<ConfigurationProfile> listItems() {
+	public List<ConfigurationProfile> listProfiles() {
 		final TypedQuery<ConfigurationProfile> query = this.em.createQuery(
 				"select profile from ConfigurationProfile profile",
 				ConfigurationProfile.class);
@@ -36,17 +36,28 @@ public class ConfigurationProfileDao {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void addItem(ConfigurationProfile profile) {
+	public void addProfile(ConfigurationProfile profile) {
 		this.em.persist(profile);
 	}
 
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public ConfigurationProfile getProfile(Long id) {
+    return em.find(ConfigurationProfile.class, id);
+  }
+
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void removeItem(ConfigurationProfile profile) {
+	public void removeProfile(ConfigurationProfile profile) {
 		this.em.remove(profile);
 	}
 
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void removeProfile(Long id) {
+    ConfigurationProfile profile = getProfile(id);
+    this.em.remove(profile);
+  }
+
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public ConfigurationProfile updateItem(ConfigurationProfile profile) {
+	public ConfigurationProfile updateProfile(ConfigurationProfile profile) {
 		return this.em.merge(profile);
 	}
 }

@@ -46,7 +46,7 @@ public class CisUser implements Serializable {
 
   /**0 valid, 1 deleted*/
   @Column(nullable = false)
-  private Integer status = new Integer(0);
+  private Integer status = 0;
 
 
   public CisUser() {

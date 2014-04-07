@@ -19,9 +19,6 @@ import javax.persistence.TypedQuery;
 import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
 import cz.i.cis.config.jpa.CisUser;
 
-/**
- * @author David Matějček
- */
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)

@@ -22,7 +22,7 @@
       <property name="eclipselink.ddl-generation.output-mode" value="both"/>
 
       <property name="eclipselink.logging.level" value="FINE"/>
-      <property name="eclipselink.logging.level.sql" value="FINE"/>
+      <property name="eclipselink.logging.level.sql" value="FINEST"/>
       <property name="eclipselink.logging.level.transaction" value="FINER"/>
       <property name="eclipselink.logging.parameters" value="true"/>
       <property name="eclipselink.logging.session" value="true"/>

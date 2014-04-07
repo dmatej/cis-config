@@ -3,14 +3,19 @@
  */
 package cz.i.cis.config.ejb;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.Date;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.ejb.Stateless;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,39 +25,67 @@ import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.test.ArquillianITest;
 
-
 /**
  * @author David Matějček
- *
  */
+@Stateless
 public class UserDaoITest extends ArquillianITest {
-  private static final Logger LOG = LoggerFactory.getLogger(UserDaoITest.class);
 
+  private static final Logger LOG = LoggerFactory.getLogger(UserDaoITest.class);
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/CisUserDao")
   private CisUserDao dao;
 
 
   @Test(expected=UserAlreadyExistsException.class)
-  public void createUser() throws UserAlreadyExistsException {
-    CisUser user0 = new CisUser();
-    user0.setLastName("Matějka");
-    user0.setLogin("xt001");
-    user0.setFirstName("Afanasi");
+  public void createAlreadyExistingUser() throws UserAlreadyExistsException {
+    final CisUser user0 = new CisUser();
+    user0.setLastName("XTMatějka");
+    user0.setLogin("xt999");
+    user0.setFirstName("XTAfanasi");
     user0.setBirthDate(new Date());
     dao.addUser(user0);
-    LOG.debug("user0: {}", user0);
-    assertNotNull("user0.id", user0.getId());
+  }
 
+
+  @Test
+  public void createNewUser() throws Exception {
+    final CisUser user = new CisUser();
+    user.setLastName("ZXTMatějka");
+    user.setLogin(RandomStringUtils.random(6, true, true));
+    user.setFirstName("ZTAfanasi");
+    user.setBirthDate(new Date());
+    dao.addUser(user);
+    LOG.debug("user: {}", user);
+    assertNotNull("user.id", user.getId());
+  }
+
+
+  @Test
+  public void listUsers() {
     final List<CisUser> users = dao.listUsers();
     LOG.debug("users: {}", users);
     assertNotNull("users", users);
-    assertEquals("users.size", 1, users.size());
-    CisUser user = users.get(0);
-    assertNotNull("users[0]", user);
-    assertEquals("user.hashCode", user0.hashCode(), user.hashCode());
-    assertEquals("user is not same os original", user0, user);
-    // DELETEME: deep equals will not work because of the birtDate - db returns zeroes as time, new Date not!
-    assertFalse("reflection equals should not return true", EqualsBuilder.reflectionEquals(user0, user, true));
+    assertFalse("users.empty", users.isEmpty());
+  }
+
+
+  @Test
+  public void testComparation() {
+    final CisUser user0 = new CisUser();
+    user0.setLastName("ZXTMatějka");
+    user0.setLogin("xyz");
+    user0.setFirstName("ZTAfanasi");
+    user0.setBirthDate(new Date());
+
+    final CisUser user1 = new CisUser();
+    user1.setLastName("ZXTMatějka");
+    user1.setLogin("xyz");
+    user1.setFirstName("ZTAfanasi");
+    user1.setBirthDate(DateUtils.addMinutes(user0.getBirthDate(), 360));
+
+    assertEquals(user0.hashCode(), user1.hashCode());
+    assertEquals(user0, user1);
+    assertFalse(EqualsBuilder.reflectionEquals(user0, user1, false));
   }
 }

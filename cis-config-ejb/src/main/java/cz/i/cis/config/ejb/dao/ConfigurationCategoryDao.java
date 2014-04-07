@@ -22,11 +22,11 @@ public class ConfigurationCategoryDao {
 	@PersistenceContext(name = "cis-jta")
 	private EntityManager em;
 
-	
+
 	public ConfigurationCategoryDao() {
 	}
 
-	
+
 	public List<ConfigurationItemCategory> listCategories() {
 		final TypedQuery<ConfigurationItemCategory> query = this.em.createQuery(
 				"select category from ConfigurationItemCategory category",
@@ -43,6 +43,16 @@ public class ConfigurationCategoryDao {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void removeCategory(ConfigurationItemCategory category) {
 		this.em.remove(category);
+	}
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void removeCategory(Integer id) {
+		ConfigurationItemCategory category = getCategory(id);
+		removeCategory(category);
+	}
+
+	public ConfigurationItemCategory getCategory(Integer id) {
+		return em.find(ConfigurationItemCategory.class, id);
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)

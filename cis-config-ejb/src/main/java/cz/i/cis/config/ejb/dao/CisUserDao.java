@@ -67,12 +67,10 @@ public class CisUserDao {
     return this.em.merge(user);
   }
 
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public CisUser getUser(Integer id) {
     return em.find(CisUser.class, id);
   }
 
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public CisUser getUser(String login) {
     final TypedQuery<CisUser> query = this.em.createQuery("select user from CisUser user where user.login = :login", CisUser.class);
     query.setParameter("login", login);

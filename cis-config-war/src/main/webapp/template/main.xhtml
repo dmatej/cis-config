@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<h:html xmlns="http://www.w3.org/1999/xhtml" lang="cs"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+  <h:head>
+    <meta http-equiv="Content-Language" content="cs" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>CIS config - <ui:insert name="title" /></title>
+
+    <h:outputStylesheet library="style" name="main.css" />
+  </h:head>
+
+  <h:body>
+    <div id="page">
+      <div id="page-top-menu">
+        <a href="#">XXX1</a>
+        <a href="#">XXX2</a>
+        <a href="#">XXX3</a>
+        <a href="#">XXX4</a>
+
+        <!-- TODO h:link outcome="/cis/login/logout" value="Odhlásit 2" rendered="#{not empty request.remoteUser}" /-->
+
+        <a href="/cis/login/logout">Odhlásit</a>
+      </div>
+
+      <div id="page-body">
+        <ui:insert name="content" />
+      </div>
+    </div>
+  </h:body>
+</h:html>
+

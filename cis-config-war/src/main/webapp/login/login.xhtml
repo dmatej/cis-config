@@ -1,32 +1,28 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="en"
+<ui:composition template="/template/main.xhtml"
       xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <title>CIS config - login</title>
-</head>
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-<body>
-  <h1>Přihlášení</h1>
-  <form method="post" action="j_security_check">
-    <table>
-      <tr>
-        <td><label for="username">Přihlašovací jméno</label></td>
-        <td><input id="username" type="text" name="j_username" size="20" /></td>
-      </tr>
-      <tr>
-        <td><label for="password">Heslo</label></td>
-        <td><input id="password" type="password" name="j_password" size="20" /></td>
-      </tr>
-      <tr>
-        <td><input type="reset" value="Resetovat" /></td>
-        <td><input type="submit" value="Přihlásit" /></td>
-      </tr>
-    </table>
-  </form>
-  <a href="/cis/index.xhtml">Zpět</a>
-</body>
-</html>
+  <ui:define name="title">Login</ui:define>
 
+  <ui:define name="content">
+    <h1>Přihlášení</h1>
+    <form method="post" action="j_security_check">
+      <table>
+        <tr>
+          <td><label for="username">Přihlašovací jméno</label></td>
+          <td><input id="username" type="text" name="j_username" size="20" tabindex="1" /></td>
+        </tr>
+        <tr>
+          <td><label for="password">Heslo</label></td>
+          <td><input id="password" type="password" name="j_password" size="20" tabindex="2" /></td>
+        </tr>
+        <tr>
+          <td><input type="reset" value="Resetovat" /></td>
+          <td><input type="submit" value="Přihlásit" tabindex="3" /></td>
+        </tr>
+      </table>
+    </form>
+  </ui:define>
+</ui:composition>

@@ -16,11 +16,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
+import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
 import cz.i.cis.config.jpa.CisUser;
 
-/**
- * @author David Matějček
- */
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
@@ -46,17 +44,15 @@ public class CisUserDao {
     try {
       this.em.persist(user);
       em.flush();
-    } catch (PersistenceException e) {
-      throw new UserAlreadyExistsException("User " + user.getLogin() + " already exists!", e);
+    } catch (PersistenceException exc) {
+      throw new UserAlreadyExistsException("User " + user.getLogin() + " already exists!", exc);
     }
   }
 
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeUser(CisUser user) {
-    CisUser u = this.em.merge(user);
-    this.em.remove(u);
-    // this.em.remove(user);
+    updateUserStatus(user, CisUser.STATUS_DELETED);
   }
 
 
@@ -72,9 +68,33 @@ public class CisUserDao {
     return this.em.merge(user);
   }
 
-
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public CisUser getUser(Integer id) {
     return em.find(CisUser.class, id);
+  }
+
+  public CisUser getUser(String login) {
+    final TypedQuery<CisUser> query = this.em.createQuery("select user from CisUser user where user.login = :login", CisUser.class);
+    query.setParameter("login", login);
+    return query.getSingleResult();
+  }
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void restoreUser(CisUser user) {
+    if(user.getStatus() != CisUser.STATUS_DELETED){
+      throw new IllegalStateException("User is not deleted: " + user);
+    }
+    updateUserStatus(user, CisUser.STATUS_VALID);
+  }
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void restoreUser(Integer id) {
+    CisUser user = getUser(id);
+    restoreUser(user);
+  }
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void updateUserStatus(CisUser user, Integer newStatus) {
+    user.setStatus(newStatus);
+    updateUser(user);
   }
 }

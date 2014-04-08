@@ -1,4 +1,4 @@
-package cz.i.cis.config.web.backing;
+package cz.i.cis.config.web.backing.user;
 
 import java.io.IOException;
 import java.util.Date;
@@ -35,8 +35,8 @@ public class UserCreateBean {
 
     try{
       userDao.addUser(newUser);
-//    return "user-edit?faces-redirect=true&includeViewParams=true&id=" + newUser.getId();
-      FacesUtils.redirect("user-list.xhtml#user-" + newUser.getId());
+//    return "edit?faces-redirect=true&includeViewParams=true&id=" + newUser.getId();
+      FacesUtils.redirect("list.xhtml#user-" + newUser.getId());
     }
     catch(Exception e){
       FacesUtils.addMessage(FacesMessage.SEVERITY_ERROR, "Nepodařilo se přidat nového uživatele: " + FacesUtils.getRootMessage(e));

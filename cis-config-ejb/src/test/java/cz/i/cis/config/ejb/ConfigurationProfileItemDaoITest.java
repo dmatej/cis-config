@@ -20,7 +20,7 @@ import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileItemDao;
-import cz.i.cis.config.ejb.dao.UserAlreadyExistsException;
+import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
@@ -66,7 +66,7 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
     key.setDescription("some key");
     key.setKey("base");
     key.setType(Type.Text);
-    dao_key.addCategory(key);
+    dao_key.addItemKey(key);
     LOG.debug("created key: {}", key);
 
     user = new CisUser();
@@ -84,7 +84,7 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
     Date current_date = new Date();
     profile.setUpdate(current_date);
     profile.setUser(user);
-    dao_profile.addItem(profile);
+    dao_profile.addProfile(profile);
     LOG.debug("created profile: {}", profile);
   }
 

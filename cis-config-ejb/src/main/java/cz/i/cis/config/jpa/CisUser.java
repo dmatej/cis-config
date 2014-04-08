@@ -21,6 +21,8 @@ import org.apache.commons.lang3.time.DateUtils;
 @Entity
 @Table(name = "cisuser")
 public class CisUser implements Serializable {
+  public static final Integer STATUS_VALID = 0;
+  public static final Integer STATUS_DELETED = 1;
 
   private static final long serialVersionUID = 1L;
 
@@ -41,6 +43,10 @@ public class CisUser implements Serializable {
   @Temporal(TemporalType.DATE)
   @Column(nullable = false)
   private Date birthDate;
+
+  /**0 valid, 1 deleted*/
+  @Column(nullable = false)
+  private Integer status = 0;
 
 
   public CisUser() {
@@ -95,6 +101,24 @@ public class CisUser implements Serializable {
 
   public void setBirthDate(Date birthDate) {
     this.birthDate = birthDate;
+  }
+
+
+  public Integer getStatus() {
+    return status;
+  }
+
+
+  public void setStatus(Integer status) {
+    this.status = status;
+  }
+
+  public boolean isValid(){
+    return status == STATUS_VALID;
+  }
+
+  public boolean isDeleted(){
+    return status == STATUS_DELETED;
   }
 
 
@@ -162,6 +186,14 @@ public class CisUser implements Serializable {
         return false;
       }
     } else if (!login.equals(other.login)) {
+      return false;
+    }
+
+    if (status == null) {
+      if (other.status != null) {
+        return false;
+      }
+    } else if (!status.equals(other.status)) {
       return false;
     }
 

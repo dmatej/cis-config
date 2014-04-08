@@ -27,9 +27,9 @@ public class ConfigurationCategoryDaoITest extends ArquillianITest {
 
   @After
   public void removeEnvirenments() {
-    List<ConfigurationItemCategory> categorys = dao.listCategorys();
+    List<ConfigurationItemCategory> categorys = dao.listCategories();
     dao.removeCategory(categorys.get(0));
-    List<ConfigurationItemCategory> list_categorys = dao.listCategorys();
+    List<ConfigurationItemCategory> list_categorys = dao.listCategories();
     assertTrue("list_category.isEmpty", list_categorys.isEmpty());
     LOG.debug("list_category: {}", list_categorys);
   }
@@ -47,7 +47,7 @@ public class ConfigurationCategoryDaoITest extends ArquillianITest {
     LOG.debug("update configuration_category: {}", configuration_category);
     assertNotNull("configuration_category.id", configuration_category.getId());
 
-    final List<ConfigurationItemCategory> categorys = dao.listCategorys();
+    final List<ConfigurationItemCategory> categorys = dao.listCategories();
     LOG.debug("categorys: {}", categorys);
     assertNotNull("categorys", categorys);
     assertEquals("categorys.size", 1, categorys.size());

@@ -1,0 +1,164 @@
+@CHARSET "UTF-8";
+
+.deleted {
+     color: white;
+}
+
+body {
+    background-color: #dadada;
+    margin: 0px;
+    padding: 0px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 11px;
+}
+
+div {
+    padding: 0px;
+    border: 0px;
+    position: relative;
+}
+
+h1 {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0px;
+    margin: 0px;
+}
+
+h2 {
+    color: #035273;
+    font-size: 12px;
+    font-weight: normal;
+    text-transform: uppercase;
+    padding: 0px;
+    margin: 0px;
+}
+
+#page {
+    width: 1024px;
+    margin: 0 auto;
+}
+
+#page-top-menu {
+    background: #b7b7b7;
+    vertical-align: middle;
+    border: 1px #565656 solid;
+    overflow: hidden;
+}
+
+#page-top-menu a {
+    background: #b7b7b7;
+    color: #565656;
+    vertical-align: middle;
+    text-decoration: none;
+    display: inline-block;
+    padding: 5px 10px;
+    float: left;
+    border-right: 1px #565656 solid;
+}
+
+#page-top-menu a:last-child {
+	float: right;
+    border-left: 1px #565656 solid;
+}
+
+#page-top-menu a:hover, #page-top-menu a:active {
+    text-decoration: underline;
+}
+
+#page-body {
+    border: 1px #bbbbbb solid;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#page-body-header {
+    height: 30px;
+    background: #035273;
+    line-height: 30px;
+    vertical-align: middle;
+}
+
+#page-body-header h1 {
+    padding-left: 2px;
+}
+
+#page-body-content {
+    background: #ffffff;
+    padding: 2px;
+}
+
+#page-body-content-header {
+    height: 20px;
+    background: #dddddd;
+    line-height: 20px;
+    vertical-align: middle;
+}
+
+#page-body-content-header h2 {
+    padding-left: 2px;
+}
+
+#page-body-content-container {
+    background: #c4c4c4;
+    padding: 5px;
+}
+
+.form-line {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    vertical-align: top;
+}
+
+.button-line {
+    text-align: right;
+}
+
+.button-line input[type=submit], .button-line input[type=button], .button-line button {
+    margin-left: 5px;
+}
+
+label {
+    width: 150px;
+    display: inline-block;
+    font-weight: bold;
+    text-align: right;
+    margin-right: 10px;
+}
+
+input, select, textarea {
+    background: #ddd9b7;
+    border: 1px #035273 solid;
+}
+
+textarea {
+    vertical-align: top;
+}
+
+input.important, select.important, textarea.important {
+    background: #ffcccc;
+    border: 1px #990000 solid;
+}
+
+input[type=submit], input[type=button], button {
+    background: #035273;
+    color: #ffffff;
+    border: 1px #1f779c solid;
+}
+
+#form-table {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+
+.form-table-label {
+    width: 150px;
+    vertical-align: top;
+}
+
+.form-table-button-line {
+    text-align: right;
+}

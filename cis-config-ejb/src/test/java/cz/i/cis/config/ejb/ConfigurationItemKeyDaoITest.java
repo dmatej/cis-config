@@ -44,9 +44,9 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
 
   @After
   public void removeEnvirenments() {
-    List<ConfigurationItemKey> keys = dao.listCategorys();
-    dao.removeCategory(keys.get(0));
-    List<ConfigurationItemKey> list_keys = dao.listCategorys();
+    List<ConfigurationItemKey> keys = dao.listItemKeys();
+    dao.removeItemKey(keys.get(0));
+    List<ConfigurationItemKey> list_keys = dao.listItemKeys();
     assertTrue("list_keys.isEmpty", list_keys.isEmpty());
     LOG.debug("list_keys: {}", list_keys);
   }
@@ -59,13 +59,13 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
     configuration_key.setDescription("base confiuration key");
     configuration_key.setKey("base");
     configuration_key.setType(Type.Text);
-    dao.addCategory(configuration_key);
+    dao.addItemKey(configuration_key);
     LOG.debug("configuration_key: {}", configuration_key);
     configuration_key.setDescription("base confiuration key 2.0");
-    dao.updateCategory(configuration_key);
+    dao.updateItemKey(configuration_key);
     assertNotNull("configuration_key.id", configuration_key.getId());
 
-    final List<ConfigurationItemKey> keys = dao.listCategorys();
+    final List<ConfigurationItemKey> keys = dao.listItemKeys();
     LOG.debug("keys: {}", keys);
     assertNotNull("keys", keys);
     assertEquals("keys.size", 1, keys.size());

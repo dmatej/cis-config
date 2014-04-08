@@ -27,27 +27,33 @@ public class ConfigurationCategoryDao {
   }
 
 
-  public List<ConfigurationItemCategory> listCategorys() {
+  public List<ConfigurationItemCategory> listCategories() {
     final TypedQuery<ConfigurationItemCategory> query = this.em.createQuery(
-        "select category from ConfigurationItemCategory category", ConfigurationItemCategory.class);
+        "select category from ConfigurationItemCategory category",
+        ConfigurationItemCategory.class);
 
     return query.getResultList();
   }
-
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addCategory(ConfigurationItemCategory category) {
     this.em.persist(category);
   }
 
-
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeCategory(ConfigurationItemCategory category) {
-    ConfigurationItemCategory c = this.em.merge(category);
-    this.em.remove(c);
-    // this.em.remove(category);
+    this.em.remove(category);
   }
 
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void removeCategory(Integer id) {
+    ConfigurationItemCategory category = getCategory(id);
+    removeCategory(category);
+  }
+
+  public ConfigurationItemCategory getCategory(Integer id) {
+    return em.find(ConfigurationItemCategory.class, id);
+  }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public ConfigurationItemCategory updateCategory(ConfigurationItemCategory category) {

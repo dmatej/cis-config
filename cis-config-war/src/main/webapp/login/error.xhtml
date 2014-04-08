@@ -1,20 +1,19 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <title>CIS config - login error</title>
-</head>
+<ui:composition template="/template/main.xhtml"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-<body>
-  <h2>Přihlášení se nezdařilo</h2>
+  <ui:define name="title">Chyba přihlášení</ui:define>
 
-  <p>Zadejte správné přihlašovací údaje. Pokud je nemáte a chcete
-    získat přístup k chráněným zdrojům, kontaktujte administrátora nebo
-    stránku hackněte.</p>
-  <ul>
-    <li><a href="/cis/login/login.xhtml">Přihlášení</a></li>
-    <li><a href="/cis/index.xhtml">Uvítací stránka</a></li>
-  </ul>
-</body>
-</html>
+  <ui:define name="content">
+    <h2>Přihlášení se nezdařilo</h2>
+
+    <p>Zadejte správné přihlašovací údaje. Pokud je nemáte a chcete
+      získat přístup k chráněným zdrojům, kontaktujte administrátora nebo
+      stránku hackněte.</p>
+    <ul>
+      <li><a href="/cis/config/index.xhtml">Zkusit znovu</a></li>
+    </ul>
+  </ui:define>
+</ui:composition>

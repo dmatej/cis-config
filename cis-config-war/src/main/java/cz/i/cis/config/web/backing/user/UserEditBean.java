@@ -1,4 +1,4 @@
-package cz.i.cis.config.web.backing;
+package cz.i.cis.config.web.backing.user;
 
 import java.util.Date;
 
@@ -53,7 +53,7 @@ public class UserEditBean {
       try{
         user = userDao.updateUser(user);
   //      FacesUtils.addMessage(FacesMessage.SEVERITY_INFO, "Změny byly uloženy.");
-        FacesUtils.redirect("user-list.xhtml#user-" + user.getId());
+        FacesUtils.redirect("list.xhtml#user-" + user.getId());
       }
       catch(Exception e){
         FacesUtils.addMessage(FacesMessage.SEVERITY_ERROR, "Nepodařilo se uložit změny: " + FacesUtils.getRootMessage(e));

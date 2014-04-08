@@ -3,7 +3,9 @@
  */
 package cz.i.cis.config.test;
 
-import org.apache.log4j.PropertyConfigurator;
+import javax.ejb.EJB;
+import javax.persistence.EntityManager;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -16,7 +18,6 @@ import org.slf4j.LoggerFactory;
 /**
  * @author David Matějček
  */
-@SuppressWarnings("unused")
 @RunWith(Arquillian.class)
 public abstract class ArquillianITest {
 
@@ -24,6 +25,17 @@ public abstract class ArquillianITest {
 
   private static EnterpriseArchive ear;
   private static boolean alreadyInitialized;
+
+  @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/EntityManagerHolder")
+  private EntityManagerHolder holder;
+
+
+  /**
+   * @return new entity manager
+   */
+  protected EntityManager getEntityManager() {
+    return holder.getEntityManager();
+  }
 
 
   /**
@@ -42,8 +54,8 @@ public abstract class ArquillianITest {
     // do not try it again - if it fails, it should fail again.
     alreadyInitialized = true;
 
-    JavaArchive jar = ShrinkWrap.create(JavaArchive.class, "cis-config-test-ejb.jar").addPackages(true, "cz.i.cis.config")
-        .addAsManifestResource("META-INF/persistence.xml", "persistence.xml");
+    JavaArchive jar = ShrinkWrap.create(JavaArchive.class, "cis-config-test-ejb.jar")
+        .addPackages(true, "cz.i.cis.config").addAsManifestResource("META-INF/persistence.xml", "persistence.xml");
     LOG.info("{}", jar.toString(true));
 
     ear = ShrinkWrap.create(EnterpriseArchive.class, "cis-config-test.ear").addAsModule(jar);

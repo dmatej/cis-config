@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.ejb.EJB;
 
 import org.junit.After;
@@ -14,13 +17,10 @@ import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileDao;
-import cz.i.cis.config.ejb.dao.UserAlreadyExistsException;
+import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.jpa.ConfigurationProfile;
 import cz.i.cis.config.test.ArquillianITest;
-
-import java.util.Date;
-import java.util.List;
 
 public class ConfigurationProfileDaoITest extends ArquillianITest {
 
@@ -50,9 +50,9 @@ public class ConfigurationProfileDaoITest extends ArquillianITest {
 
   @After
   public void removeEnvirenments() {
-    List<ConfigurationProfile> profiles = dao.listItems();
-    dao.removeItem(profiles.get(0));
-    List<ConfigurationProfile> list_profiles = dao.listItems();
+    List<ConfigurationProfile> profiles = dao.listProfiles();
+    dao.removeProfile(profiles.get(0));
+    List<ConfigurationProfile> list_profiles = dao.listProfiles();
     assertTrue("profiles.isEmpty", list_profiles.isEmpty());
     LOG.debug("list_profiles: {}", list_profiles);
   }
@@ -66,14 +66,14 @@ public class ConfigurationProfileDaoITest extends ArquillianITest {
     Date current_date = new Date();
     configuration_profile.setUpdate(current_date);
     configuration_profile.setUser(user);
-    dao.addItem(configuration_profile);
+    dao.addProfile(configuration_profile);
     LOG.debug("configuration_profile: {}", configuration_profile);
     configuration_profile.setDescription("windows web hosting platform");
-    dao.updateItem(configuration_profile);
+    dao.updateProfile(configuration_profile);
     LOG.debug("update configuration_profile: {}", configuration_profile);
     assertNotNull("configuration_profile.id", configuration_profile.getId());
 
-    List<ConfigurationProfile> profiles = dao.listItems();
+    List<ConfigurationProfile> profiles = dao.listProfiles();
     LOG.debug("profiles: {}", profiles);
     assertNotNull("profiles", profiles);
     assertEquals("profiles.size", 1, profiles.size());

@@ -19,8 +19,7 @@ import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
-import cz.i.cis.config.ejb.dao.UniqueKeyException;
-import cz.i.cis.config.ejb.dao.UserAlreadyExistsException;
+import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.jpa.ConfigurationItem;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
@@ -70,7 +69,7 @@ public class ConfigurationItemDaoITest extends ArquillianITest {
     key.setKey("key");
     key.setDescription("my key");
     key.setType(Type.Text);
-    dao_key.addCategory(key);
+    dao_key.addItemKey(key);
     LOG.debug("created item key: {}", key);
     // delete
     /*

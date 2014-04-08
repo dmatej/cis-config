@@ -14,39 +14,43 @@ import javax.persistence.TypedQuery;
 
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 
-
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class ConfigurationCategoryDao {
-	@PersistenceContext(name = "cis-jta")
-	private EntityManager em;
 
-	
-	public ConfigurationCategoryDao() {
-	}
+  @PersistenceContext(name = "cis-jta")
+  private EntityManager em;
 
-	
-	public List<ConfigurationItemCategory> listCategorys() {
-		final TypedQuery<ConfigurationItemCategory> query = this.em.createQuery(
-				"select category from ConfigurationItemCategory category",
-				ConfigurationItemCategory.class);
 
-		return query.getResultList();
-	}
+  public ConfigurationCategoryDao() {
+  }
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void addCategory(ConfigurationItemCategory category) {
-		this.em.persist(category);
-	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void removeCategory(ConfigurationItemCategory category) {
-		this.em.remove(category);
-	}
+  public List<ConfigurationItemCategory> listCategorys() {
+    final TypedQuery<ConfigurationItemCategory> query = this.em.createQuery(
+        "select category from ConfigurationItemCategory category", ConfigurationItemCategory.class);
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public ConfigurationItemCategory updateCategory(ConfigurationItemCategory category) {
-		return this.em.merge(category);
-	}
+    return query.getResultList();
+  }
+
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void addCategory(ConfigurationItemCategory category) {
+    this.em.persist(category);
+  }
+
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void removeCategory(ConfigurationItemCategory category) {
+    ConfigurationItemCategory c = this.em.merge(category);
+    this.em.remove(c);
+    // this.em.remove(category);
+  }
+
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public ConfigurationItemCategory updateCategory(ConfigurationItemCategory category) {
+    return this.em.merge(category);
+  }
 }

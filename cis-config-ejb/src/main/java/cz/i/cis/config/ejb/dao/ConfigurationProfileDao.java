@@ -14,39 +14,43 @@ import javax.persistence.TypedQuery;
 
 import cz.i.cis.config.jpa.ConfigurationProfile;
 
-
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class ConfigurationProfileDao {
-	@PersistenceContext(name = "cis-jta")
-	private EntityManager em;
+
+  @PersistenceContext(name = "cis-jta")
+  private EntityManager em;
 
 
-	public ConfigurationProfileDao() {
-	}
+  public ConfigurationProfileDao() {
+  }
 
 
-	public List<ConfigurationProfile> listItems() {
-		final TypedQuery<ConfigurationProfile> query = this.em.createQuery(
-				"select profile from ConfigurationProfile profile",
-				ConfigurationProfile.class);
+  public List<ConfigurationProfile> listItems() {
+    final TypedQuery<ConfigurationProfile> query = this.em.createQuery(
+        "select profile from ConfigurationProfile profile", ConfigurationProfile.class);
 
-		return query.getResultList();
-	}
+    return query.getResultList();
+  }
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void addItem(ConfigurationProfile profile) {
-		this.em.persist(profile);
-	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void removeItem(ConfigurationProfile profile) {
-		this.em.remove(profile);
-	}
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void addItem(ConfigurationProfile profile) {
+    this.em.persist(profile);
+  }
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public ConfigurationProfile updateItem(ConfigurationProfile profile) {
-		return this.em.merge(profile);
-	}
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void removeItem(ConfigurationProfile profile) {
+    ConfigurationProfile p = this.em.merge(profile);
+    this.em.remove(p);
+    // this.em.remove(profile);
+  }
+
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public ConfigurationProfile updateItem(ConfigurationProfile profile) {
+    return this.em.merge(profile);
+  }
 }

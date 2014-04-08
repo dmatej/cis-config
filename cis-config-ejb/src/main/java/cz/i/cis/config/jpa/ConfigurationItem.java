@@ -170,4 +170,12 @@ public class ConfigurationItem implements Serializable {
 
     return true;
   }
+
+
+  @Override
+  public String toString() {
+    return this.getClass().getCanonicalName() + " id=" + this.getId() + ",key_id=" + this.getKey().getId()
+        + ",item_value=" + this.getValue() + ",update=" + this.getUpdate().toString() + ",user_id="
+        + this.getUser().getId();
+  }
 }

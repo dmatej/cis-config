@@ -170,4 +170,11 @@ public class ConfigurationProfile implements Serializable {
 
     return true;
   }
+
+
+  @Override
+  public String toString() {
+    return this.getClass().getCanonicalName() + " id=" + this.getId() + ",name=" + this.getName() + ",description="
+        + this.getDescription() + ",update=" + this.getUpdate().toString() + ",user_id=" + this.getUser().getId();
+  }
 }

@@ -146,4 +146,11 @@ public class ConfigurationProfileItem implements Serializable {
 
     return true;
   }
+
+
+  @Override
+  public String toString() {
+    return this.getClass().getCanonicalName() + " id=" + this.getId() + " profile_id=" + this.getProfile().getId()
+        + ",key_id=" + this.getKey().getId() + ",item_value=" + this.getValue();
+  }
 }

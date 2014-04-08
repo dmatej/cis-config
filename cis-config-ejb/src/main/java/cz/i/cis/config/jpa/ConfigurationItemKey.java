@@ -165,4 +165,11 @@ public class ConfigurationItemKey implements Serializable {
 
     return true;
   }
+
+
+  @Override
+  public String toString() {
+    return this.getClass().getCanonicalName() + " id=" + this.getId() + " category_id=" + this.getCategory().getId()
+        + ",type=" + this.getType() + ",key=" + this.getKey() + ",description=" + this.getDescription();
+  }
 }

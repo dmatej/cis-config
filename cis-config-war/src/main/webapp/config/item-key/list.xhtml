@@ -1,0 +1,65 @@
+<ui:composition template="/template/main.xhtml"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+  <ui:define name="title">Seznam klíčů</ui:define>
+
+  <ui:define name="content">
+    <h1>Seznam klíčů konfiguračních položek</h1>
+
+    <p><h:link outcome="create" value="Vytvořit nový klíč" /></p>
+
+    <h:form>
+      <h:panelGrid columns="3" border="1">
+        <h:panelGroup>Kategorie:</h:panelGroup>
+        <h:panelGroup>
+          <h:selectOneMenu value="#{itemKeyList.selectedCategory}">
+            <f:selectItem itemLabel="" itemValue="#{itemKeyList.noneSelector}" />
+            <f:selectItem itemLabel="všechny" itemValue="#{itemKeyList.allSelector}" />
+            <f:selectItems value="#{itemKeyList.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category}" />
+          </h:selectOneMenu>
+        </h:panelGroup>
+      </h:panelGrid>
+
+      <h:dataTable value="#{itemKeyList.filteredItemKeys}" var="itemKey">
+        <h:column>
+          <f:facet name="header">ID</f:facet>
+          <a id="itemKey-#{itemKey.id}"><h:outputText value="#{itemKey.id}"/></a>
+        </h:column>
+        <h:column>
+          <f:facet name="header">Klíč</f:facet>
+          <h:outputText value="#{itemKey.key}"/>
+        </h:column>
+        <h:column>
+          <f:facet name="header">Typ</f:facet>
+          <h:outputText value="#{itemKey.type}"/>
+        </h:column>
+        <h:column>
+          <f:facet name="header">Kategorie</f:facet>
+          <h:outputText value="#{itemKey.category.name}"/>
+        </h:column>
+        <h:column>
+          <f:facet name="header">Popis</f:facet>
+          <h:outputText value="#{itemKey.description}"/>
+        </h:column>
+
+        <h:column>
+          <h:commandLink action="#{itemKeyList.actionDeleteItemKey}" value="smazat">
+            <f:setPropertyActionListener target="#{itemKeyList.itemKeyID}" value="#{itemKey.id}" />
+          </h:commandLink>
+        </h:column>
+        <h:column>
+          <h:link outcome="edit" value="upravit">
+            <f:param name="id" value="#{itemKey.id}" />
+          </h:link>
+        </h:column>
+      </h:dataTable>
+    </h:form>
+
+    <ul>
+      <li><a href="/cis/config">Zpět</a></li>
+    </ul>
+  </ui:define>
+</ui:composition>

@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
 
 
@@ -23,30 +24,42 @@ public class ConfigurationItemKeyDao {
 	private EntityManager em;
 
 
-	public ConfigurationItemKeyDao() {
+	public List<ConfigurationItemKey> listItemKeys() {
+    final TypedQuery<ConfigurationItemKey> query = this.em.createQuery(
+        "select itemKey from ConfigurationItemKey itemKey", ConfigurationItemKey.class);
+
+    return query.getResultList();
 	}
 
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void addItemKey(ConfigurationItemKey key) {
+		this.em.persist(key);
+	}
 
-	public List<ConfigurationItemKey> listCategorys() {
-		final TypedQuery<ConfigurationItemKey> query = this.em.createQuery(
-				"select key from ConfigurationItemKey key",
-				ConfigurationItemKey.class);
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void removeItemKey(ConfigurationItemKey key) {
+		this.em.remove(key);
+	}
+
+	public ConfigurationItemKey updateItemKey(ConfigurationItemKey key) {
+		return this.em.merge(key);
+	}
+
+	public List<ConfigurationItemKey> filterItemKeys(ConfigurationItemCategory category){
+	  final TypedQuery<ConfigurationItemKey> query = this.em.createQuery(
+				"SELECT itemKey FROM ConfigurationItemKey itemKey WHERE itemKey.category = :category", ConfigurationItemKey.class);
+	  query.setParameter("category", category);
 
 		return query.getResultList();
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void addCategory(ConfigurationItemKey key) {
-		this.em.persist(key);
-	}
+  public void removeItemKey(Integer id) {
+    ConfigurationItemKey itemKey = getItemKey(id);
+    em.remove(itemKey);
+  }
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void removeCategory(ConfigurationItemKey key) {
-		this.em.remove(key);
-	}
-
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public ConfigurationItemKey updateCategory(ConfigurationItemKey key) {
-		return this.em.merge(key);
-	}
+  public ConfigurationItemKey getItemKey(Integer id){
+    return em.find(ConfigurationItemKey.class, id);
+  }
 }

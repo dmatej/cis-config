@@ -1,5 +1,9 @@
 @CHARSET "UTF-8";
 
+.deleted {
+     color: white;
+}
+
 body {
     background-color: #dadada;
     margin: 0px;

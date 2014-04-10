@@ -1,7 +1,8 @@
 package cz.i.cis.config.web.backing.item_key;
 
-import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -27,28 +28,35 @@ public class ItemKeyCreateBean {
   private ConfigurationCategoryDao categoryDao;
 
 
-  private List<ConfigurationItemCategory> allCategories;
+  private Map<String, ConfigurationItemCategory> allCategories;
 
   private String key;
   private Type type;
-  private ConfigurationItemCategory category;
+  private String selectedCategory;
   private String description;
 
 
   @PostConstruct
   public void init(){
-    allCategories = categoryDao.listCategories();
+    allCategories = new HashMap<>();
+    for (ConfigurationItemCategory category : categoryDao.listCategories()) {
+      allCategories.put(category.getId().toString(), category);
+    }
   }
 
 
-  public String actionAddItemKey() throws IOException{
-    ConfigurationItemKey newItemKey = new ConfigurationItemKey();
-      newItemKey.setKey(key);
-      newItemKey.setType(type);
-      newItemKey.setCategory(category);
-      newItemKey.setDescription(description);
-
+  public String actionAddItemKey(){
     try{
+      if(!allCategories.containsKey(selectedCategory)){
+        throw new Exception("Selected category is not valid.");
+      }
+
+      ConfigurationItemKey newItemKey = new ConfigurationItemKey();
+        newItemKey.setKey(key);
+        newItemKey.setType(type);
+        newItemKey.setCategory(allCategories.get(selectedCategory));
+        newItemKey.setDescription(description);
+
       itemKeyDao.addItemKey(newItemKey);
 //    return "edit?faces-redirect=true&includeViewParams=true&id=" + newUser.getId();
       FacesUtils.redirect("list.xhtml#itemKey-" + newItemKey.getId());
@@ -64,8 +72,8 @@ public class ItemKeyCreateBean {
     return Type.values();
   }
 
-  public List<ConfigurationItemCategory> getAllCategories(){
-    return allCategories;
+  public Collection<ConfigurationItemCategory> getAllCategories(){
+    return allCategories.values();
   }
 
   public String getKey() {
@@ -84,12 +92,12 @@ public class ItemKeyCreateBean {
     this.type = type;
   }
 
-  public ConfigurationItemCategory getCategory() {
-    return category;
+  public String getSelectedCategory() {
+    return selectedCategory;
   }
 
-  public void setCategory(ConfigurationItemCategory category) {
-    this.category = category;
+  public void setSelectedCategory(String category) {
+    this.selectedCategory = category;
   }
 
   public String getDescription() {

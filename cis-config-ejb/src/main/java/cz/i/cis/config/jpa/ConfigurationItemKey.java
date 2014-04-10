@@ -25,7 +25,7 @@ public class ConfigurationItemKey implements Serializable {
   @Id
   @Column(nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @ManyToOne
   @JoinColumn(name = "category_id", nullable = false)
@@ -47,12 +47,12 @@ public class ConfigurationItemKey implements Serializable {
   }
 
 
-  public Long getId() {
+  public Integer getId() {
     return this.id;
   }
 
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

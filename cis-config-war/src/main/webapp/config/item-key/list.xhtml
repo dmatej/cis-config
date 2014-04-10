@@ -15,10 +15,10 @@
       <h:panelGrid columns="3" border="1">
         <h:panelGroup>Kategorie:</h:panelGroup>
         <h:panelGroup>
-          <h:selectOneMenu value="#{itemKeyList.selectedCategory}">
+          <h:selectOneMenu value="#{itemKeyList.selectedCategory}" onchange="submit();">
             <f:selectItem itemLabel="" itemValue="#{itemKeyList.noneSelector}" />
             <f:selectItem itemLabel="všechny" itemValue="#{itemKeyList.allSelector}" />
-            <f:selectItems value="#{itemKeyList.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category}" />
+            <f:selectItems value="#{itemKeyList.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
           </h:selectOneMenu>
         </h:panelGroup>
       </h:panelGrid>

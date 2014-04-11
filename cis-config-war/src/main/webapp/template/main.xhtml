@@ -17,10 +17,11 @@
   <h:body>
     <div id="page">
       <div id="page-top-menu">
-        <a href="#">XXX1</a>
-        <a href="#">XXX2</a>
-        <a href="#">XXX3</a>
-        <a href="#">XXX4</a>
+        <h:link outcome="/config/user/list" value="Uživatelé" />
+        <h:link outcome="/config/active/list" value="Aktivní konfigurace" />
+        <h:link outcome="/config/profile/list" value="Profily konfigurací" />
+        <h:link outcome="/config/category/list" value="Kategorie položek" />
+        <h:link outcome="/config/item-key/list" value="Konfigurační položky" />
 
         <!-- TODO h:link outcome="/cis/login/logout" value="Odhlásit 2" rendered="#{not empty request.remoteUser}" /-->
 

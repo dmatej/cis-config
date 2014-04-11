@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+
 /**
  * Entity implementation class for Entity: ConfigurationItemCategory
  */
@@ -19,6 +20,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class ConfigurationItemCategory implements Serializable {
 
   private static final long serialVersionUID = 1L;
+
 
   @Id
   @Column(nullable = false, updatable = false)
@@ -29,25 +31,17 @@ public class ConfigurationItemCategory implements Serializable {
   private String name;
 
 
-  public ConfigurationItemCategory() {
-    super();
-  }
-
-
   public Integer getId() {
     return this.id;
   }
-
 
   public void setId(Integer id) {
     this.id = id;
   }
 
-
   public String getName() {
     return this.name;
   }
-
 
   public void setName(String name) {
     this.name = name;
@@ -64,7 +58,6 @@ public class ConfigurationItemCategory implements Serializable {
 
     return result;
   }
-
 
   @Override
   public boolean equals(Object obj) {

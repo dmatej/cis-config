@@ -41,7 +41,7 @@ public class ConfigurationProfileDao {
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public ConfigurationProfile getProfile(Long id) {
+  public ConfigurationProfile getProfile(Integer id) {
     return em.find(ConfigurationProfile.class, id);
   }
 
@@ -51,7 +51,7 @@ public class ConfigurationProfileDao {
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void removeProfile(Long id) {
+  public void removeProfile(Integer id) {
     ConfigurationProfile profile = getProfile(id);
     this.em.remove(profile);
   }

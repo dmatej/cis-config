@@ -15,6 +15,7 @@ import javax.persistence.TemporalType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.time.DateUtils;
 
+
 /**
  * Entity implementation class for Entity: CisUser
  */
@@ -25,6 +26,7 @@ public class CisUser implements Serializable {
   public static final Integer STATUS_DELETED = 1;
 
   private static final long serialVersionUID = 1L;
+
 
   @Id
   @Column(nullable = false, updatable = false)
@@ -49,65 +51,49 @@ public class CisUser implements Serializable {
   private Integer status = 0;
 
 
-  public CisUser() {
-    super();
-  }
-
-
   public Integer getId() {
     return this.id;
   }
-
 
   public void setId(Integer id) {
     this.id = id;
   }
 
-
   public String getLogin() {
     return this.login;
   }
-
 
   public void setLogin(String login) {
     this.login = login;
   }
 
-
   public String getFirstName() {
     return this.firstName;
   }
-
 
   public void setFirstName(String firstName) {
     this.firstName = firstName;
   }
 
-
   public String getLastName() {
     return this.lastName;
   }
-
 
   public void setLastName(String lastName) {
     this.lastName = lastName;
   }
 
-
   public Date getBirthDate() {
     return this.birthDate;
   }
-
 
   public void setBirthDate(Date birthDate) {
     this.birthDate = birthDate;
   }
 
-
   public Integer getStatus() {
     return status;
   }
-
 
   public void setStatus(Integer status) {
     this.status = status;
@@ -132,7 +118,6 @@ public class CisUser implements Serializable {
 
     return result;
   }
-
 
   @Override
   public boolean equals(Object obj) {

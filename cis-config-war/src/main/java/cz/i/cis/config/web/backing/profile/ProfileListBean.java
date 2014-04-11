@@ -19,7 +19,7 @@ public class ProfileListBean {
   @EJB
   private ConfigurationProfileDao profileDao;
 
-  private Long profileID;
+  private Integer profileID;
 
 
   public List<ConfigurationProfile> getAllProfiles() {
@@ -44,11 +44,11 @@ public class ProfileListBean {
   }
 
 
-  public Long getProfileID() {
+  public Integer getProfileID() {
     return profileID;
   }
 
-  public void setProfileID(Long profileID) {
+  public void setProfileID(Integer profileID) {
     this.profileID = profileID;
   }
 }

@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+
 /**
  * Entity implementation class for Entity: ConfigurationProfile
  */
@@ -23,10 +24,11 @@ public class ConfigurationProfile implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
+
   @Id
   @Column(nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @Column(nullable = false)
   private String name;
@@ -43,55 +45,41 @@ public class ConfigurationProfile implements Serializable {
   private CisUser user;
 
 
-  public ConfigurationProfile() {
-    super();
-  }
-
-
-  public Long getId() {
+  public Integer getId() {
     return this.id;
   }
 
-
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
-
 
   public String getName() {
     return this.name;
   }
 
-
   public void setName(String name) {
     this.name = name;
   }
-
 
   public String getDescription() {
     return this.description;
   }
 
-
   public void setDescription(String description) {
     this.description = description;
   }
-
 
   public Date getUpdate() {
     return this.update;
   }
 
-
   public void setUpdate(Date update) {
     this.update = update;
   }
 
-
   public CisUser getUser() {
     return this.user;
   }
-
 
   public void setUser(CisUser user) {
     this.user = user;
@@ -111,7 +99,6 @@ public class ConfigurationProfile implements Serializable {
 
     return result;
   }
-
 
   @Override
   public boolean equals(Object obj) {
@@ -174,7 +161,12 @@ public class ConfigurationProfile implements Serializable {
 
   @Override
   public String toString() {
-    return this.getClass().getCanonicalName() + " id=" + this.getId() + ",name=" + this.getName() + ",description="
-        + this.getDescription() + ",update=" + this.getUpdate().toString() + ",user_id=" + this.getUser().getId();
+    return new StringBuilder(this.getClass().getCanonicalName())
+      .append("[id=").append(this.getId())
+      .append(", name=").append(this.getName())
+      .append(", description=").append(this.getDescription())
+      .append(", update=").append(this.getUpdate().toString())
+      .append(", user_id=").append(this.getUser().getId())
+      .append("]").toString();
   }
 }

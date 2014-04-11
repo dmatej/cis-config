@@ -1,6 +1,7 @@
 package cz.i.cis.config.web.backing.profile;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -9,9 +10,15 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import cz.i.cis.config.ejb.dao.CisUserDao;
+import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
+import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileDao;
+import cz.i.cis.config.ejb.dao.ConfigurationProfileItemDao;
 import cz.i.cis.config.jpa.CisUser;
+import cz.i.cis.config.jpa.ConfigurationItemCategory;
+import cz.i.cis.config.jpa.ConfigurationItemKey;
 import cz.i.cis.config.jpa.ConfigurationProfile;
+import cz.i.cis.config.jpa.ConfigurationProfileItem;
 import cz.i.cis.config.web.FacesUtils;
 
 
@@ -22,13 +29,23 @@ public class ProfileEditBean {
   @EJB
   private ConfigurationProfileDao profileDao;
   @EJB
+  private ConfigurationProfileItemDao itemDao;
+  @EJB
+  private ConfigurationCategoryDao categoryDao;
+  @EJB
+  private ConfigurationItemKeyDao itemKeyDao;
+  @EJB
   private CisUserDao userDao;
 
-  private Long id;
+  private Integer id;
 
   private ConfigurationProfile profile;
+  private List<ConfigurationProfileItem> profileItems;
+  private List<ConfigurationItemKey> itemKeys;
+  private List<ConfigurationItemCategory> categories;;
   //TODO seznam položek, přidávání, odebírání, uložení
 
+  //profile metadata
   private String name;
   private String description;
 
@@ -38,7 +55,7 @@ public class ProfileEditBean {
 
     if(profile != null){
       name = profile.getName();
-      description= profile.getDescription();
+      description = profile.getDescription();
     }
     else{
       FacesUtils.addMessage(FacesMessage.SEVERITY_ERROR, "Zvolený profil nebyl nalezen v databázi - ID = " + id);
@@ -77,11 +94,11 @@ public class ProfileEditBean {
   }
 
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

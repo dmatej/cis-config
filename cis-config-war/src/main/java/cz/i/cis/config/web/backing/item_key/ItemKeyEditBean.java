@@ -1,7 +1,6 @@
 package cz.i.cis.config.web.backing.item_key;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.ejb.EJB;
@@ -39,10 +38,7 @@ public class ItemKeyEditBean {
 
 
   public void init(){
-    allCategories = new HashMap<>();
-    for (ConfigurationItemCategory category : categoryDao.listCategories()) {
-      allCategories.put(category.getId().toString(), category);
-    }
+    allCategories = categoryDao.getCategoryMap();
 
     itemKey = itemKeyDao.getItemKey(id);
     if(itemKey != null){

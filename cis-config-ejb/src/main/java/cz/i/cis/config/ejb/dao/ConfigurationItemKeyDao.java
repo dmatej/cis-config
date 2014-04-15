@@ -1,6 +1,8 @@
 package cz.i.cis.config.ejb.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -22,10 +24,6 @@ public class ConfigurationItemKeyDao {
 
   @PersistenceContext(name = "cis-jta")
   private EntityManager em;
-
-
-  public ConfigurationItemKeyDao() {
-  }
 
 
   public List<ConfigurationItemKey> listItemKeys() {
@@ -65,5 +63,14 @@ public class ConfigurationItemKeyDao {
 
   public ConfigurationItemKey getItemKey(Integer id){
     return em.find(ConfigurationItemKey.class, id);
+  }
+
+  public static Map<String, ConfigurationItemKey> getItemKeyMap(List<ConfigurationItemKey> itemKeys) {
+    Map<String, ConfigurationItemKey> itemKeyMap = new HashMap<>();
+    for (ConfigurationItemKey itemKey : itemKeys) {
+      itemKeyMap.put(itemKey.getId().toString(), itemKey);
+    }
+
+    return itemKeyMap;
   }
 }

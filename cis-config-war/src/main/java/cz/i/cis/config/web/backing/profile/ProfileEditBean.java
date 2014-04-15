@@ -1,7 +1,10 @@
 package cz.i.cis.config.web.backing.profile;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -25,6 +28,8 @@ import cz.i.cis.config.web.FacesUtils;
 @Named(value = "profileEdit")
 @ViewScoped
 public class ProfileEditBean {
+  private static final String NONE_SELECTOR = "none";
+  private static final String ALL_SELECTOR = "all";
 
   @EJB
   private ConfigurationProfileDao profileDao;
@@ -41,16 +46,19 @@ public class ProfileEditBean {
 
   private ConfigurationProfile profile;
   private List<ConfigurationProfileItem> profileItems;
-  private List<ConfigurationItemKey> itemKeys;
-  private List<ConfigurationItemCategory> categories;;
+  private Map<String, ConfigurationItemKey> filteredItemKeys;
+  private Map<String, ConfigurationItemCategory> allCategories;
   //TODO seznam položek, přidávání, odebírání, uložení
 
   //profile metadata
   private String name;
   private String description;
 
+  private String selectedCategory;
+  private String selectedItemKey;
 
-  public void init(){
+
+  public void init() throws Exception{
     profile = profileDao.getProfile(id);
 
     if(profile != null){
@@ -60,6 +68,11 @@ public class ProfileEditBean {
     else{
       FacesUtils.addMessage(FacesMessage.SEVERITY_ERROR, "Zvolený profil nebyl nalezen v databázi - ID = " + id);
     }
+
+    selectedCategory = NONE_SELECTOR;
+    selectedItemKey = NONE_SELECTOR;
+    allCategories = categoryDao.getCategoryMap();
+    refreshItemKeys();
   }
 
   public String actionUpdateProfileMetadata(){
@@ -93,6 +106,30 @@ public class ProfileEditBean {
     return null;  //stay on the same page to display the messages
   }
 
+  public String actionAddProfileItem(){
+    //TODO
+    return null;
+  }
+
+  private void refreshItemKeys() throws Exception{
+    if(NONE_SELECTOR.equals(selectedCategory)){
+      filteredItemKeys = Collections.emptyMap();
+    }
+    else if(ALL_SELECTOR.equals(selectedCategory)){
+      filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeyDao.listItemKeys());
+    }
+    else{
+      if(!allCategories.containsKey(selectedCategory)){
+        throw new Exception("Selected category is not valid.");
+      }
+
+      ConfigurationItemCategory filter = allCategories.get(selectedCategory);
+      List<ConfigurationItemKey> itemKeys = itemKeyDao.filterItemKeys(filter);
+
+      filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
+    }
+  }
+
 
   public Integer getId() {
     return id;
@@ -116,5 +153,52 @@ public class ProfileEditBean {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public boolean isKeySelectorDisabled(){
+    return NONE_SELECTOR.equals(selectedCategory);
+  }
+
+  public boolean isKeyValueDisabled(){
+    return NONE_SELECTOR.equals(selectedItemKey);
+  }
+
+  public String getAllSelector(){
+    return ALL_SELECTOR;
+  }
+
+  public String getNoneSelector(){
+    return NONE_SELECTOR;
+  }
+
+  public String getSelectedCategory() {
+    return selectedCategory;
+  }
+
+  public void setSelectedCategory(String selectedCategory) {
+    this.selectedCategory = selectedCategory;
+  }
+
+  public Collection<ConfigurationItemCategory> getAllCategories() {
+    return allCategories.values();
+  }
+
+  public Collection<ConfigurationItemKey> getFilteredItemKeys() throws Exception{
+    refreshItemKeys();
+
+    return filteredItemKeys.values();
+  }
+
+  public String getSelectedItemKey() {
+    return selectedItemKey;
+  }
+
+  public void setSelectedItemKey(String selectedItemKey) {
+    this.selectedItemKey = selectedItemKey;
+  }
+
+  public boolean refreshAddItemKeyForm(){
+    if(NONE_SELECTOR.equals(selectedCategory)) selectedItemKey = NONE_SELECTOR;
+    return true;
   }
 }

@@ -2,7 +2,6 @@ package cz.i.cis.config.web.backing.item_key;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ public class ItemKeyListBean {
 
   @PostConstruct
   public void init(){
-    allCategories = getCategoryMap(categoryDao.listCategories());
+    allCategories = categoryDao.getCategoryMap();
     selectedCategory = NONE_SELECTOR;
   }
 
@@ -101,15 +100,5 @@ public class ItemKeyListBean {
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
     return allCategories.values();
-  }
-
-
-  private Map<String, ConfigurationItemCategory> getCategoryMap(List<ConfigurationItemCategory> categoryList) {
-    Map<String, ConfigurationItemCategory> categoryMap = new HashMap<>();
-    for (ConfigurationItemCategory category : categoryList) {
-      categoryMap.put(category.getId().toString(), category);
-    }
-
-    return categoryMap;
   }
 }

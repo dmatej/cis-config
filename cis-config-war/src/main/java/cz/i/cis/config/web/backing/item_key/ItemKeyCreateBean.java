@@ -1,7 +1,6 @@
 package cz.i.cis.config.web.backing.item_key;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -38,10 +37,7 @@ public class ItemKeyCreateBean {
 
   @PostConstruct
   public void init(){
-    allCategories = new HashMap<>();
-    for (ConfigurationItemCategory category : categoryDao.listCategories()) {
-      allCategories.put(category.getId().toString(), category);
-    }
+    allCategories = categoryDao.getCategoryMap();
   }
 
 

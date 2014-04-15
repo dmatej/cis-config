@@ -1,6 +1,8 @@
 package cz.i.cis.config.web.backing.item_key;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -25,25 +27,28 @@ public class ItemKeyEditBean {
   private ConfigurationCategoryDao categoryDao;
 
 
-  private List<ConfigurationItemCategory> allCategories;
+  private Map<String, ConfigurationItemCategory> allCategories;
   private ConfigurationItemKey itemKey;
 
   private Integer id;
 
   private String key;
   private Type type;
-  private ConfigurationItemCategory category;
+  private String selectedCategory;
   private String description;
 
 
   public void init(){
-    allCategories = categoryDao.listCategories();
+    allCategories = new HashMap<>();
+    for (ConfigurationItemCategory category : categoryDao.listCategories()) {
+      allCategories.put(category.getId().toString(), category);
+    }
 
     itemKey = itemKeyDao.getItemKey(id);
     if(itemKey != null){
       key = itemKey.getKey();
       type = itemKey.getType();
-      category = itemKey.getCategory();
+      selectedCategory = itemKey.getCategory().getId().toString();
       description = itemKey.getDescription();
     }
     else{
@@ -52,11 +57,15 @@ public class ItemKeyEditBean {
   }
 
 
-  public String actionUpdateItemKey(){
+  public String actionUpdateItemKey() throws Exception{
     if(itemKey != null){
+      if(!allCategories.containsKey(selectedCategory)){
+        throw new Exception("Selected category is not valid.");
+      }
+
       itemKey.setKey(key);
       itemKey.setType(type);
-      itemKey.setCategory(category);
+      itemKey.setCategory(allCategories.get(selectedCategory));
       itemKey.setDescription(description);
 
       try{
@@ -104,12 +113,12 @@ public class ItemKeyEditBean {
     this.type = type;
   }
 
-  public ConfigurationItemCategory getCategory() {
-    return category;
+  public String getSelectedCategory() {
+    return selectedCategory;
   }
 
-  public void setCategory(ConfigurationItemCategory category) {
-    this.category = category;
+  public void setSelectedCategory(String category) {
+    this.selectedCategory = category;
   }
 
   public String getDescription() {
@@ -120,7 +129,7 @@ public class ItemKeyEditBean {
     this.description = description;
   }
 
-  public List<ConfigurationItemCategory> getAllCategories() {
-    return allCategories;
+  public Collection<ConfigurationItemCategory> getAllCategories() {
+    return allCategories.values();
   }
 }

@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+
 /**
  * Entity implementation class for Entity: ConfigurationProfileItem
  */
@@ -21,10 +22,11 @@ public class ConfigurationProfileItem implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
+
   @Id
   @Column(nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @ManyToOne
   @JoinColumn(name = "profile_id", nullable = false)
@@ -38,45 +40,33 @@ public class ConfigurationProfileItem implements Serializable {
   private String value;
 
 
-  public ConfigurationProfileItem() {
-    super();
-  }
-
-
-  public Long getId() {
+  public Integer getId() {
     return this.id;
   }
 
-
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
-
 
   public ConfigurationProfile getProfile() {
     return this.profile;
   }
 
-
   public void setProfile(ConfigurationProfile profile) {
     this.profile = profile;
   }
-
 
   public ConfigurationItemKey getKey() {
     return this.key;
   }
 
-
   public void setKey(ConfigurationItemKey key) {
     this.key = key;
   }
 
-
   public String getValue() {
     return this.value;
   }
-
 
   public void setValue(String value) {
     this.value = value;
@@ -95,7 +85,6 @@ public class ConfigurationProfileItem implements Serializable {
 
     return result;
   }
-
 
   @Override
   public boolean equals(Object obj) {
@@ -145,5 +134,16 @@ public class ConfigurationProfileItem implements Serializable {
     }
 
     return true;
+  }
+
+
+  @Override
+  public String toString() {
+    return new StringBuilder(getClass().getCanonicalName())
+      .append("[id=").append(getId())
+      .append(", profile_id=").append(getProfile().getId())
+      .append(", key_id=").append(getKey().getId())
+      .append(", item_value=").append(getValue())
+      .append("]").toString();
   }
 }

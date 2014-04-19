@@ -38,6 +38,7 @@ public class CisUserDao {
     return query.getResultList();
   }
 
+
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addUser(CisUser user) throws UserAlreadyExistsException {
     try {
@@ -48,16 +49,19 @@ public class CisUserDao {
     }
   }
 
+
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeUser(CisUser user) {
     updateUserStatus(user, CisUser.STATUS_DELETED);
   }
+
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeUser(Integer id) {
     CisUser user = getUser(id);
     removeUser(user);
   }
+
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public CisUser updateUser(CisUser user) {

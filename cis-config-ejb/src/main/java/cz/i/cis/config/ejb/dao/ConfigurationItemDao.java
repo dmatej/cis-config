@@ -14,20 +14,14 @@ import javax.persistence.TypedQuery;
 
 import cz.i.cis.config.jpa.ConfigurationItem;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
-import cz.i.cis.config.jpa.ConfigurationItemKey;
-
 
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class ConfigurationItemDao {
-  
+
   @PersistenceContext(name = "cis-jta")
   private EntityManager em;
-
-  
-  public ConfigurationItemDao() {
-  }
 
 
   public List<ConfigurationItem> listItems() {
@@ -47,7 +41,6 @@ public class ConfigurationItemDao {
     // throw new UniqueKeyException("ConfigurationItem with unique foreign key " +
     // item.getKey().getKey() + " already exists!", e);
     // }
-
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -70,4 +63,5 @@ public class ConfigurationItemDao {
     query.setParameter("category", category);
     return query.getResultList();
   }
+
 }

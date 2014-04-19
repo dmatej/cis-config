@@ -27,7 +27,8 @@
 
         <h:panelGroup>Datum narození</h:panelGroup>
         <h:panelGroup>
-          <h:inputText required="true" requiredMessage="Není vyplněno datum narození" value="#{userCreate.birthDate}" label="d-M-yyyy">
+          <h:inputText required="true" requiredMessage="Není vyplněno datum narození" value="#{userCreate.birthDate}"
+                       label="d.M.yyyy" converterMessage="Datum zadejte ve formátu d.M.yyyy">
             <f:convertDateTime pattern="d.M.yyyy" />
           </h:inputText>
         </h:panelGroup>

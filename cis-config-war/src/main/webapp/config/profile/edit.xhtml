@@ -37,8 +37,36 @@
       </h:panelGrid>
     </h:form>
 
-    <h:form>
-      //TODO formulář na přidání nové položky
+    <h:form onsubmit="#{profileEdit.refreshAddItemKeyForm()}">
+      <h:panelGrid columns="4" border="1">
+        <h:panelGroup>Kategorie</h:panelGroup>
+        <h:panelGroup>Klíč</h:panelGroup>
+        <h:panelGroup>Hodnota</h:panelGroup>
+        <h:panelGroup> </h:panelGroup>
+
+        <h:panelGroup>
+          <h:selectOneMenu value="#{profileEdit.selectedCategory}" onchange="submit();">
+            <f:selectItem itemLabel="" itemValue="#{profileEdit.noneSelector}" />
+            <f:selectItem itemLabel="všechny" itemValue="#{profileEdit.allSelector}" />
+            <f:selectItems value="#{profileEdit.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
+          </h:selectOneMenu>
+        </h:panelGroup>
+
+        <h:panelGroup>
+          <h:selectOneMenu value="#{profileEdit.selectedItemKey}" onchange="submit();" disabled="#{profileEdit.keySelectorDisabled}">
+            <f:selectItem itemLabel="" itemValue="#{profileEdit.noneSelector}" />
+            <f:selectItems value="#{profileEdit.filteredItemKeys}" var="itemKey" itemLabel="#{itemKey.key}" itemValue="#{itemKey.id}" />
+          </h:selectOneMenu>
+        </h:panelGroup>
+
+        <h:panelGroup>
+          <h:inputText disabled="#{profileEdit.keyValueDisabled}"></h:inputText>
+        </h:panelGroup>
+
+        <h:panelGroup>
+          <h:commandButton action="#{profileEdit.actionAddProfileItem}" value="Přidat položku" />
+        </h:panelGroup>
+      </h:panelGrid>
     </h:form>
 
     //TODO přidat tlačítko na uložení položek profilu

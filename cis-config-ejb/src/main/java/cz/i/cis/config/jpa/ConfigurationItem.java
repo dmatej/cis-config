@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+
 /**
  * Entity implementation class for Entity: ConfigurationItem
  */
@@ -24,10 +25,11 @@ public class ConfigurationItem implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
+
   @Id
   @Column(nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @OneToOne
   @JoinColumn(name = "key_id", nullable = false, unique = true)
@@ -45,55 +47,41 @@ public class ConfigurationItem implements Serializable {
   private CisUser user;
 
 
-  public ConfigurationItem() {
-    super();
-  }
-
-
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
-
 
   public ConfigurationItemKey getKey() {
     return key;
   }
 
-
   public void setKey(ConfigurationItemKey key) {
     this.key = key;
   }
-
 
   public String getValue() {
     return value;
   }
 
-
   public void setValue(String value) {
     this.value = value;
   }
-
 
   public Date getUpdate() {
     return update;
   }
 
-
   public void setUpdate(Date update) {
     this.update = update;
   }
 
-
   public CisUser getUser() {
     return user;
   }
-
 
   public void setUser(CisUser user) {
     this.user = user;
@@ -113,7 +101,6 @@ public class ConfigurationItem implements Serializable {
 
     return result;
   }
-
 
   @Override
   public boolean equals(Object obj) {
@@ -169,5 +156,17 @@ public class ConfigurationItem implements Serializable {
     }
 
     return true;
+  }
+
+
+  @Override
+  public String toString() {
+    return new StringBuilder(getClass().getCanonicalName())
+      .append("[id=").append(getId())
+      .append(", key_id=").append(getKey().getId())
+      .append(", item_value=").append(getValue())
+      .append(", update=").append(getUpdate().toString())
+      .append(", user_id=").append(getUser().getId())
+      .append("]").toString();
   }
 }

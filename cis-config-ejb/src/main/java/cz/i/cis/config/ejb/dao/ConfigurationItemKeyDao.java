@@ -21,7 +21,7 @@ import cz.i.cis.config.jpa.ConfigurationItemKey;
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class ConfigurationItemKeyDao {
-  
+
   @PersistenceContext(name = "cis-jta")
   private EntityManager em;
 
@@ -46,7 +46,7 @@ public class ConfigurationItemKeyDao {
   public ConfigurationItemKey updateItemKey(ConfigurationItemKey key) {
     return this.em.merge(key);
   }
-  
+
   public List<ConfigurationItemKey> filterItemKeys(ConfigurationItemCategory category){
     final TypedQuery<ConfigurationItemKey> query = this.em.createQuery(
         "SELECT itemKey FROM ConfigurationItemKey itemKey WHERE itemKey.category = :category", ConfigurationItemKey.class);

@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+
 /**
  * Entity implementation class for Entity: ConfigurationItemKey
  */
@@ -22,10 +23,11 @@ public class ConfigurationItemKey implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
+
   @Id
   @Column(nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @ManyToOne
   @JoinColumn(name = "category_id", nullable = false)
@@ -42,55 +44,41 @@ public class ConfigurationItemKey implements Serializable {
   private String description = "";
 
 
-  public ConfigurationItemKey() {
-    super();
-  }
-
-
-  public Long getId() {
+  public Integer getId() {
     return this.id;
   }
 
-
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
-
 
   public ConfigurationItemCategory getCategory() {
     return this.category;
   }
 
-
   public void setCategory(ConfigurationItemCategory idCategory) {
     this.category = idCategory;
   }
-
 
   public Type getType() {
     return this.type;
   }
 
-
   public void setType(Type type) {
     this.type = type;
   }
-
 
   public String getKey() {
     return this.key;
   }
 
-
   public void setKey(String key) {
     this.key = key;
   }
 
-
   public String getDescription() {
     return this.description;
   }
-
 
   public void setDescription(String description) {
     this.description = description;
@@ -110,7 +98,6 @@ public class ConfigurationItemKey implements Serializable {
 
     return result;
   }
-
 
   @Override
   public boolean equals(Object obj) {
@@ -164,5 +151,17 @@ public class ConfigurationItemKey implements Serializable {
     }
 
     return true;
+  }
+
+
+  @Override
+  public String toString() {
+    return new StringBuilder(getClass().getCanonicalName())
+      .append("[id=").append(getId())
+      .append(", category_id=").append(getCategory().getId())
+      .append(", type=").append(getType())
+      .append(", key=").append(getKey())
+      .append(", description=").append(getDescription())
+      .append("]").toString();
   }
 }

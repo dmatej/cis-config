@@ -12,10 +12,14 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.time.DateUtils;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +28,7 @@ import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.test.ArquillianITest;
+import cz.i.cis.config.test.UserTestHelper;
 
 /**
  * @author David Matějček
@@ -35,16 +40,28 @@ public class UserDaoITest extends ArquillianITest {
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/CisUserDao")
   private CisUserDao dao;
+  @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/UserTestHelper")
+  private UserTestHelper helper;
 
+  @Before
+  public void init() {
+  }
+
+  @After
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void cleanup() {
+    helper.cleanup();
+  }
 
   @Test(expected=UserAlreadyExistsException.class)
   public void createAlreadyExistingUser() throws UserAlreadyExistsException {
-    final CisUser user0 = new CisUser();
-    user0.setLastName("XTMatějka");
-    user0.setLogin("xt999");
-    user0.setFirstName("XTAfanasi");
-    user0.setBirthDate(new Date());
-    dao.addUser(user0);
+    final CisUser user0 = helper.createUser();
+    final CisUser user = new CisUser();
+    user.setLastName("XTMatějka");
+    user.setLogin(user0.getLogin());
+    user.setFirstName("XTAfanasi");
+    user.setBirthDate(new Date());
+    dao.addUser(user);
   }
 
 
@@ -56,6 +73,7 @@ public class UserDaoITest extends ArquillianITest {
     user.setFirstName("ZTAfanasi");
     user.setBirthDate(new Date());
     dao.addUser(user);
+    helper.addToDelete(user);
     LOG.debug("user: {}", user);
     assertNotNull("user.id", user.getId());
   }

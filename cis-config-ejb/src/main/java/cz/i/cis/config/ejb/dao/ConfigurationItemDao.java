@@ -44,10 +44,21 @@ public class ConfigurationItemDao {
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public ConfigurationItem getItem(Integer id) {
+    return em.find(ConfigurationItem.class, id);
+  }
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeItem(ConfigurationItem item) {
     ConfigurationItem i = this.em.merge(item);
     this.em.remove(i);
     // this.em.remove(item);
+  }
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void removeItem(Integer id) {
+    ConfigurationItem item = getItem(id);
+    this.em.remove(item);
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)

@@ -31,18 +31,23 @@
 
     </h:panelGrid>
     </h:form>
+
     <h:form>
       <h:dataTable value="#{activeConfigList.filteredActiveItems}"
         var="activeConfiguration">
         <h:column>
           <f:facet name="header">ID</f:facet>
-          <h:outputText value="#{activeConfiguration.id}" />
+          <a id="activeConfig-#{activeConfiguration.id}"><h:outputText value="#{activeConfiguration.id}" /></a>
         </h:column>
         <h:column>
           <f:facet name="header">Hodnota</f:facet>
           <h:outputText value="#{activeConfiguration.value}" />
         </h:column>
-
+        <h:column>
+          <h:commandLink action="#{activeConfigList.actionDeleteActiveConfig}" value="smazat">
+            <f:setPropertyActionListener target="#{activeConfigList.activeConfigID}" value="#{activeConfiguration.id}" />
+          </h:commandLink>
+        </h:column>
       </h:dataTable>
     </h:form>
 

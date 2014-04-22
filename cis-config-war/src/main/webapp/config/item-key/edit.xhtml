@@ -30,8 +30,8 @@
 
         <h:panelGroup>Kategorie</h:panelGroup>
         <h:panelGroup>
-          <h:selectOneMenu value="#{itemKeyEdit.category}">
-            <f:selectItems value="#{itemKeyEdit.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category}" />
+          <h:selectOneMenu value="#{itemKeyEdit.selectedCategory}">
+            <f:selectItems value="#{itemKeyEdit.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
           </h:selectOneMenu>
         </h:panelGroup>
 

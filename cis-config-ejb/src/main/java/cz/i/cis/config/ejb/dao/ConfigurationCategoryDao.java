@@ -1,6 +1,8 @@
 package cz.i.cis.config.ejb.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -33,6 +35,15 @@ public class ConfigurationCategoryDao {
         ConfigurationItemCategory.class);
 
     return query.getResultList();
+  }
+
+  public Map<String, ConfigurationItemCategory> getCategoryMap() {
+    Map<String, ConfigurationItemCategory> categoryMap = new HashMap<>();
+    for (ConfigurationItemCategory category : listCategories()) {
+      categoryMap.put(category.getId().toString(), category);
+    }
+
+    return categoryMap;
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)

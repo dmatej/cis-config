@@ -1,7 +1,9 @@
 package cz.i.cis.config.web.backing.item_key;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -19,8 +21,8 @@ import cz.i.cis.config.web.FacesUtils;
 @Named(value = "itemKeyList")
 @ViewScoped
 public class ItemKeyListBean {
-  private static final ConfigurationItemCategory NONE_SELECTOR = null;
-  private static final ConfigurationItemCategory ALL_SELECTOR = new ConfigurationItemCategory();
+  private static final String NONE_SELECTOR = "none";
+  private static final String ALL_SELECTOR = "all";
 
 
   @EJB
@@ -31,14 +33,16 @@ public class ItemKeyListBean {
 
   private Integer itemKeyID;
 
-  private ConfigurationItemCategory selectedCategory;
-  private List<ConfigurationItemCategory> allCategories;
+  private String selectedCategory;
+  private Map<String, ConfigurationItemCategory> allCategories;
 
 
   @PostConstruct
   public void init(){
-    allCategories = categoryDao.listCategories();
+    allCategories = categoryDao.getCategoryMap();
+    selectedCategory = NONE_SELECTOR;
   }
+
 
 
   public String actionDeleteItemKey(){
@@ -54,21 +58,27 @@ public class ItemKeyListBean {
 
 
 
-  public List<ConfigurationItemKey> getFilteredItemKeys(){
-    if(selectedCategory == NONE_SELECTOR){
+  public List<ConfigurationItemKey> getFilteredItemKeys() throws Exception{
+    if(NONE_SELECTOR.equals(selectedCategory)){
       return Collections.emptyList();
     }
-    if(selectedCategory == ALL_SELECTOR){
+    if(ALL_SELECTOR.equals(selectedCategory)){
       return itemKeyDao.listItemKeys();
     }
-    return itemKeyDao.filterItemKeys(selectedCategory);
+
+    if(!allCategories.containsKey(selectedCategory)){
+      throw new Exception("Selected category is not valid.");
+    }
+
+    ConfigurationItemCategory filter = allCategories.get(selectedCategory);
+    return itemKeyDao.filterItemKeys(filter);
   }
 
-  public ConfigurationItemCategory getAllSelector(){
+  public String getAllSelector(){
     return ALL_SELECTOR;
   }
 
-  public ConfigurationItemCategory getNoneSelector(){
+  public String getNoneSelector(){
     return NONE_SELECTOR;
   }
 
@@ -80,15 +90,15 @@ public class ItemKeyListBean {
     this.itemKeyID = itemKeyID;
   }
 
-  public ConfigurationItemCategory getSelectedCategory() {
+  public String getSelectedCategory() {
     return selectedCategory;
   }
 
-  public void setSelectedCategory(ConfigurationItemCategory selectedCategory) {
+  public void setSelectedCategory(String selectedCategory) {
     this.selectedCategory = selectedCategory;
   }
 
-  public List<ConfigurationItemCategory> getAllCategories() {
-    return allCategories;
+  public Collection<ConfigurationItemCategory> getAllCategories() {
+    return allCategories.values();
   }
 }

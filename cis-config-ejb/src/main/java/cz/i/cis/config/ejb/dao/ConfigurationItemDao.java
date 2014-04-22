@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import cz.i.cis.config.jpa.ConfigurationItem;
+import cz.i.cis.config.jpa.ConfigurationItemCategory;
 
 @Local
 @Stateless
@@ -23,17 +24,13 @@ public class ConfigurationItemDao {
   private EntityManager em;
 
 
-  public ConfigurationItemDao() {
-  }
-
-
   public List<ConfigurationItem> listItems() {
-    final TypedQuery<ConfigurationItem> query = this.em.createQuery("select item from ConfigurationItem item",
+    final TypedQuery<ConfigurationItem> query = this.em.createQuery(
+        "select item from ConfigurationItem item",
         ConfigurationItem.class);
 
     return query.getResultList();
   }
-
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addItem(ConfigurationItem item) // throws UniqueKeyException
@@ -44,9 +41,12 @@ public class ConfigurationItemDao {
     // throw new UniqueKeyException("ConfigurationItem with unique foreign key " +
     // item.getKey().getKey() + " already exists!", e);
     // }
-
   }
 
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public ConfigurationItem getItem(Integer id) {
+    return em.find(ConfigurationItem.class, id);
+  }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeItem(ConfigurationItem item) {
@@ -55,9 +55,24 @@ public class ConfigurationItemDao {
     // this.em.remove(item);
   }
 
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void removeItem(Integer id) {
+    ConfigurationItem item = getItem(id);
+    this.em.remove(item);
+  }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public ConfigurationItem updateItem(ConfigurationItem item) {
     return this.em.merge(item);
   }
+
+  public List<ConfigurationItem> listConfigurationItems(ConfigurationItemCategory category) {
+    final TypedQuery<ConfigurationItem> query = this.em.createQuery(
+        "SELECT item FROM ConfigurationItem item "
+        + "WHERE item.key.category = :category",
+        ConfigurationItem.class);
+    query.setParameter("category", category);
+    return query.getResultList();
+  }
+
 }

@@ -24,14 +24,14 @@
 
         <h:panelGroup>Kategorie</h:panelGroup>
         <h:panelGroup>
-          <h:selectOneMenu value="#{itemKeyCreate.category}">
-            <f:selectItems value="#{itemKeyCreate.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category}" />
+          <h:selectOneMenu value="#{itemKeyCreate.selectedCategory}">
+            <f:selectItems value="#{itemKeyCreate.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
           </h:selectOneMenu>
         </h:panelGroup>
 
         <h:panelGroup>Popis</h:panelGroup>
         <h:panelGroup>
-          <h:inputTextarea required="true" requiredMessage="Není vyplněn popis" value="#{itemKeyCreate.description}"
+          <h:inputTextarea required="false" requiredMessage="Není vyplněn popis" value="#{itemKeyCreate.description}"
                            rows="4" cols="40" />
         </h:panelGroup>
 

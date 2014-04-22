@@ -10,8 +10,10 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
+import cz.i.cis.config.ejb.dao.exceptions.UniqueKeyException;
 import cz.i.cis.config.jpa.ConfigurationItem;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 
@@ -33,14 +35,14 @@ public class ConfigurationItemDao {
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void addItem(ConfigurationItem item) // throws UniqueKeyException
-  {
-    // try{
-    this.em.persist(item);
-    // }catch (PersistenceException e) {
-    // throw new UniqueKeyException("ConfigurationItem with unique foreign key " +
-    // item.getKey().getKey() + " already exists!", e);
-    // }
+  public void addItem(ConfigurationItem item) throws UniqueKeyException {
+    try {
+      this.em.persist(item);
+      em.flush();
+    } catch (PersistenceException e) {
+      throw new UniqueKeyException("ConfigurationItem with unique foreign key " + item.getKey().getKey()
+          + " already exists!", e);
+    }
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)

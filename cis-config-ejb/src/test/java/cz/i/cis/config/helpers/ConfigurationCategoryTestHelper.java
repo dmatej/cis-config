@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,7 @@ public class ConfigurationCategoryTestHelper {
 
   public ConfigurationItemCategory createConfigurationCategory() {
     final ConfigurationItemCategory configuration_category = new ConfigurationItemCategory();
-    configuration_category.setName("Connection settings for basic registers");
+    configuration_category.setName((RandomStringUtils.random(10, true, true)));
     em.persist(configuration_category);
     em.flush();
     configuration_categories.add(configuration_category);

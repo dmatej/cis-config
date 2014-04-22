@@ -38,7 +38,7 @@ public class ConfigurationCategoryDaoITest extends ArquillianITest {
   }
 
   @Test
-  public void creatNewteConfigurationCategory() {
+  public void creatNewConfigurationCategory() {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setName("Connection settings for registers");
     dao.addCategory(category);
@@ -48,8 +48,7 @@ public class ConfigurationCategoryDaoITest extends ArquillianITest {
     }
 /*
   @Test
-  public void creatAlreadyExistingteConfigurationCategory() {
-    LOG.debug("DEBUG ConfigurationCategoryDao");
+  public void creatAlreadyExistingConfigurationCategory() {
     final ConfigurationItemCategory configuration_category = helper.createConfigurationCategory();
     final ConfigurationItemCategory copy_configuration_category = new ConfigurationItemCategory();
     copy_configuration_category.setName(configuration_category.getName());

@@ -8,7 +8,7 @@
   <h:head>
     <meta charset="utf-8" />
 
-    <title>CIS config - <ui:insert name="title" /></title>
+    <title>CIS config<ui:fragment rendered="#{!empty pageName}"> &gt; <h:outputText value="#{pageName}" /></ui:fragment><ui:fragment rendered="#{!empty pageTitle}"> &gt; <h:outputText value="#{pageTitle}" /></ui:fragment></title>
 
     <h:outputScript library="js" name="message.js"></h:outputScript>
 
@@ -30,7 +30,23 @@
       </div>
 
       <div id="page-body">
-        <ui:insert name="content" />
+        <ui:fragment rendered="#{!empty pageName}">
+        <div id="page-body-header">
+          <h1><h:outputText value="#{pageName}" /></h1>
+        </div>
+        </ui:fragment>
+
+        <div id="page-body-content">
+          <ui:fragment rendered="#{!empty pageTitle}">
+          <div id="page-body-content-header">
+              <h2><h:outputText value="#{pageTitle}" /></h2>
+          </div>
+          </ui:fragment>
+
+          <div id="page-body-content-container">
+            <ui:insert name="content" />
+          </div>
+        </div>
       </div>
     </div>
   </h:body>

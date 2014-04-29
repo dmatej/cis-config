@@ -5,7 +5,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:jsf="http://xmlns.jcp.org/jsf">
 
-  <ui:define name="title">Úprava uživatele</ui:define>
+  <ui:param name="pageName" value="Uživatelé" />
+  <ui:param name="pageTitle" value="Editace uživatele" />
 
   <f:metadata>
     <f:viewParam name="id" value="#{userEdit.id}" required="true" requiredMessage="Pro editaci uživatele je nutné zadat parametr id." />
@@ -13,7 +14,6 @@
   </f:metadata>
 
   <ui:define name="content">
-    <h1>Úprava uživatele</h1>
     <h:form>
       <h:panelGrid columns="2" border="1">
         <h:panelGroup>Jméno</h:panelGroup>

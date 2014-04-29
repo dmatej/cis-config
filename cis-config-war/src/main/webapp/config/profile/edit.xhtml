@@ -5,6 +5,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
   <ui:define name="title">Chyba přihlášení</ui:define>
+  <ui:param name="pageName" value="Konfigurační profily" />
+  <ui:param name="pageTitle" value="Editace konfiguračního profilu" />
 
   <f:metadata>
     <f:viewParam name="id" value="#{profileEdit.id}" required="true" requiredMessage="Pro editaci profilu je nutné zadat parametr id." />
@@ -12,7 +14,6 @@
   </f:metadata>
 
   <ui:define name="content">
-    <h1>Úprava konfiguračního profilu</h1>
     <h:form>
       <h:panelGrid columns="2" border="1">
         <h:panelGroup>Název</h:panelGroup>

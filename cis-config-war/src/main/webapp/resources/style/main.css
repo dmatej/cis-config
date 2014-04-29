@@ -35,6 +35,10 @@ h2 {
   text-decoration: line-through;
 }
 
+a.deleted {
+  text-decoration: none;
+}
+
 a {
   text-decoration: none;
 }
@@ -137,7 +141,8 @@ label {
   margin-right: 10px;
 }
 
-input,select,textarea {
+input, select, textarea {
+  min-width: 400px;
   background: #ddd9b7;
   border: 1px #035273 solid;
 }
@@ -146,29 +151,40 @@ textarea {
   vertical-align: top;
 }
 
-input.important,select.important,textarea.important {
+input.important, select.important, textarea.important {
   background: #ffcccc;
   border: 1px #990000 solid;
 }
 
-input[type=submit],input[type=button],button {
+input[type=submit], input[type=button], button {
+  min-width: 0px;
   background: #035273;
   color: #ffffff;
   border: 1px #1f779c solid;
 }
 
-#form-table {
-  width: 100%;
+#form\:table {
   margin: 0px;
   padding: 0px;
   border: 0px;
 }
 
-.form-table-label {
+.form\:table\:error {
+  margin-left: 10px;
+  font-weight: bold;
+  color: #990000;
+}
+
+.form\:table\:label {
   width: 150px;
   vertical-align: top;
 }
 
-.form-table-button-line {
-  text-align: right;
+.form\:table\:buttonline {
+  display: inline-block;
+  float: right;
+}
+
+.form\:table\:buttonline * {
+  margin-left: 10px;
 }

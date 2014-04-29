@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="cs"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
   <h:head>
     <meta charset="utf-8" />
@@ -17,17 +18,19 @@
 
   <h:body>
     <div id="page">
+      <c:if test="#{not empty request.remoteUser}">
       <div id="page-top-menu">
-        <h:link outcome="/config/user/list" value="Uživatelé" />
-        <h:link outcome="/config/active/list" value="Aktivní konfigurace" />
-        <h:link outcome="/config/profile/list" value="Profily konfigurací" />
-        <h:link outcome="/config/category/list" value="Kategorie položek" />
-        <h:link outcome="/config/item-key/list" value="Konfigurační položky" />
+         <h:link outcome="/config/user/list" value="Uživatelé" />
+         <h:link outcome="/config/active/list" value="Aktivní konfigurace" />
+         <h:link outcome="/config/profile/list" value="Profily konfigurací" />
+         <h:link outcome="/config/category/list" value="Kategorie položek" />
+         <h:link outcome="/config/item-key/list" value="Konfigurační položky" />
 
-        <!-- TODO h:link outcome="/cis/login/logout" value="Odhlásit 2" rendered="#{not empty request.remoteUser}" /-->
+         <!-- TODO h:link outcome="/cis/login/logout" value="Odhlásit 2" rendered="#{not empty request.remoteUser}" /-->
 
-        <a href="/cis/login/logout">Odhlásit</a>
+         <a href="/cis/login/logout">Odhlásit</a>
       </div>
+      </c:if>
 
       <div id="page-body">
         <ui:fragment rendered="#{!empty pageName}">

@@ -22,7 +22,9 @@
         </h:panelGroup>
       </h:panelGrid>
 
-      <h:dataTable value="#{itemKeyList.filteredItemKeys}" var="itemKey">
+      <ui:param name="items" value="#{itemKeyList.filteredItemKeys}" />
+
+      <h:dataTable value="#{items}" var="itemKey" rendered="#{not empty items}">
         <h:column>
           <f:facet name="header">ID</f:facet>
           <a id="itemKey-#{itemKey.id}"><h:outputText value="#{itemKey.id}"/></a>
@@ -56,9 +58,5 @@
         </h:column>
       </h:dataTable>
     </h:form>
-
-    <ul>
-      <li><a href="/cis/config">Zpět</a></li>
-    </ul>
   </ui:define>
 </ui:composition>

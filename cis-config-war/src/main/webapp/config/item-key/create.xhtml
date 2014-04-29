@@ -8,45 +8,41 @@
   <ui:param name="pageTitle" value="Vytvoření nového klíče konfiguračních položek" />
 
   <ui:define name="content">
-    <h:form>
-      <h:panelGrid columns="2" border="1">
-        <h:panelGroup>Klíč</h:panelGroup>
+    <h:form id="form">
+      <h:panelGrid columns="2" id="table">
+        <h:panelGroup class="form:table:label"><label for="form:key">Klíč</label></h:panelGroup>
         <h:panelGroup>
-          <h:inputText required="true" requiredMessage="Není vyplněn klíč" value="#{itemKeyCreate.key}" />
+          <h:inputText id="key" class="important" required="true" requiredMessage="Není vyplněn klíč" value="#{itemKeyCreate.key}" />
+          <h:message for="key" styleClass="form:table:error" />
         </h:panelGroup>
 
-        <h:panelGroup>Typ</h:panelGroup>
+        <h:panelGroup class="form:table:label"><label for="form:type">Typ</label></h:panelGroup>
         <h:panelGroup>
-          <h:selectOneMenu value="#{itemKeyCreate.type}">
+          <h:selectOneMenu id="type" value="#{itemKeyCreate.type}">
             <f:selectItems value="#{itemKeyCreate.allTypes}" />
           </h:selectOneMenu>
         </h:panelGroup>
 
-        <h:panelGroup>Kategorie</h:panelGroup>
+        <h:panelGroup class="form:table:label"><label for="form:category">Kategorie</label></h:panelGroup>
         <h:panelGroup>
-          <h:selectOneMenu value="#{itemKeyCreate.selectedCategory}">
+          <h:selectOneMenu id="category" value="#{itemKeyCreate.selectedCategory}">
             <f:selectItems value="#{itemKeyCreate.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
           </h:selectOneMenu>
         </h:panelGroup>
 
-        <h:panelGroup>Popis</h:panelGroup>
+        <h:panelGroup class="form:table:label"><label for="form:description">Popis</label></h:panelGroup>
         <h:panelGroup>
-          <h:inputTextarea required="false" requiredMessage="Není vyplněn popis" value="#{itemKeyCreate.description}"
-                           rows="4" cols="40" />
+          <h:inputTextarea id="description" required="false" value="#{itemKeyCreate.description}" rows="4" cols="40" />
         </h:panelGroup>
 
-
         <h:panelGroup>
-          <!-- prazdná buňka -->
         </h:panelGroup>
-        <h:panelGroup>
+
+        <h:panelGroup class="form:table:buttonline">
           <h:commandButton action="#{itemKeyCreate.actionAddItemKey}" type="submit" value="Uložit" />
+          <h:button outcome="/config/item-key/list" value="Storno" />
         </h:panelGroup>
       </h:panelGrid>
     </h:form>
-
-    <ul>
-      <li><h:link outcome="list" value="Zpět na seznam" /></li>
-    </ul>
   </ui:define>
 </ui:composition>

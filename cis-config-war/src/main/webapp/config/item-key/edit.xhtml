@@ -14,41 +14,9 @@
   </f:metadata>
 
   <ui:define name="content">
-    <h:form>
-      <h:panelGrid columns="2" border="1">
-        <h:panelGroup>Klíč</h:panelGroup>
-        <h:panelGroup>
-          <h:inputText required="true" requiredMessage="Není vyplněn klíč" value="#{itemKeyEdit.key}" />
-        </h:panelGroup>
+  <ui:param name="itemKey" value="#{itemKeyEdit}" />
+  <ui:param name="itemKeyAction" value="actionUpdateItemKey" />
 
-        <h:panelGroup>Typ</h:panelGroup>
-        <h:panelGroup>
-          <h:selectOneMenu value="#{itemKeyEdit.type}">
-            <f:selectItems value="#{itemKeyEdit.allTypes}" />
-          </h:selectOneMenu>
-        </h:panelGroup>
-
-        <h:panelGroup>Kategorie</h:panelGroup>
-        <h:panelGroup>
-          <h:selectOneMenu value="#{itemKeyEdit.selectedCategory}">
-            <f:selectItems value="#{itemKeyEdit.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
-          </h:selectOneMenu>
-        </h:panelGroup>
-
-        <h:panelGroup>Popis</h:panelGroup>
-        <h:panelGroup>
-          <h:inputTextarea required="true" requiredMessage="Není vyplněn popis" value="#{itemKeyEdit.description}"
-                           rows="4" cols="40" />
-        </h:panelGroup>
-
-
-        <h:panelGroup>
-          <!-- prazdná buňka -->
-        </h:panelGroup>
-        <h:panelGroup>
-          <h:commandButton action="#{itemKeyEdit.actionUpdateItemKey}" type="submit" value="Uložit" />
-        </h:panelGroup>
-      </h:panelGrid>
-    </h:form>
-  </ui:define>
+  <ui:include src="form.xhtml" />
+ </ui:define>
 </ui:composition>

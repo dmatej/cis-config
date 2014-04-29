@@ -7,42 +7,10 @@
   <ui:param name="pageName" value="Klíče konfiguračních položek" />
   <ui:param name="pageTitle" value="Vytvoření nového klíče konfiguračních položek" />
 
-  <ui:define name="content">
-    <h:form id="form">
-      <h:panelGrid columns="2" id="table">
-        <h:panelGroup class="form:table:label"><label for="form:key">Klíč</label></h:panelGroup>
-        <h:panelGroup>
-          <h:inputText id="key" class="important" required="true" requiredMessage="Není vyplněn klíč" value="#{itemKeyCreate.key}" />
-          <h:message for="key" styleClass="form:table:error" />
-        </h:panelGroup>
-
-        <h:panelGroup class="form:table:label"><label for="form:type">Typ</label></h:panelGroup>
-        <h:panelGroup>
-          <h:selectOneMenu id="type" value="#{itemKeyCreate.type}">
-            <f:selectItems value="#{itemKeyCreate.allTypes}" />
-          </h:selectOneMenu>
-        </h:panelGroup>
-
-        <h:panelGroup class="form:table:label"><label for="form:category">Kategorie</label></h:panelGroup>
-        <h:panelGroup>
-          <h:selectOneMenu id="category" value="#{itemKeyCreate.selectedCategory}">
-            <f:selectItems value="#{itemKeyCreate.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
-          </h:selectOneMenu>
-        </h:panelGroup>
-
-        <h:panelGroup class="form:table:label"><label for="form:description">Popis</label></h:panelGroup>
-        <h:panelGroup>
-          <h:inputTextarea id="description" required="false" value="#{itemKeyCreate.description}" rows="4" cols="40" />
-        </h:panelGroup>
-
-        <h:panelGroup>
-        </h:panelGroup>
-
-        <h:panelGroup class="form:table:buttonline">
-          <h:commandButton action="#{itemKeyCreate.actionAddItemKey}" type="submit" value="Uložit" />
-          <h:button outcome="/config/item-key/list" value="Storno" />
-        </h:panelGroup>
-      </h:panelGrid>
-    </h:form>
-  </ui:define>
+ <ui:define name="content">
+  <ui:include src="form.xhtml">
+   <ui:param name="itemKey" value="#{itemKeyCreate}" />
+   <ui:param name="itemKeyAction" value="actionAddItemKey" />
+  </ui:include>
+ </ui:define>
 </ui:composition>

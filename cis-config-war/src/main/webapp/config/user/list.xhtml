@@ -1,37 +1,36 @@
 <ui:composition template="/template/main.xhtml"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-  <ui:define name="title">Seznam uživatelů</ui:define>
+  <ui:param name="pageName" value="Uživatelé" />
+  <ui:param name="pageTitle" value="Seznam uživatelů" />
 
   <ui:define name="content">
-    <h1>Seznam uživatelů</h1>
-
     <p><h:link outcome="create" value="Vytvořit nového uživatele" /></p>
 
     <h:form>
       <h:dataTable value="#{userList.allUsers}" var="cisUser" rowClasses="#{userList.rowClasses}">
         <h:column>
           <f:facet name="header">ID</f:facet>
-          <a id="user-#{cisUser.id}"><h:outputText value="#{cisUser.id}"/></a>
+          <a id="user-#{cisUser.id}"><h:outputText value="#{cisUser.id}" /></a>
         </h:column>
         <h:column>
           <f:facet name="header">Login</f:facet>
-          <h:outputText value="#{cisUser.login}"/>
+          <h:outputText value="#{cisUser.login}" />
         </h:column>
         <h:column>
           <f:facet name="header">Jméno</f:facet>
-          <h:outputText value="#{cisUser.firstName}"/>
+          <h:outputText value="#{cisUser.firstName}" />
         </h:column>
         <h:column>
           <f:facet name="header">Příjmení</f:facet>
-          <h:outputText value="#{cisUser.lastName}"/>
+          <h:outputText value="#{cisUser.lastName}" />
         </h:column>
         <h:column>
           <f:facet name="header">Datum narození</f:facet>
-          <h:outputText value="#{cisUser.birthDate}"/>
+          <h:outputText value="#{cisUser.birthDate}" />
         </h:column>
 
         <h:column>
@@ -40,9 +39,18 @@
           </h:commandLink>
         </h:column>
         <h:column>
-          <h:link outcome="edit" value="upravit" rendered="#{cisUser.valid}">
-            <f:param name="id" value="#{cisUser.id}" />
-          </h:link>
+          <c:choose>
+            <c:when test="#{userValidator.loginExist() != true}">
+              <h:link outcome="list" value="upravit"
+                onclick="alert('warning');" />
+            </c:when>
+            <c:otherwise>
+              <h:link outcome="edit" value="upravit"
+                rendered="#{cisUser.valid}">
+                <f:param name="id" value="#{cisUser.id}" />
+              </h:link>
+            </c:otherwise>
+          </c:choose>
         </h:column>
         <h:column>
           <h:commandLink action="#{userList.actionRestoreUser}" value="obnovit" rendered="#{cisUser.deleted}">

@@ -37,7 +37,7 @@ public class ActiveConfigListBean {
 
   public void init() throws Exception{
     allCategories = categoryDao.getCategoryMap();
-    if (!allCategories.containsKey(selectedCategory) || selectedCategory != ALL_SELECTOR) {
+    if (!allCategories.containsKey(selectedCategory) && !ALL_SELECTOR.equals(selectedCategory)) {
       selectedCategory = NONE_SELECTOR;
     }
 

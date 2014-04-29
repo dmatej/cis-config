@@ -83,6 +83,7 @@ public class CisUserDao {
   public void restoreUser(CisUser user) {
     if(user.getStatus() == CisUser.STATUS_DELETED){
       updateUserStatus(user, CisUser.STATUS_VALID);
+      return;
     }
     throw new IllegalStateException("User is not deleted: " + user);
   }

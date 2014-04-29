@@ -24,7 +24,7 @@
 
       <ui:param name="items" value="#{itemKeyList.filteredItemKeys}" />
 
-      <h:dataTable value="#{items}" var="itemKey" rendered="#{not empty items}">
+      <h:dataTable value="#{items}" var="itemKey" rendered="#{not empty items}" id="">
         <h:column>
           <f:facet name="header">ID</f:facet>
           <a id="itemKey-#{itemKey.id}"><h:outputText value="#{itemKey.id}"/></a>

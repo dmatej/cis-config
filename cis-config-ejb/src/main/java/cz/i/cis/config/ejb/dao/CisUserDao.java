@@ -12,6 +12,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
@@ -71,15 +72,19 @@ public class CisUserDao {
   public CisUser getUser(String login) {
     final TypedQuery<CisUser> query = this.em.createQuery("select user from CisUser user where user.login = :login", CisUser.class);
     query.setParameter("login", login);
-    return query.getSingleResult();
+    try {
+      return query.getSingleResult();
+    } catch (NoResultException e) {
+      return null;
+    }
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void restoreUser(CisUser user) {
-    if(user.getStatus() != CisUser.STATUS_DELETED){
-      throw new IllegalStateException("User is not deleted: " + user);
+    if(user.getStatus() == CisUser.STATUS_DELETED){
+      updateUserStatus(user, CisUser.STATUS_VALID);
     }
-    updateUserStatus(user, CisUser.STATUS_VALID);
+    throw new IllegalStateException("User is not deleted: " + user);
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)

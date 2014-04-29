@@ -29,7 +29,7 @@
 
 
         <h:panelGroup>
-          <h:commandButton type="reset" value="Reset" />
+          <!-- prázdná buňka -->
         </h:panelGroup>
         <h:panelGroup>
           <h:commandButton action="#{profileEdit.actionUpdateProfileMetadata}" type="submit" value="Uložit metadata" />
@@ -46,7 +46,7 @@
 
         <h:panelGroup>
           <h:selectOneMenu value="#{profileEdit.selectedCategory}" onchange="submit();">
-            <f:selectItem itemLabel="" itemValue="#{profileEdit.noneSelector}" />
+            <f:selectItem itemLabel="vyberte kategorii" itemValue="#{profileEdit.noneSelector}" />
             <f:selectItem itemLabel="všechny" itemValue="#{profileEdit.allSelector}" />
             <f:selectItems value="#{profileEdit.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
           </h:selectOneMenu>
@@ -54,7 +54,7 @@
 
         <h:panelGroup>
           <h:selectOneMenu value="#{profileEdit.selectedItemKey}" onchange="submit();" disabled="#{profileEdit.keySelectorDisabled}">
-            <f:selectItem itemLabel="" itemValue="#{profileEdit.noneSelector}" />
+            <f:selectItem itemLabel="vyberte klíč" itemValue="#{profileEdit.noneSelector}" />
             <f:selectItems value="#{profileEdit.filteredItemKeys}" var="itemKey" itemLabel="#{itemKey.key}" itemValue="#{itemKey.id}" />
           </h:selectOneMenu>
         </h:panelGroup>

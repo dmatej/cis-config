@@ -7,6 +7,7 @@
   <ui:define name="title">Aktivní konfigurace</ui:define>
 
   <f:metadata>
+    <f:viewParam name="selectedCategory" value="#{activeConfigList.selectedCategory}" />
     <f:viewAction action="#{activeConfigList.init}" />
   </f:metadata>
 
@@ -19,7 +20,7 @@
       <h:panelGroup>
         <h:selectOneMenu value="#{activeConfigList.selectedCategory}"
           onchange="submit();">
-          <f:selectItem itemLabel=""
+          <f:selectItem itemLabel="vyberte kategorii"
             itemValue="#{activeConfigList.noneSelector}" />
           <f:selectItem itemLabel="všechny"
             itemValue="#{activeConfigList.allSelector}" />
@@ -44,7 +45,7 @@
           <h:outputText value="#{activeConfiguration.value}" />
         </h:column>
         <h:column>
-          <h:commandLink action="#{activeConfigList.actionDeleteActiveConfig}" value="smazat">
+          <h:commandLink action="#{activeConfigList.actionDeleteActiveConfig}" value="smazat" onclick="return confirm('Opravdu chcete smazat tuto položku?')">
             <f:setPropertyActionListener target="#{activeConfigList.activeConfigID}" value="#{activeConfiguration.id}" />
           </h:commandLink>
         </h:column>

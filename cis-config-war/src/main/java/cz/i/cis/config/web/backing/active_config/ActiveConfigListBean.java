@@ -36,8 +36,11 @@ public class ActiveConfigListBean {
 
 
   public void init() throws Exception{
-    selectedCategory = NONE_SELECTOR;
     allCategories = categoryDao.getCategoryMap();
+    if (!allCategories.containsKey(selectedCategory) && !ALL_SELECTOR.equals(selectedCategory)) {
+      selectedCategory = NONE_SELECTOR;
+    }
+
     refreshActiveItems();
   }
 
@@ -62,7 +65,7 @@ public class ActiveConfigListBean {
   public String actionDeleteActiveConfig(){
     try{
       configItemDao.removeItem(activeConfigID);
-      return "list?faces-redirect=true";
+      return "list?faces-redirect=true&includeViewParams=true";
     }
     catch(Exception e){
       FacesUtils.addMessage(FacesMessage.SEVERITY_ERROR, "Nepodařilo se smazat profil: " + FacesUtils.getRootMessage(e));

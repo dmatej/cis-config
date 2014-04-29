@@ -4,11 +4,10 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-  <ui:define name="title">Seznam klíčů</ui:define>
+  <ui:param name="pageName" value="Klíče konfiguračních položek" />
+  <ui:param name="pageTitle" value="Seznam klíčů konfiguračních položek" />
 
   <ui:define name="content">
-    <h1>Seznam klíčů konfiguračních položek</h1>
-
     <p><h:link outcome="create" value="Vytvořit nový klíč" /></p>
 
     <h:form>
@@ -16,7 +15,7 @@
         <h:panelGroup>Kategorie:</h:panelGroup>
         <h:panelGroup>
           <h:selectOneMenu value="#{itemKeyList.selectedCategory}" onchange="submit();">
-            <f:selectItem itemLabel="" itemValue="#{itemKeyList.noneSelector}" />
+            <f:selectItem itemLabel="vyberte kategorii" itemValue="#{itemKeyList.noneSelector}" />
             <f:selectItem itemLabel="všechny" itemValue="#{itemKeyList.allSelector}" />
             <f:selectItems value="#{itemKeyList.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
           </h:selectOneMenu>

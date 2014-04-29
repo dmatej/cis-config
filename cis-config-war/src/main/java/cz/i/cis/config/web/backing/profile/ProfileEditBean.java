@@ -45,6 +45,7 @@ public class ProfileEditBean {
   private Integer id;
 
   private ConfigurationProfile profile;
+  @SuppressWarnings("unused")
   private List<ConfigurationProfileItem> profileItems;
   private Map<String, ConfigurationItemKey> filteredItemKeys;
   private Map<String, ConfigurationItemCategory> allCategories;

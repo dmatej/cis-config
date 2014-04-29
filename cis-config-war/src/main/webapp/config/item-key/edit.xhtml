@@ -5,7 +5,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:jsf="http://xmlns.jcp.org/jsf">
 
-  <ui:define name="title">Úprava klíče</ui:define>
+  <ui:param name="pageName" value="Klíče konfiguračních položek" />
+  <ui:param name="pageTitle" value="Editace klíče konfiguračních položek" />
 
   <f:metadata>
     <f:viewParam name="id" value="#{itemKeyEdit.id}" required="true" requiredMessage="Pro editaci klíče je nutné zadat parametr id." />
@@ -13,7 +14,6 @@
   </f:metadata>
 
   <ui:define name="content">
-    <h1>Úprava klíče konfigurační položky</h1>
     <h:form>
       <h:panelGrid columns="2" border="1">
         <h:panelGroup>Klíč</h:panelGroup>
@@ -43,7 +43,7 @@
 
 
         <h:panelGroup>
-          <h:commandButton type="reset" value="Reset" />
+          <!-- prazdná buňka -->
         </h:panelGroup>
         <h:panelGroup>
           <h:commandButton action="#{itemKeyEdit.actionUpdateItemKey}" type="submit" value="Uložit" />

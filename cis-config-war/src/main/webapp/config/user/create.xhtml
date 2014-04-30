@@ -1,50 +1,17 @@
 <ui:composition template="/template/main.xhtml"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+ xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:h="http://xmlns.jcp.org/jsf/html"
+ xmlns:f="http://xmlns.jcp.org/jsf/core"
+ xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
   <ui:param name="pageName" value="Uživatelé" />
   <ui:param name="pageTitle" value="Vytvoření nového uživatele" />
 
-  <ui:define name="content">
-    <h:form>
-      <h:panelGrid columns="2" border="1">
-        <h:panelGroup>Jméno</h:panelGroup>
-        <h:panelGroup>
-          <h:inputText required="true" requiredMessage="Není vyplněno jméno" value="#{userCreate.name}" />
-        </h:panelGroup>
-
-        <h:panelGroup>Příjmení</h:panelGroup>
-        <h:panelGroup>
-          <h:inputText required="true" requiredMessage="Není vyplněno příjmení" value="#{userCreate.surname}" />
-        </h:panelGroup>
-
-        <h:panelGroup>Login</h:panelGroup>
-        <h:panelGroup>
-          <h:inputText required="true" requiredMessage="Není vyplněn login" value="#{userCreate.login}" />
-        </h:panelGroup>
-
-        <h:panelGroup>Datum narození</h:panelGroup>
-        <h:panelGroup>
-          <h:inputText required="true" requiredMessage="Není vyplněno datum narození" value="#{userCreate.birthDate}"
-                       label="d.M.yyyy" converterMessage="Datum zadejte ve formátu d.M.yyyy">
-            <f:convertDateTime pattern="d.M.yyyy" />
-          </h:inputText>
-        </h:panelGroup>
-
-
-        <h:panelGroup>
-        <!-- prazdná buňka -->
-        </h:panelGroup>
-        <h:panelGroup>
-          <h:commandButton action="#{userCreate.actionAddUser}" type="submit" value="Uložit" />
-        </h:panelGroup>
-      </h:panelGrid>
-    </h:form>
-
-    <ul>
-      <li><h:link outcome="list" value="Zpět na seznam" /></li>
-    </ul>
-  </ui:define>
+ <ui:define name="content">
+  <ui:include src="form.xhtml">
+   <ui:param name="user" value="#{userCreate}" />
+   <ui:param name="userAction" value="actionAddUser" />
+   <ui:param name="userButtonName" value="Vytvořit" />
+  </ui:include>
+ </ui:define>
 </ui:composition>

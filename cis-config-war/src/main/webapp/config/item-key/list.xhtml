@@ -1,62 +1,67 @@
 <ui:composition template="/template/main.xhtml"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+ xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:h="http://xmlns.jcp.org/jsf/html"
+ xmlns:f="http://xmlns.jcp.org/jsf/core"
+ xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-  <ui:param name="pageName" value="Klíče konfiguračních položek" />
-  <ui:param name="pageTitle" value="Seznam klíčů konfiguračních položek" />
+ <ui:param name="pageName" value="Klíče konfiguračních položek" />
+ <ui:param name="pageTitle" value="Seznam klíčů konfiguračních položek" />
 
-  <ui:define name="content">
-    <p><h:link outcome="create" value="Vytvořit nový klíč" /></p>
+ <ui:define name="content">
+  <p>
+   <h:link outcome="create" value="Vytvořit nový klíč" />
+  </p>
 
-    <h:form>
-      <h:panelGrid columns="3" border="1">
-        <h:panelGroup>Kategorie:</h:panelGroup>
-        <h:panelGroup>
-          <h:selectOneMenu value="#{itemKeyList.selectedCategory}" onchange="submit();">
-            <f:selectItem itemLabel="vyberte kategorii" itemValue="#{itemKeyList.noneSelector}" />
-            <f:selectItem itemLabel="všechny" itemValue="#{itemKeyList.allSelector}" />
-            <f:selectItems value="#{itemKeyList.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
-          </h:selectOneMenu>
-        </h:panelGroup>
-      </h:panelGrid>
+  <h:form id="form">
+   <h:panelGrid columns="2" id="categories">
+    <h:panelGroup class="form:table:label">
+     <label for="form:category">Kategorie</label>
+    </h:panelGroup>
 
-      <ui:param name="items" value="#{itemKeyList.filteredItemKeys}" />
+    <h:panelGroup>
+     <h:selectOneMenu id="category" value="#{itemKeyList.selectedCategory}" onchange="submit();">
+      <f:selectItem itemLabel="vyberte kategorii" itemValue="#{itemKeyList.noneSelector}" />
+      <f:selectItem itemLabel="všechny" itemValue="#{itemKeyList.allSelector}" />
+      <f:selectItems value="#{itemKeyList.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
+     </h:selectOneMenu>
+    </h:panelGroup>
+   </h:panelGrid>
 
-      <h:dataTable value="#{items}" var="itemKey" rendered="#{not empty items}" id="">
-        <h:column>
-          <f:facet name="header">ID</f:facet>
-          <a id="itemKey-#{itemKey.id}"><h:outputText value="#{itemKey.id}"/></a>
-        </h:column>
-        <h:column>
-          <f:facet name="header">Klíč</f:facet>
-          <h:outputText value="#{itemKey.key}"/>
-        </h:column>
-        <h:column>
-          <f:facet name="header">Typ</f:facet>
-          <h:outputText value="#{itemKey.type}"/>
-        </h:column>
-        <h:column>
-          <f:facet name="header">Kategorie</f:facet>
-          <h:outputText value="#{itemKey.category.name}"/>
-        </h:column>
-        <h:column>
-          <f:facet name="header">Popis</f:facet>
-          <h:outputText value="#{itemKey.description}"/>
-        </h:column>
+   <ui:param name="items" value="#{itemKeyList.filteredItemKeys}" />
 
-        <h:column>
-          <h:commandLink action="#{itemKeyList.actionDeleteItemKey}" value="smazat">
-            <f:setPropertyActionListener target="#{itemKeyList.itemKeyID}" value="#{itemKey.id}" />
-          </h:commandLink>
-        </h:column>
-        <h:column>
-          <h:link outcome="edit" value="upravit">
-            <f:param name="id" value="#{itemKey.id}" />
-          </h:link>
-        </h:column>
-      </h:dataTable>
-    </h:form>
-  </ui:define>
+   <h:dataTable id="data-table" value="#{items}" var="itemKey" rendered="#{not empty items}">
+    <h:column>
+     <f:facet name="header">ID</f:facet>
+     <a id="itemKey-#{itemKey.id}" class="id"><h:outputText value="#{itemKey.id}" /></a>
+    </h:column>
+    <h:column>
+     <f:facet name="header">Klíč</f:facet>
+     <h:outputText value="#{itemKey.key}" />
+    </h:column>
+    <h:column>
+     <f:facet name="header">Typ</f:facet>
+     <h:outputText value="#{itemKey.type}" />
+    </h:column>
+    <h:column>
+     <f:facet name="header">Kategorie</f:facet>
+     <h:outputText value="#{itemKey.category.name}" />
+    </h:column>
+    <h:column>
+     <f:facet name="header">Popis</f:facet>
+     <h:outputText value="#{itemKey.description}" />
+    </h:column>
+
+    <h:column>
+     <h:commandLink action="#{itemKeyList.actionDeleteItemKey}" value="smazat">
+      <f:setPropertyActionListener target="#{itemKeyList.itemKeyID}" value="#{itemKey.id}" />
+     </h:commandLink>
+    </h:column>
+    <h:column>
+     <h:link outcome="edit" value="upravit">
+      <f:param name="id" value="#{itemKey.id}" />
+     </h:link>
+    </h:column>
+   </h:dataTable>
+  </h:form>
+ </ui:define>
 </ui:composition>

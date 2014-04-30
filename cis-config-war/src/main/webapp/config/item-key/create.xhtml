@@ -1,16 +1,17 @@
 <ui:composition template="/template/main.xhtml"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+ xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:h="http://xmlns.jcp.org/jsf/html"
+ xmlns:f="http://xmlns.jcp.org/jsf/core"
+ xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-  <ui:param name="pageName" value="Klíče konfiguračních položek" />
-  <ui:param name="pageTitle" value="Vytvoření nového klíče konfiguračních položek" />
+ <ui:param name="pageName" value="Klíče konfiguračních položek" />
+ <ui:param name="pageTitle" value="Vytvoření nového klíče konfiguračních položek" />
 
  <ui:define name="content">
   <ui:include src="form.xhtml">
    <ui:param name="itemKey" value="#{itemKeyCreate}" />
    <ui:param name="itemKeyAction" value="actionAddItemKey" />
+   <ui:param name="itemKeyButtonName" value="Vytvořit" />
   </ui:include>
  </ui:define>
 </ui:composition>

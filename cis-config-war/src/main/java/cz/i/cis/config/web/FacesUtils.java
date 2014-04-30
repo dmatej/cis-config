@@ -9,9 +9,13 @@ import javax.faces.context.FacesContext;
 
 public class FacesUtils {
 
-  public static void addMessage(Severity severity, String message){
+  public static void addMessage(Severity severity, String message) {
+    addMessage(severity, null, message);
+  }
+
+  public static void addMessage(Severity severity, String clientId, String message) {
     FacesMessage msg = new FacesMessage(severity, message, "");
-    FacesContext.getCurrentInstance().addMessage(null, msg);
+    FacesContext.getCurrentInstance().addMessage(clientId, msg);
   }
 
   public static void redirect(String where) throws IOException{

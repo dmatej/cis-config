@@ -131,7 +131,7 @@ tr.deleted {
 }
 
 .button-line input[type=submit],.button-line input[type=button],.button-line button
-{
+ {
  margin-left: 5px;
 }
 
@@ -165,7 +165,7 @@ input[type=submit],input[type=button],button {
  border: 1px #1f779c solid;
 }
 
-#form\:table, #form\:categories {
+#form\:table,#form\:categories {
  margin: 0px;
  padding: 0px;
  border: 0px;
@@ -177,11 +177,20 @@ input[type=submit],input[type=button],button {
  color: #990000;
 }
 
+ul.form\:table\:error {
+ display: inline-block;
+ margin-bottom: 0px;
+ margin-top: 0px;
+ padding: 0px;
+}
+
 .form\:table\:label {
  width: 150px;
 }
 
 .form\:table\:label\:top {
+ width: 150px;
+ display: inline-block;
  vertical-align: top;
 }
 
@@ -194,7 +203,7 @@ input[type=submit],input[type=button],button {
  margin-left: 10px;
 }
 
-input.login, input.short {
+input.login,input.short {
  min-width: 200px;
 }
 

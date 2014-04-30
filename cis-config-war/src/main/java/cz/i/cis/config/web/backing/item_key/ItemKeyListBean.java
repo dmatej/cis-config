@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -15,6 +14,7 @@ import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
+import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
 @Named(value = "itemKeyList")
@@ -23,6 +23,7 @@ public class ItemKeyListBean {
 
   private static final String NONE_SELECTOR = "none";
   private static final String ALL_SELECTOR = "all";
+  private static final String SESSION_NAME = "item-key-category";
 
   @EJB
   private ConfigurationItemKeyDao itemKeyDao;
@@ -38,7 +39,13 @@ public class ItemKeyListBean {
   @PostConstruct
   public void init() {
     allCategories = categoryDao.getCategoryMap();
-    selectedCategory = NONE_SELECTOR;
+
+    String category = (String) FacesUtils.getSession(SESSION_NAME);
+    if (category == null) {
+      selectedCategory = NONE_SELECTOR;
+    } else {
+      selectedCategory = category;
+    }
   }
 
 
@@ -46,9 +53,8 @@ public class ItemKeyListBean {
     try {
       itemKeyDao.removeItemKey(itemKeyID);
       return "list?faces-redirect=true";
-    } catch (Exception e) {
-      FacesUtils.addMessage(FacesMessage.SEVERITY_ERROR,
-          "Nepodařilo se smazat uživatele: " + FacesUtils.getRootMessage(e));
+    } catch (Exception exc) {
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat klíč", FacesUtils.getRootMessage(exc));
     }
     return null;
   }
@@ -98,6 +104,7 @@ public class ItemKeyListBean {
 
 
   public void setSelectedCategory(String selectedCategory) {
+    FacesUtils.setSession(SESSION_NAME, selectedCategory);
     this.selectedCategory = selectedCategory;
   }
 

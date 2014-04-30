@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -14,12 +13,13 @@ import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemDao;
 import cz.i.cis.config.jpa.ConfigurationItem;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
+import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
-
 
 @Named(value = "activeConfigList")
 @ViewScoped
 public class ActiveConfigListBean {
+
   private static final String NONE_SELECTOR = "none";
   private static final String ALL_SELECTOR = "all";
 
@@ -35,7 +35,7 @@ public class ActiveConfigListBean {
   private String selectedCategory;
 
 
-  public void init() throws Exception{
+  public void init() throws Exception {
     allCategories = categoryDao.getCategoryMap();
     if (!allCategories.containsKey(selectedCategory) && !ALL_SELECTOR.equals(selectedCategory)) {
       selectedCategory = NONE_SELECTOR;
@@ -44,15 +44,14 @@ public class ActiveConfigListBean {
     refreshActiveItems();
   }
 
-  private void refreshActiveItems() throws Exception{
-    if(NONE_SELECTOR.equals(selectedCategory)){
+
+  private void refreshActiveItems() throws Exception {
+    if (NONE_SELECTOR.equals(selectedCategory)) {
       filteredActiveItems = Collections.emptyList();
-    }
-    else if(ALL_SELECTOR.equals(selectedCategory)){
+    } else if (ALL_SELECTOR.equals(selectedCategory)) {
       filteredActiveItems = configItemDao.listItems();
-    }
-    else{
-      if(!allCategories.containsKey(selectedCategory)){
+    } else {
+      if (!allCategories.containsKey(selectedCategory)) {
         throw new Exception("Selected category is not valid.");
       }
 
@@ -62,37 +61,42 @@ public class ActiveConfigListBean {
     }
   }
 
-  public String actionDeleteActiveConfig(){
-    try{
+
+  public String actionDeleteActiveConfig() {
+    try {
       configItemDao.removeItem(activeConfigID);
       return "list?faces-redirect=true&includeViewParams=true";
-    }
-    catch(Exception e){
-      FacesUtils.addMessage(FacesMessage.SEVERITY_ERROR, "Nepodařilo se smazat profil: " + FacesUtils.getRootMessage(e));
+    } catch (Exception exc) {
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat profil", FacesUtils.getRootMessage(exc));
     }
     return null;
   }
 
 
-  public String getAllSelector(){
+  public String getAllSelector() {
     return ALL_SELECTOR;
   }
 
-  public String getNoneSelector(){
+
+  public String getNoneSelector() {
     return NONE_SELECTOR;
   }
+
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
     return allCategories.values();
   }
 
+
   public String getSelectedCategory() {
     return selectedCategory;
   }
 
+
   public void setSelectedCategory(String selectedCategory) {
     this.selectedCategory = selectedCategory;
   }
+
 
   public List<ConfigurationItem> getFilteredActiveItems() throws Exception {
     refreshActiveItems();
@@ -100,13 +104,16 @@ public class ActiveConfigListBean {
     return filteredActiveItems;
   }
 
+
   public void setFilteredActiveItems(List<ConfigurationItem> filteredActiveItems) {
     this.filteredActiveItems = filteredActiveItems;
   }
 
+
   public Integer getActiveConfigID() {
     return activeConfigID;
   }
+
 
   public void setActiveConfigID(Integer activeConfigID) {
     this.activeConfigID = activeConfigID;

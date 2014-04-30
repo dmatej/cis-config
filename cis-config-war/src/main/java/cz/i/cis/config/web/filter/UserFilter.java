@@ -10,7 +10,6 @@ import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -34,10 +33,11 @@ public class UserFilter implements Filter {
   private static final Logger LOG = LoggerFactory.getLogger(UserFilter.class);
 
   private static final String USER_CONTEXT = "/config/user";
-  private static final String CREATE_USER_SERVLET = USER_CONTEXT + "/create.xhtml" ;
+  private static final String CREATE_USER_SERVLET = USER_CONTEXT + "/create.xhtml";
 
   @EJB
   private CisUserDao userDao;
+
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
@@ -55,7 +55,7 @@ public class UserFilter implements Filter {
       return;
     }
     final String contextPath = httpRequest.getContextPath();
-    ((HttpServletResponse)response).sendRedirect(contextPath + CREATE_USER_SERVLET );
+    ((HttpServletResponse) response).sendRedirect(contextPath + CREATE_USER_SERVLET);
     LOG.info("Forwarded to {}", CREATE_USER_SERVLET);
   }
 

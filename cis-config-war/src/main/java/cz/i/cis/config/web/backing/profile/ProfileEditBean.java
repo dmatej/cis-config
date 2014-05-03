@@ -65,7 +65,8 @@ public class ProfileEditBean {
     if (profile != null) {
       name = profile.getName();
       description = profile.getDescription();
-    } else {
+    }
+    else {
       FacesMessagesUtils.addErrorMessage("Zvolený profil nebyl nalezen v databázi - ID = " + id, null);
     }
 
@@ -97,10 +98,12 @@ public class ProfileEditBean {
         profile = profileDao.updateProfile(profile);
         FacesMessagesUtils.addInfoMessage("Změny byly uloženy.", null);
         // FacesUtils.redirect("list.xhtml#profile-" + profile.getId());
-      } catch (Exception e) {
+      }
+      catch (Exception e) {
         FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", FacesUtils.getRootMessage(e));
       }
-    } else {
+    }
+    else {
       FacesMessagesUtils.addErrorMessage("Musíte editovat existující profil, abyste mohli uložit jeho změny", null);
     }
     return null; // stay on the same page to display the messages
@@ -116,9 +119,11 @@ public class ProfileEditBean {
   private void refreshItemKeys() throws Exception {
     if (NONE_SELECTOR.equals(selectedCategory)) {
       filteredItemKeys = Collections.emptyMap();
-    } else if (ALL_SELECTOR.equals(selectedCategory)) {
+    }
+    else if (ALL_SELECTOR.equals(selectedCategory)) {
       filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeyDao.listItemKeys());
-    } else {
+    }
+    else {
       if (!allCategories.containsKey(selectedCategory)) {
         throw new Exception("Selected category is not valid.");
       }

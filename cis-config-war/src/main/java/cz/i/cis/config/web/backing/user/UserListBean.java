@@ -11,6 +11,7 @@ import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
+
 @Named(value = "userList")
 @ViewScoped
 public class UserListBean {
@@ -34,7 +35,8 @@ public class UserListBean {
     try {
       userDao.removeUser(userID);
       return "list?faces-redirect=true";
-    } catch (Exception exc) {
+    }
+    catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat uživatele", FacesUtils.getRootMessage(exc));
     }
     return null;
@@ -45,7 +47,8 @@ public class UserListBean {
     try {
       userDao.restoreUser(userID);
       return "list?faces-redirect=true";
-    } catch (Exception exc) {
+    }
+    catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se obnovit uživatele", FacesUtils.getRootMessage(exc));
     }
     return null;

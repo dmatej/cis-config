@@ -16,6 +16,7 @@ import javax.persistence.TypedQuery;
 import cz.i.cis.config.ejb.dao.exceptions.UniqueProfileKeyException;
 import cz.i.cis.config.jpa.ConfigurationProfileItem;
 
+
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
@@ -23,10 +24,6 @@ public class ConfigurationProfileItemDao {
 
   @PersistenceContext(name = "cis-jta")
   private EntityManager em;
-
-
-  public ConfigurationProfileItemDao() {
-  }
 
 
   public List<ConfigurationProfileItem> listItems() {
@@ -39,11 +36,12 @@ public class ConfigurationProfileItemDao {
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addItem(ConfigurationProfileItem item) throws UniqueProfileKeyException {
-  //  this.em.persist(item);
+//    this.em.persist(item);
     try {
       this.em.persist(item);
       em.flush();
-    } catch (PersistenceException exc) {
+    }
+    catch (PersistenceException exc) {
       throw new UniqueProfileKeyException("Key" + item.getKey().getKey() +" and profile " + item.getProfile().getName() + " already exists!", exc);
     }
   }
@@ -53,7 +51,7 @@ public class ConfigurationProfileItemDao {
   public void removeItem(ConfigurationProfileItem item) {
     ConfigurationProfileItem i = this.em.merge(item);
     this.em.remove(i);
-    // this.em.remove(item);
+//     this.em.remove(item);
   }
 
 

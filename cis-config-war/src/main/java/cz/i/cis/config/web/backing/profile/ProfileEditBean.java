@@ -77,13 +77,12 @@ public class ProfileEditBean {
   }
 
 
-  public String actionUpdateProfileMetadata() {
+  public void actionUpdateProfileMetadata() {
     if (profile != null) { // TODO to ukládání je i u vytváření nového profilu, nejlíp sjednotit
       try {
         String login = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
         if (login == null || login.isEmpty()) {
-          throw new Exception(
-              "Somehow no user is not logged in and phantoms are not allowed to create configuration profiles.");
+          throw new Exception("Somehow no user is not logged in and phantoms are not allowed to create configuration profiles.");
         }
         CisUser editor = userDao.getUser(login);
         if (editor == null) {
@@ -106,7 +105,6 @@ public class ProfileEditBean {
     else {
       FacesMessagesUtils.addErrorMessage("Musíte editovat existující profil, abyste mohli uložit jeho změny", null);
     }
-    return null; // stay on the same page to display the messages
   }
 
 

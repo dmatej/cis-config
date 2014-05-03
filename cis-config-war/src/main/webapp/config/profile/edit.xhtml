@@ -18,8 +18,7 @@
       <h:panelGrid columns="2" border="1">
         <h:panelGroup>Název</h:panelGroup>
         <h:panelGroup>
-          <h:inputText required="true" requiredMessage="Není vyplněn název" value="#{profileEdit.name}"
-                       size="40" />
+          <h:inputText required="true" requiredMessage="Není vyplněn název" value="#{profileEdit.name}" size="40" />
         </h:panelGroup>
 
         <h:panelGroup>Popis</h:panelGroup>
@@ -30,10 +29,12 @@
 
 
         <h:panelGroup>
-          <!-- prázdná buňka -->
+          <!-- empty table header for button -->
         </h:panelGroup>
         <h:panelGroup>
-          <h:commandButton action="#{profileEdit.actionUpdateProfileMetadata}" type="submit" value="Uložit metadata" />
+          <h:commandButton value="Uložit metadata">
+            <f:ajax listener="#{profileEdit.actionUpdateProfileMetadata}" execute="@form" render="@form" />
+          </h:commandButton>
         </h:panelGroup>
       </h:panelGrid>
     </h:form>

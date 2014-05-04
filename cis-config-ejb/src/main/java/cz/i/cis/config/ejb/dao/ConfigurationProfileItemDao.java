@@ -1,6 +1,8 @@
 package cz.i.cis.config.ejb.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -58,5 +60,15 @@ public class ConfigurationProfileItemDao {
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public ConfigurationProfileItem updateItem(ConfigurationProfileItem item) {
     return this.em.merge(item);
+  }
+
+
+  public static Map<String, ConfigurationProfileItem> getItemMap(List<ConfigurationProfileItem> items) {
+    Map<String, ConfigurationProfileItem> itemMap = new HashMap<>();
+    for (ConfigurationProfileItem item : items) {
+      itemMap.put(item.getId().toString(), item);
+    }
+
+    return itemMap;
   }
 }

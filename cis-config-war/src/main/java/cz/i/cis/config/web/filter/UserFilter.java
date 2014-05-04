@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.CisUserDao;
 
+
 /**
  * Redirects client to new user registration if the user still does not exist in application.
  *
@@ -43,8 +44,10 @@ public class UserFilter implements Filter {
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
     ServletException {
     LOG.debug("doFilter(request={}, response={}, chain={})", request, response, chain);
+
     final HttpServletRequest httpRequest = (HttpServletRequest) request;
     final String login = httpRequest.getUserPrincipal() == null ? null : httpRequest.getUserPrincipal().getName();
+
     LOG.info("login={}, servletPath={}", login, httpRequest.getServletPath());
     if (login == null || httpRequest.getServletPath().startsWith(USER_CONTEXT)) {
       chain.doFilter(httpRequest, response);
@@ -54,6 +57,7 @@ public class UserFilter implements Filter {
       chain.doFilter(httpRequest, response);
       return;
     }
+
     final String contextPath = httpRequest.getContextPath();
     ((HttpServletResponse) response).sendRedirect(contextPath + CREATE_USER_SERVLET);
     LOG.info("Forwarded to {}", CREATE_USER_SERVLET);

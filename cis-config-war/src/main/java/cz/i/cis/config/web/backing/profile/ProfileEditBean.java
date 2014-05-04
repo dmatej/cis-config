@@ -3,6 +3,7 @@ package cz.i.cis.config.web.backing.profile;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileItemDao;
+import cz.i.cis.config.ejb.dao.exceptions.UniqueProfileKeyException;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
@@ -23,6 +25,7 @@ import cz.i.cis.config.jpa.ConfigurationProfile;
 import cz.i.cis.config.jpa.ConfigurationProfileItem;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
+
 
 @Named(value = "profileEdit")
 @ViewScoped
@@ -45,11 +48,14 @@ public class ProfileEditBean {
   private Integer id;
 
   private ConfigurationProfile profile;
-  @SuppressWarnings("unused")
-  private List<ConfigurationProfileItem> profileItems;
   private Map<String, ConfigurationItemKey> filteredItemKeys;
   private Map<String, ConfigurationItemCategory> allCategories;
-  // TODO seznam položek, přidávání, odebírání, uložení
+
+  private Map<String, ConfigurationProfileItem> profileItems;
+  private Map<String, ConfigurationProfileItem> deletedProfileItems;
+  private int newItemID = -1;
+  private String manipulationID;
+
 
   // profile metadata
   private String name;
@@ -57,6 +63,12 @@ public class ProfileEditBean {
 
   private String selectedCategory;
   private String selectedItemKey;
+  private String profileItemValue;
+
+
+  public ProfileEditBean(){
+
+  }
 
 
   public void init() throws Exception {
@@ -74,10 +86,37 @@ public class ProfileEditBean {
     selectedItemKey = NONE_SELECTOR;
     allCategories = categoryDao.getCategoryMap();
     refreshItemKeys();
+    refreshItems();
+  }
+
+  private void refreshItemKeys() throws Exception {
+    if (NONE_SELECTOR.equals(selectedCategory)) {
+      filteredItemKeys = Collections.emptyMap();
+    }
+    else if (ALL_SELECTOR.equals(selectedCategory)) {
+      filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeyDao.listItemKeys());
+    }
+    else {
+      if (!allCategories.containsKey(selectedCategory)) {
+        throw new Exception("Selected category is not valid.");
+      }
+
+      ConfigurationItemCategory filter = allCategories.get(selectedCategory);
+      List<ConfigurationItemKey> itemKeys = itemKeyDao.filterItemKeys(filter);
+
+      filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
+    }
+  }
+
+  private void refreshItems(){
+    List<ConfigurationProfileItem> items= itemDao.listItems();
+    profileItems = ConfigurationProfileItemDao.getItemMap(items);
+
+    deletedProfileItems = new HashMap<>();
   }
 
 
-  public void actionUpdateProfileMetadata() {
+  public String actionUpdateProfileMetadata() {
     if (profile != null) { // TODO to ukládání je i u vytváření nového profilu, nejlíp sjednotit
       try {
         String login = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
@@ -105,99 +144,151 @@ public class ProfileEditBean {
     else {
       FacesMessagesUtils.addErrorMessage("Musíte editovat existující profil, abyste mohli uložit jeho změny", null);
     }
-  }
-
-
-  public String actionAddProfileItem() {
-    // TODO
     return null;
   }
 
 
-  private void refreshItemKeys() throws Exception {
-    if (NONE_SELECTOR.equals(selectedCategory)) {
-      filteredItemKeys = Collections.emptyMap();
+  public String actionAddProfileItem() {
+    Integer id = newItemID--;
+    ConfigurationItemKey key = filteredItemKeys.get(selectedItemKey);
+    String value = profileItemValue;
+
+
+    if(key != null && value != null && !value.isEmpty()){
+      ConfigurationProfileItem item = new ConfigurationProfileItem();
+        item.setId(id);
+        item.setKey(key);
+        item.setProfile(profile);
+        item.setValue(profileItemValue);
+
+      profileItems.put(item.getId().toString(), item);
     }
-    else if (ALL_SELECTOR.equals(selectedCategory)) {
-      filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeyDao.listItemKeys());
+    return null;
+  }
+
+  public String actionDeleteItem(){
+    ConfigurationProfileItem deleteItem = profileItems.get(manipulationID);
+    Integer id = deleteItem.getId();
+
+    if(isDeletedItem(id)) return null; //nothing new to delete
+
+    if(isNewItem(id)){
+      //new items delete from cache right away
+      profileItems.remove(id);
     }
-    else {
-      if (!allCategories.containsKey(selectedCategory)) {
-        throw new Exception("Selected category is not valid.");
+    else{
+      //existing items mark for deletion
+      deletedProfileItems.put(deleteItem.getId().toString(), deleteItem);
+    }
+
+    return null;
+  }
+
+  public String actionSaveChanges(){
+    try {
+      //TODO in one transaction?
+      for (ConfigurationProfileItem item : profileItems.values()) {
+        Integer id = item.getId();
+
+        //delete
+        if(isDeletedItem(id)){
+//          if(!isNewItem(id)){ //only existing items are in deleted list
+            itemDao.removeItem(item);
+//          }
+          profileItems.remove(id);
+          deletedProfileItems.remove(id);
+        }
+        //insert
+        else if(isNewItem(id)){
+          itemDao.addItem(item);
+        }
+        //update
+        else{
+          itemDao.updateItem(item);
+        }
       }
 
-      ConfigurationItemCategory filter = allCategories.get(selectedCategory);
-      List<ConfigurationItemKey> itemKeys = itemKeyDao.filterItemKeys(filter);
-
-      filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
+      newItemID = -1;
     }
+    catch (UniqueProfileKeyException e) {
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", FacesUtils.getRootMessage(e));
+    }
+    return null;
   }
+
+  private boolean isDeletedItem(Integer id){
+    return deletedProfileItems.containsKey(id.toString());
+  }
+
+  private boolean isNewItem(Integer id){
+    return id.intValue() < 0;
+  }
+
 
 
   public Integer getId() {
     return id;
   }
 
-
   public void setId(Integer id) {
     this.id = id;
   }
-
 
   public String getName() {
     return name;
   }
 
-
   public void setName(String name) {
     this.name = name;
   }
-
 
   public String getDescription() {
     return description;
   }
 
-
   public void setDescription(String description) {
     this.description = description;
   }
 
+  public String getProfileItemValue() {
+    return profileItemValue;
+  }
+
+  public void setProfileItemValue(String profileItemValue) {
+    this.profileItemValue = profileItemValue;
+  }
 
   public boolean isKeySelectorDisabled() {
     return NONE_SELECTOR.equals(selectedCategory);
   }
 
-
   public boolean isKeyValueDisabled() {
     return NONE_SELECTOR.equals(selectedItemKey);
   }
-
 
   public String getAllSelector() {
     return ALL_SELECTOR;
   }
 
-
   public String getNoneSelector() {
     return NONE_SELECTOR;
   }
-
 
   public String getSelectedCategory() {
     return selectedCategory;
   }
 
-
   public void setSelectedCategory(String selectedCategory) {
     this.selectedCategory = selectedCategory;
   }
-
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
     return allCategories.values();
   }
 
+  public Collection<ConfigurationProfileItem> getProfileItems() {
+    return profileItems.values();
+  }
 
   public Collection<ConfigurationItemKey> getFilteredItemKeys() throws Exception {
     refreshItemKeys();
@@ -205,16 +296,17 @@ public class ProfileEditBean {
     return filteredItemKeys.values();
   }
 
-
   public String getSelectedItemKey() {
     return selectedItemKey;
   }
-
 
   public void setSelectedItemKey(String selectedItemKey) {
     this.selectedItemKey = selectedItemKey;
   }
 
+  public void setManipulationID(String manipulationID) {
+    this.manipulationID = manipulationID;
+  }
 
   public boolean refreshAddItemKeyForm() {
     if (NONE_SELECTOR.equals(selectedCategory))

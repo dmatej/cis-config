@@ -29,11 +29,11 @@
 
 
         <h:panelGroup>
-          <!-- empty table header for button -->
+          <!-- prázdná buňka -->
         </h:panelGroup>
         <h:panelGroup>
-          <h:commandButton value="Uložit metadata">
-            <f:ajax listener="#{profileEdit.actionUpdateProfileMetadata}" execute="@form" render="@form" />
+          <h:commandButton action="#{profileEdit.actionUpdateProfileMetadata}" type="submit" value="Uložit metadata">
+<!--             <f:ajax listener="# {profileEdit.actionUpdateProfileMetadata}" execute="@form" render="@form" /> -->
           </h:commandButton>
         </h:panelGroup>
       </h:panelGrid>
@@ -62,7 +62,7 @@
         </h:panelGroup>
 
         <h:panelGroup>
-          <h:inputText disabled="#{profileEdit.keyValueDisabled}"></h:inputText>
+          <h:inputText value="#{profileEdit.profileItemValue}" disabled="#{profileEdit.keyValueDisabled}"></h:inputText>
         </h:panelGroup>
 
         <h:panelGroup>
@@ -71,10 +71,39 @@
       </h:panelGrid>
     </h:form>
 
-    //TODO přidat tlačítko na uložení položek profilu
-
     <h:form>
-      //TODO seznam položek s možností mazání
+      <h:commandButton action="#{profileEdit.actionSaveChanges}" value="Uložit změny" />
+
+      <ui:param name="items" value="#{profileEdit.profileItems}" />
+
+      <h:dataTable id="data-table" value="#{items}" var="item" rendered="#{not empty items}">
+        <h:column>
+          <f:facet name="header">ID</f:facet>
+          <a id="item-#{item.id}" class="id"><h:outputText value="#{item.id}" /></a>
+        </h:column>
+        <h:column>
+          <f:facet name="header">Klíč</f:facet>
+          <h:outputText value="#{item.key.key}" />
+        </h:column>
+        <h:column>
+          <f:facet name="header">Typ</f:facet>
+          <h:outputText value="#{itemk.key.type}" />
+        </h:column>
+        <h:column>
+          <f:facet name="header">Kategorie</f:facet>
+          <h:outputText value="#{item.key.category.name}" />
+        </h:column>
+        <h:column>
+          <f:facet name="header">Hodnota</f:facet>
+          <h:outputText value="#{item.value}" />
+        </h:column>
+
+        <h:column>
+          <h:commandLink action="#{profileEdit.actionDeleteItem}" value="smazat">
+            <f:setPropertyActionListener target="#{profileEdit.manipulationID}" value="#{item.id}" />
+          </h:commandLink>
+        </h:column>
+      </h:dataTable>
     </h:form>
 
     <ul>

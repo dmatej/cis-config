@@ -50,7 +50,8 @@ public class ProfileCreateBean {
 
       return "edit?faces-redirect=true&includeViewParams=true&id=" + profile.getId();
       // FacesUtils.redirect("list.xhtml#user-" + profile.getId());
-    } catch (Exception exc) {
+    }
+    catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat nový profil", FacesUtils.getRootMessage(exc));
     }
     return null;
@@ -61,16 +62,13 @@ public class ProfileCreateBean {
     return name;
   }
 
-
   public void setName(String name) {
     this.name = name;
   }
 
-
   public String getDescription() {
     return description;
   }
-
 
   public void setDescription(String description) {
     this.description = description;

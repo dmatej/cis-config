@@ -31,7 +31,8 @@ public class ProfileListBean {
       profileDao.removeProfile(profileID);
 
       return "list?faces-redirect=true";
-    } catch (Exception exc) {
+    }
+    catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat profil", FacesUtils.getRootMessage(exc));
     }
     return null;

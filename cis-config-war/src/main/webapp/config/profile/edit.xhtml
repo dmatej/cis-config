@@ -99,7 +99,13 @@
         </h:column>
 
         <h:column>
-          <h:commandLink action="#{profileEdit.actionDeleteItem}" value="smazat">
+          <h:commandLink action="#{profileEdit.actionDeleteItem}" value="smazat" rendered="#{!profileEdit.isDeletedItem(item.id)}">
+            <f:setPropertyActionListener target="#{profileEdit.manipulationID}" value="#{item.id}" />
+          </h:commandLink>
+        </h:column>
+
+        <h:column>
+          <h:commandLink action="#{profileEdit.actionRestoreItem}" value="obnovit" rendered="#{profileEdit.isDeletedItem(item.id)}">
             <f:setPropertyActionListener target="#{profileEdit.manipulationID}" value="#{item.id}" />
           </h:commandLink>
         </h:column>

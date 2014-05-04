@@ -66,11 +66,6 @@ public class ProfileEditBean {
   private String profileItemValue;
 
 
-  public ProfileEditBean(){
-
-  }
-
-
   public void init() throws Exception {
     profile = profileDao.getProfile(id);
 
@@ -174,13 +169,18 @@ public class ProfileEditBean {
 
     if(isNewItem(id)){
       //new items delete from cache right away
-      profileItems.remove(id);
+      profileItems.remove(id.toString());
     }
     else{
       //existing items mark for deletion
       deletedProfileItems.put(deleteItem.getId().toString(), deleteItem);
     }
 
+    return null;
+  }
+
+  public String actionRestoreItem(){
+    deletedProfileItems.remove(manipulationID);
     return null;
   }
 
@@ -201,6 +201,9 @@ public class ProfileEditBean {
         //insert
         else if(isNewItem(id)){
           itemDao.addItem(item);
+          //assure to have item under new ID in map
+          profileItems.remove(id);
+          profileItems.put(item.getId().toString(), item);
         }
         //update
         else{
@@ -208,19 +211,20 @@ public class ProfileEditBean {
         }
       }
 
+
       newItemID = -1;
     }
     catch (UniqueProfileKeyException e) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", FacesUtils.getRootMessage(e));
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny: " + FacesUtils.getRootMessage(e), null);
     }
     return null;
   }
 
-  private boolean isDeletedItem(Integer id){
+  public boolean isDeletedItem(Integer id){
     return deletedProfileItems.containsKey(id.toString());
   }
 
-  private boolean isNewItem(Integer id){
+  public boolean isNewItem(Integer id){
     return id.intValue() < 0;
   }
 

@@ -1,4 +1,4 @@
-package cz.i.cis.config.ejb;
+package cz.i.cis.config.web;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.context.FacesContext;

@@ -119,11 +119,11 @@ public class ProfileEditBean {
     }
   }
 
-  public void actionDeleteItemAjax(ConfigurationProfileItem item) {
+  public void actionDeleteItem(ConfigurationProfileItem item) {
     throw new RuntimeException(item.toString());
   }
 
-  public String actionDeleteItem(){
+  public String actionDeleteItemOld(){
     ConfigurationProfileItem deleteItem = profileItems.get(manipulationID);
     Integer id = deleteItem.getId();
 
@@ -141,7 +141,11 @@ public class ProfileEditBean {
     return null;
   }
 
-  public String actionRestoreItem(){
+  public void actionRestoreItem(ConfigurationProfileItem item) {
+    throw new RuntimeException(item.toString());
+  }
+
+  public String actionRestoreItemOld(){
     deletedProfileItems.remove(manipulationID);
     return null;
   }

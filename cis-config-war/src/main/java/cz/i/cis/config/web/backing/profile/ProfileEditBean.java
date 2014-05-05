@@ -2,13 +2,11 @@ package cz.i.cis.config.web.backing.profile;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -18,7 +16,6 @@ import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileItemDao;
 import cz.i.cis.config.ejb.dao.exceptions.UniqueProfileKeyException;
-import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
 import cz.i.cis.config.jpa.ConfigurationProfile;
@@ -32,7 +29,6 @@ import cz.i.cis.config.web.FacesUtils;
 public class ProfileEditBean {
 
   private static final String NONE_SELECTOR = "none";
-  private static final String ALL_SELECTOR = "all";
 
   @EJB
   private ConfigurationProfileDao profileDao;
@@ -46,6 +42,7 @@ public class ProfileEditBean {
   private CisUserDao userDao;
 
   private Integer id;
+  private String name;
 
   private ConfigurationProfile profile;
   private Map<String, ConfigurationItemKey> filteredItemKeys;
@@ -56,11 +53,6 @@ public class ProfileEditBean {
   private int newItemID = -1;
   private String manipulationID;
 
-
-  // profile metadata
-  private String name;
-  private String description;
-
   private String selectedCategory;
   private String selectedItemKey;
   private String profileItemValue;
@@ -69,12 +61,11 @@ public class ProfileEditBean {
   public void init() throws Exception {
     profile = profileDao.getProfile(id);
 
-    if (profile != null) {
-      name = profile.getName();
-      description = profile.getDescription();
+    if (profile == null) {
+      FacesMessagesUtils.addErrorMessage("Zvolený profil nebyl nalezen v databázi - ID = " + id, null);
     }
     else {
-      FacesMessagesUtils.addErrorMessage("Zvolený profil nebyl nalezen v databázi - ID = " + id, null);
+      this.name = profile.getName();
     }
 
     selectedCategory = NONE_SELECTOR;
@@ -87,9 +78,6 @@ public class ProfileEditBean {
   private void refreshItemKeys() throws Exception {
     if (NONE_SELECTOR.equals(selectedCategory)) {
       filteredItemKeys = Collections.emptyMap();
-    }
-    else if (ALL_SELECTOR.equals(selectedCategory)) {
-      filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeyDao.listItemKeys());
     }
     else {
       if (!allCategories.containsKey(selectedCategory)) {
@@ -109,39 +97,6 @@ public class ProfileEditBean {
 
     deletedProfileItems = new HashMap<>();
   }
-
-
-  public String actionUpdateProfileMetadata() {
-    if (profile != null) { // TODO to ukládání je i u vytváření nového profilu, nejlíp sjednotit
-      try {
-        String login = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
-        if (login == null || login.isEmpty()) {
-          throw new Exception("Somehow no user is not logged in and phantoms are not allowed to create configuration profiles.");
-        }
-        CisUser editor = userDao.getUser(login);
-        if (editor == null) {
-          throw new Exception("Logged in user has not been found in the database.");
-        }
-
-        profile.setName(name);
-        profile.setDescription(description);
-        profile.setUser(editor);
-        profile.setUpdate(new Date());
-
-        profile = profileDao.updateProfile(profile);
-        FacesMessagesUtils.addInfoMessage("Změny byly uloženy.", null);
-        // FacesUtils.redirect("list.xhtml#profile-" + profile.getId());
-      }
-      catch (Exception e) {
-        FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", FacesUtils.getRootMessage(e));
-      }
-    }
-    else {
-      FacesMessagesUtils.addErrorMessage("Musíte editovat existující profil, abyste mohli uložit jeho změny", null);
-    }
-    return null;
-  }
-
 
   public String actionAddProfileItem() {
     Integer id = newItemID--;
@@ -192,9 +147,9 @@ public class ProfileEditBean {
 
         //delete
         if(isDeletedItem(id)){
-//          if(!isNewItem(id)){ //only existing items are in deleted list
+// if(!isNewItem(id)){ //only existing items are in deleted list
             itemDao.removeItem(item);
-//          }
+// }
           profileItems.remove(id);
           deletedProfileItems.remove(id);
         }
@@ -230,29 +185,7 @@ public class ProfileEditBean {
 
 
 
-  public Integer getId() {
-    return id;
-  }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
 
   public String getProfileItemValue() {
     return profileItemValue;
@@ -268,10 +201,6 @@ public class ProfileEditBean {
 
   public boolean isKeyValueDisabled() {
     return NONE_SELECTOR.equals(selectedItemKey);
-  }
-
-  public String getAllSelector() {
-    return ALL_SELECTOR;
   }
 
   public String getNoneSelector() {
@@ -316,5 +245,21 @@ public class ProfileEditBean {
     if (NONE_SELECTOR.equals(selectedCategory))
       selectedItemKey = NONE_SELECTOR;
     return true;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }

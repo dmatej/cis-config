@@ -184,16 +184,6 @@ ul.form\:table\:error {
  padding: 0px;
 }
 
-.form\:table\:label {
- width: 150px;
-}
-
-.form\:table\:label\:top {
- width: 150px;
- display: inline-block;
- vertical-align: top;
-}
-
 .form\:table\:buttonline {
  display: inline-block;
  float: right;

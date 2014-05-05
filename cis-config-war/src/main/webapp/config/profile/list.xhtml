@@ -31,20 +31,29 @@
      </h:outputText>
     </h:column>
     <h:column>
-     <f:facet name="header">Poslední editor</f:facet>
+     <f:facet name="header">Změnil</f:facet>
      <h:outputText value="#{profile.user.login}" />
     </h:column>
     <h:column>
+     <f:facet name="header">Smazání</f:facet>
      <h:commandLink action="#{profileList.actionDeleteProfile}" value="smazat">
       <f:setPropertyActionListener target="#{profileList.profileID}" value="#{profile.id}" />
      </h:commandLink>
     </h:column>
     <h:column>
-     <h:link outcome="edit" value="upravit">
+     <f:facet name="header">Editace</f:facet>
+     <h:link outcome="edit-info" value="upravit">
       <f:param name="id" value="#{profile.id}" />
      </h:link>
     </h:column>
     <h:column>
+     <f:facet name="header">Položky</f:facet>
+     <h:link outcome="edit" value="položky">
+      <f:param name="id" value="#{profile.id}" />
+     </h:link>
+    </h:column>
+    <h:column>
+     <f:facet name="header">Aktivace</f:facet>
      <h:commandLink action="#{profileList.actionActivateProfile}" value="aktivovat">
       <f:setPropertyActionListener target="#{profileList.profileID}" value="#{profile.id}" />
      </h:commandLink>

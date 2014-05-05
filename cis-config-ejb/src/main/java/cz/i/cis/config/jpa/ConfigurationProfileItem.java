@@ -39,7 +39,6 @@ public class ConfigurationProfileItem implements Serializable {
   @Column(name = "item_value", nullable = false)
   private String value;
 
-
   public Integer getId() {
     return this.id;
   }
@@ -71,7 +70,6 @@ public class ConfigurationProfileItem implements Serializable {
   public void setValue(String value) {
     this.value = value;
   }
-
 
   @Override
   public int hashCode() {

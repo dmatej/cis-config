@@ -10,22 +10,31 @@
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputText id="name" class="important short" required="true" requiredMessage="Nebyl vyplněn název" value="#{category.name}" size="40" />
+    <h:inputText id="name" class="important" required="true" requiredMessage="Nenbyl vyplněn název" value="#{profile.name}" size="40" />
    </h:panelGroup>
 
    <h:panelGroup>
     <h:message for="name" styleClass="form:table:error" />
    </h:panelGroup>
 
-   <h:panelGroup />
+   <h:panelGroup>
+    <h:outputLabel for="description" value="Popis" />
+   </h:panelGroup>
 
-   <h:panelGroup class="form:table:buttonline">
-    <h:commandButton action="#{category[categoryAction]}" type="submit" value="#{categoryButtonName}" />
-    <h:button outcome="list" value="Storno" />
+   <h:panelGroup>
+    <h:inputTextarea id="description" required="false" value="#{profile.description}" rows="4" cols="40" />
    </h:panelGroup>
 
    <h:panelGroup />
 
+   <h:panelGroup />
+
+   <h:panelGroup class="form:table:buttonline">
+    <h:commandButton action="#{profile[profileAction]}" type="submit" value="#{profileButtonName}" />
+    <h:button outcome="list" value="Storno" />
+   </h:panelGroup>
+
+   <h:panelGroup />
   </h:panelGrid>
  </h:form>
 </ui:composition>

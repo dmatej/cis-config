@@ -13,7 +13,8 @@
  <ui:param name="pageTitle" value="Editace položek profilu &quot;#{profileEdit.name}&quot;" />
 
  <ui:define name="content">
-  <h:form onsubmit="#{profileEdit.refreshAddItemKeyForm()}">
+  <h:form id="form">
+
    <h:panelGrid columns="2">
     <h:panelGroup>
      <h:outputLabel for="category" value="Kategorie" />
@@ -48,12 +49,12 @@
     <h:panelGroup />
 
     <h:panelGroup>
-     <h:commandButton action="#{profileEdit.actionAddProfileItem}" value="Přidat položku" />
+     <h:commandButton value="Přidat položku">
+      <f:ajax listener="#{profileEdit.actionAddProfileItem}" execute="@form" render="@form" />
+     </h:commandButton>
     </h:panelGroup>
    </h:panelGrid>
-  </h:form>
 
-  <h:form>
    <h:commandButton action="#{profileEdit.actionSaveChanges}" value="Uložit změny" />
 
    <ui:param name="items" value="#{profileEdit.profileItems}" />
@@ -80,9 +81,10 @@
      <h:outputText value="#{item.value}" />
     </h:column>
 
-    <h:column>
-     <h:commandLink action="#{profileEdit.actionDeleteItem}" value="smazat" rendered="#{!profileEdit.isDeletedItem(item.id)}">
-      <f:setPropertyActionListener target="#{profileEdit.manipulationID}" value="#{item.id}" />
+    <h:column><!-- action=" # { profileEdit.actionDeleteItem}" -->
+     <h:commandLink  value="smazat" rendered="#{!profileEdit.isDeletedItem(item.id)}">
+      <f:ajax listener="#{profileEdit.actionDeleteItemAjax(item)}" />
+      <!--  <f:setPropertyActionListener target="# {profileEdit.manipulationID}" value="# {item.id}" />-->
      </h:commandLink>
     </h:column>
 

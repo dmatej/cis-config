@@ -98,11 +98,10 @@ public class ProfileEditBean {
     deletedProfileItems = new HashMap<>();
   }
 
-  public String actionAddProfileItem() {
+  public void actionAddProfileItem() {
     Integer id = newItemID--;
     ConfigurationItemKey key = filteredItemKeys.get(selectedItemKey);
     String value = profileItemValue;
-
 
     if(key != null && value != null && !value.isEmpty()){
       ConfigurationProfileItem item = new ConfigurationProfileItem();
@@ -112,8 +111,16 @@ public class ProfileEditBean {
         item.setValue(profileItemValue);
 
       profileItems.put(item.getId().toString(), item);
+
+      selectedCategory = NONE_SELECTOR;
+      selectedItemKey = "";
+      // TODO: remove item key
+      profileItemValue = "";
     }
-    return null;
+  }
+
+  public void actionDeleteItemAjax(ConfigurationProfileItem item) {
+    throw new RuntimeException(item.toString());
   }
 
   public String actionDeleteItem(){
@@ -182,10 +189,6 @@ public class ProfileEditBean {
   public boolean isNewItem(Integer id){
     return id.intValue() < 0;
   }
-
-
-
-
 
   public String getProfileItemValue() {
     return profileItemValue;

@@ -5,8 +5,8 @@
 
  <h:form id="form">
   <h:panelGrid columns="3" id="table">
-   <h:panelGroup class="form:table:label">
-    <label for="form:first-name">Jméno</label>
+   <h:panelGroup>
+    <h:outputLabel for="first-name" value="Jméno" />
    </h:panelGroup>
 
    <h:panelGroup>
@@ -17,8 +17,8 @@
     <h:message for="first-name" styleClass="form:table:error" />
    </h:panelGroup>
 
-   <h:panelGroup class="form:table:label">
-    <label for="form:last-name">Jméno</label>
+   <h:panelGroup>
+    <h:outputLabel for="last-name" value="Příjmení" />
    </h:panelGroup>
 
    <h:panelGroup>
@@ -29,8 +29,8 @@
     <h:message for="last-name" styleClass="form:table:error" />
    </h:panelGroup>
 
-   <h:panelGroup class="form:table:label">
-    <label for="form:nickname">Login</label>
+   <h:panelGroup>
+    <h:outputLabel for="nickname" value="Login" />
    </h:panelGroup>
 
    <h:panelGroup>
@@ -41,12 +41,13 @@
     <h:message for="nickname" styleClass="form:table:error" />
    </h:panelGroup>
 
-   <h:panelGroup class="form:table:label">
-    <label for="form:birthdate">Datum narození</label>
+   <h:panelGroup>
+    <h:outputLabel for="birthdate" value="Datum narození" />
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputText id="birthdate" class="important short" required="true" requiredMessage="Nebylo vyplněno datum narození" value="#{user.birthDate}" label="d.M.yyyy" converterMessage="Datum zadejte ve formátu d.M.yyyy" size="40">
+    <h:inputText id="birthdate" class="important short" required="true" requiredMessage="Nebylo vyplněno datum narození" value="#{user.birthDate}" label="d.M.yyyy"
+     converterMessage="Datum zadejte ve formátu d.M.yyyy" size="40">
      <f:convertDateTime pattern="d.M.yyyy" />
     </h:inputText>
    </h:panelGroup>

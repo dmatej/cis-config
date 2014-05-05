@@ -5,15 +5,12 @@
  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
  <ui:param name="pageName" value="Vítejte v CIS config" />
- <ui:param name="pageTitle" value="Rozcestník" />
+ <ui:param name="pageTitle" value="Smazaný uživatel" />
 
  <ui:define name="content">
-  <h:link outcome="config/index.xhtml" value="Vstoupit do aplikace" id="redirect" />
+  <p>Vaše přihlašovací jméno bylo smazáno z aplikace. Pokud se chcete do aplikace přihlásit,
+  kontaktujte prosím administrátora stránek.</p>
 
-  <script>
-      window.setTimeout(function() {
-        location.href = document.getElementById("redirect").href;
-      }, 5000);
-    </script>
+
  </ui:define>
 </ui:composition>

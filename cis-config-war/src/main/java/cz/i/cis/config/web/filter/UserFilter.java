@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.CisUserDao;
+import cz.i.cis.config.jpa.CisUser;
 
 
 /**
@@ -35,6 +36,7 @@ public class UserFilter implements Filter {
 
   private static final String USER_CONTEXT = "/config/user";
   private static final String CREATE_USER_SERVLET = USER_CONTEXT + "/create.xhtml";
+  private static final String REMOVED_CONTEXT_SERVLET = "/removed.xhtml";
 
   @EJB
   private CisUserDao userDao;
@@ -49,11 +51,21 @@ public class UserFilter implements Filter {
     final String login = httpRequest.getUserPrincipal() == null ? null : httpRequest.getUserPrincipal().getName();
 
     LOG.info("login={}, servletPath={}", login, httpRequest.getServletPath());
-    if (login == null || httpRequest.getServletPath().startsWith(USER_CONTEXT)) {
+    if (login == null || httpRequest.getServletPath().equals(CREATE_USER_SERVLET)) {
       chain.doFilter(httpRequest, response);
       return;
     }
-    if (userDao.getUser(login) != null) {
+
+    CisUser user = userDao.getUser(login);
+    if (user != null) {
+      if(user.isDeleted()) {
+        final String contextPath = httpRequest.getContextPath();
+        ((HttpServletResponse) response).sendRedirect(contextPath + REMOVED_CONTEXT_SERVLET);
+        LOG.info("Forwarded to {}", REMOVED_CONTEXT_SERVLET);
+
+        return;
+      }
+
       chain.doFilter(httpRequest, response);
       return;
     }

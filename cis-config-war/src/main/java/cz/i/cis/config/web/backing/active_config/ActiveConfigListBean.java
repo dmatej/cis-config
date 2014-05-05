@@ -16,12 +16,13 @@ import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
+
 @Named(value = "activeConfigList")
 @ViewScoped
 public class ActiveConfigListBean {
-
   private static final String NONE_SELECTOR = "none";
   private static final String ALL_SELECTOR = "all";
+
 
   @EJB
   private ConfigurationCategoryDao categoryDao;
@@ -48,9 +49,11 @@ public class ActiveConfigListBean {
   private void refreshActiveItems() throws Exception {
     if (NONE_SELECTOR.equals(selectedCategory)) {
       filteredActiveItems = Collections.emptyList();
-    } else if (ALL_SELECTOR.equals(selectedCategory)) {
+    }
+    else if (ALL_SELECTOR.equals(selectedCategory)) {
       filteredActiveItems = configItemDao.listItems();
-    } else {
+    }
+    else {
       if (!allCategories.containsKey(selectedCategory)) {
         throw new Exception("Selected category is not valid.");
       }
@@ -62,14 +65,13 @@ public class ActiveConfigListBean {
   }
 
 
-  public String actionDeleteActiveConfig() {
+  public void actionDeleteItem(ConfigurationItem toDelete) {
     try {
-      configItemDao.removeItem(activeConfigID);
-      return "list?faces-redirect=true&includeViewParams=true";
-    } catch (Exception exc) {
+      configItemDao.removeItem(toDelete);
+    }
+    catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat profil", FacesUtils.getRootMessage(exc));
     }
-    return null;
   }
 
 
@@ -77,26 +79,21 @@ public class ActiveConfigListBean {
     return ALL_SELECTOR;
   }
 
-
   public String getNoneSelector() {
     return NONE_SELECTOR;
   }
-
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
     return allCategories.values();
   }
 
-
   public String getSelectedCategory() {
     return selectedCategory;
   }
 
-
   public void setSelectedCategory(String selectedCategory) {
     this.selectedCategory = selectedCategory;
   }
-
 
   public List<ConfigurationItem> getFilteredActiveItems() throws Exception {
     refreshActiveItems();
@@ -104,16 +101,13 @@ public class ActiveConfigListBean {
     return filteredActiveItems;
   }
 
-
   public void setFilteredActiveItems(List<ConfigurationItem> filteredActiveItems) {
     this.filteredActiveItems = filteredActiveItems;
   }
 
-
   public Integer getActiveConfigID() {
     return activeConfigID;
   }
-
 
   public void setActiveConfigID(Integer activeConfigID) {
     this.activeConfigID = activeConfigID;

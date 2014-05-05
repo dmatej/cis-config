@@ -3,7 +3,6 @@ package cz.i.cis.config.web.backing.active_config;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -20,8 +19,8 @@ import cz.i.cis.config.web.FacesUtils;
 @Named(value = "activeConfigList")
 @ViewScoped
 public class ActiveConfigListBean {
-  private static final String NONE_SELECTOR = "none";
-  private static final String ALL_SELECTOR = "all";
+  private static final ConfigurationItemCategory NONE_SELECTOR = new ConfigurationItemCategory();
+  private static final ConfigurationItemCategory ALL_SELECTOR = new ConfigurationItemCategory();
 
 
   @EJB
@@ -29,38 +28,33 @@ public class ActiveConfigListBean {
   @EJB
   private ConfigurationItemDao configItemDao;
 
-  private Map<String, ConfigurationItemCategory> allCategories;
+  private List<ConfigurationItemCategory> allCategories;
   private List<ConfigurationItem> filteredActiveItems;
 
-  private Integer activeConfigID;
-  private String selectedCategory;
+  private ConfigurationItemCategory selectedCategory;
 
 
   public void init() throws Exception {
-    allCategories = categoryDao.getCategoryMap();
-    if (!allCategories.containsKey(selectedCategory) && !ALL_SELECTOR.equals(selectedCategory)) {
-      selectedCategory = NONE_SELECTOR;
-    }
+    allCategories = categoryDao.listCategories();
+    selectedCategory = NONE_SELECTOR;
 
     refreshActiveItems();
   }
 
 
   private void refreshActiveItems() throws Exception {
-    if (NONE_SELECTOR.equals(selectedCategory)) {
+    if (selectedCategory == NONE_SELECTOR) {
       filteredActiveItems = Collections.emptyList();
     }
-    else if (ALL_SELECTOR.equals(selectedCategory)) {
+    else if (selectedCategory == ALL_SELECTOR) {
       filteredActiveItems = configItemDao.listItems();
     }
     else {
-      if (!allCategories.containsKey(selectedCategory)) {
+      if (!allCategories.contains(selectedCategory)) {
         throw new Exception("Selected category is not valid.");
       }
 
-      ConfigurationItemCategory filter = allCategories.get(selectedCategory);
-
-      filteredActiveItems = configItemDao.listConfigurationItems(filter);
+      filteredActiveItems = configItemDao.listConfigurationItems(selectedCategory);
     }
   }
 
@@ -75,23 +69,23 @@ public class ActiveConfigListBean {
   }
 
 
-  public String getAllSelector() {
+  public ConfigurationItemCategory getAllSelector() {
     return ALL_SELECTOR;
   }
 
-  public String getNoneSelector() {
+  public ConfigurationItemCategory getNoneSelector() {
     return NONE_SELECTOR;
   }
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
-    return allCategories.values();
+    return allCategories;
   }
 
-  public String getSelectedCategory() {
+  public ConfigurationItemCategory getSelectedCategory() {
     return selectedCategory;
   }
 
-  public void setSelectedCategory(String selectedCategory) {
+  public void setSelectedCategory(ConfigurationItemCategory selectedCategory) {
     this.selectedCategory = selectedCategory;
   }
 
@@ -103,13 +97,5 @@ public class ActiveConfigListBean {
 
   public void setFilteredActiveItems(List<ConfigurationItem> filteredActiveItems) {
     this.filteredActiveItems = filteredActiveItems;
-  }
-
-  public Integer getActiveConfigID() {
-    return activeConfigID;
-  }
-
-  public void setActiveConfigID(Integer activeConfigID) {
-    this.activeConfigID = activeConfigID;
   }
 }

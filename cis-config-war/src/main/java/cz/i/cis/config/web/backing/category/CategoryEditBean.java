@@ -26,7 +26,11 @@ public class CategoryEditBean {
 
 
   public void init() {
-    category = categoryDao.getCategory(id);
+    try {
+      category = categoryDao.getCategory(id);
+    } catch (IllegalArgumentException exc) {
+      FacesMessagesUtils.addErrorMessage("edit:category", exc.getMessage(), null);
+    }
 
     if (category != null) {
       name = category.getName();

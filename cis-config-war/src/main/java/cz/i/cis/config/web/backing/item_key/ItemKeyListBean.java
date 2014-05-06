@@ -61,17 +61,20 @@ public class ItemKeyListBean {
 
 
   public List<ConfigurationItemKey> getFilteredItemKeys() {
-    if (NONE_SELECTOR.equals(selectedCategory)) {
-      return Collections.emptyList();
-    }
-    if (ALL_SELECTOR.equals(selectedCategory)) {
-      return itemKeyDao.listItemKeys();
-    }
+    try {
+      if (NONE_SELECTOR.equals(selectedCategory)) {
+        return Collections.emptyList();
+      }
+      if (ALL_SELECTOR.equals(selectedCategory)) {
+        return itemKeyDao.listItemKeys();
+      }
 
-    if (!allCategories.containsKey(selectedCategory)) {
-      throw new IllegalArgumentException("Selected category is not valid.");
+      if (!allCategories.containsKey(selectedCategory)) {
+        throw new IllegalArgumentException("Selected category is not valid.");
+      }
+    } catch (IllegalArgumentException exc) {
+      FacesMessagesUtils.addErrorMessage("form:category", exc.getMessage(), null);
     }
-
     ConfigurationItemCategory filter = allCategories.get(selectedCategory);
 
     return itemKeyDao.filterItemKeys(filter);

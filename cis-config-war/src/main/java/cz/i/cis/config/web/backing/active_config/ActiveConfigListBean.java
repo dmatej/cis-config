@@ -15,13 +15,12 @@ import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
-
 @Named(value = "activeConfigList")
 @ViewScoped
 public class ActiveConfigListBean {
+
   private static final ConfigurationItemCategory NONE_SELECTOR = new ConfigurationItemCategory();
   private static final ConfigurationItemCategory ALL_SELECTOR = new ConfigurationItemCategory();
-
 
   @EJB
   private ConfigurationCategoryDao categoryDao;
@@ -45,16 +44,18 @@ public class ActiveConfigListBean {
   private void refreshActiveItems() throws Exception {
     if (selectedCategory == NONE_SELECTOR) {
       filteredActiveItems = Collections.emptyList();
-    }
-    else if (selectedCategory == ALL_SELECTOR) {
+    } else if (selectedCategory == ALL_SELECTOR) {
       filteredActiveItems = configItemDao.listItems();
-    }
-    else {
+    } else {
       if (!allCategories.contains(selectedCategory)) {
         throw new Exception("Selected category is not valid.");
       }
+      try {
+        filteredActiveItems = configItemDao.listConfigurationItems(selectedCategory);
+      } catch (IllegalArgumentException exc) {
+        FacesMessagesUtils.addErrorMessage("list:item", exc.getMessage(), null);
+      }
 
-      filteredActiveItems = configItemDao.listConfigurationItems(selectedCategory);
     }
   }
 
@@ -62,8 +63,7 @@ public class ActiveConfigListBean {
   public void actionDeleteItem(ConfigurationItem toDelete) {
     try {
       configItemDao.removeItem(toDelete);
-    }
-    catch (Exception exc) {
+    } catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat profil", FacesUtils.getRootMessage(exc));
     }
   }
@@ -73,27 +73,33 @@ public class ActiveConfigListBean {
     return ALL_SELECTOR;
   }
 
+
   public ConfigurationItemCategory getNoneSelector() {
     return NONE_SELECTOR;
   }
+
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
     return allCategories;
   }
 
+
   public ConfigurationItemCategory getSelectedCategory() {
     return selectedCategory;
   }
 
+
   public void setSelectedCategory(ConfigurationItemCategory selectedCategory) {
     this.selectedCategory = selectedCategory;
   }
+
 
   public List<ConfigurationItem> getFilteredActiveItems() throws Exception {
     refreshActiveItems();
 
     return filteredActiveItems;
   }
+
 
   public void setFilteredActiveItems(List<ConfigurationItem> filteredActiveItems) {
     this.filteredActiveItems = filteredActiveItems;

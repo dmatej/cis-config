@@ -37,8 +37,11 @@ public class ItemKeyEditBean {
 
   public void init() {
     allCategories = categoryDao.getCategoryMap();
-
-    itemKey = itemKeyDao.getItemKey(id);
+    try {
+      itemKey = itemKeyDao.getItemKey(id);
+    } catch (IllegalArgumentException exc) {
+      FacesMessagesUtils.addErrorMessage("edit:key", exc.getMessage(), null);
+    }
     if (itemKey != null) {
       key = itemKey.getKey();
       type = itemKey.getType();

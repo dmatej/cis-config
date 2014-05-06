@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-
 import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.web.FacesMessagesUtils;

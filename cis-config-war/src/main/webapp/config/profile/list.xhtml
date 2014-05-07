@@ -40,8 +40,8 @@
 
     <h:column>
      <f:facet name="header">Smazání</f:facet>
-     <h:commandLink action="#{profileList.actionDeleteProfile}" value="smazat">
-      <f:setPropertyActionListener target="#{profileList.profileID}" value="#{profile.id}" />
+     <h:commandLink value="smazat">
+      <f:ajax listener="#{profileList.actionDeleteProfile(profile.id)}" render="@form" />
      </h:commandLink>
     </h:column>
 

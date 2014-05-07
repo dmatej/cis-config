@@ -18,39 +18,24 @@ public class ProfileListBean {
   @EJB
   private ConfigurationProfileDao profileDao;
 
-  private Integer profileID;
-
 
   public List<ConfigurationProfile> getAllProfiles() {
     return profileDao.listProfiles();
   }
 
 
-  public String actionDeleteProfile() {
+  public void actionDeleteProfile(Integer profileID) {
     try {
       profileDao.removeProfile(profileID);
-
-      return "list?faces-redirect=true";
     }
     catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat profil", FacesUtils.getRootMessage(exc));
     }
-    return null;
   }
 
 
   public String actionActivateProfile() {
     // TODO zkopírovat všechny položky do aktivní konfigurace
     return null;
-  }
-
-
-  public Integer getProfileID() {
-    return profileID;
-  }
-
-
-  public void setProfileID(Integer profileID) {
-    this.profileID = profileID;
   }
 }

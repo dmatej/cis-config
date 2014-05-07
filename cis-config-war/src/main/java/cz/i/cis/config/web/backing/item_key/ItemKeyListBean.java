@@ -30,8 +30,6 @@ public class ItemKeyListBean {
   @EJB
   private ConfigurationCategoryDao categoryDao;
 
-  private Integer itemKeyID;
-
   private String selectedCategory;
   private Map<String, ConfigurationItemCategory> allCategories;
 
@@ -43,20 +41,20 @@ public class ItemKeyListBean {
     String category = (String) FacesUtils.getSession(SESSION_NAME);
     if (category == null) {
       selectedCategory = NONE_SELECTOR;
-    } else {
+    }
+    else {
       selectedCategory = category;
     }
   }
 
 
-  public String actionDeleteItemKey() {
+  public void actionDeleteItemKey(Integer itemKeyID) {
     try {
       itemKeyDao.removeItemKey(itemKeyID);
-      return "list?faces-redirect=true";
-    } catch (Exception exc) {
+    }
+    catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat klíč", FacesUtils.getRootMessage(exc));
     }
-    return null;
   }
 
 
@@ -72,7 +70,8 @@ public class ItemKeyListBean {
       if (!allCategories.containsKey(selectedCategory)) {
         throw new IllegalArgumentException("Selected category is not valid.");
       }
-    } catch (IllegalArgumentException exc) {
+    }
+    catch (IllegalArgumentException exc) {
       FacesMessagesUtils.addErrorMessage("form:category", exc.getMessage(), null);
     }
     ConfigurationItemCategory filter = allCategories.get(selectedCategory);
@@ -85,32 +84,18 @@ public class ItemKeyListBean {
     return ALL_SELECTOR;
   }
 
-
   public String getNoneSelector() {
     return NONE_SELECTOR;
   }
-
-
-  public Integer getItemKeyID() {
-    return itemKeyID;
-  }
-
-
-  public void setItemKeyID(Integer itemKeyID) {
-    this.itemKeyID = itemKeyID;
-  }
-
 
   public String getSelectedCategory() {
     return selectedCategory;
   }
 
-
   public void setSelectedCategory(String selectedCategory) {
     FacesUtils.setSession(SESSION_NAME, selectedCategory);
     this.selectedCategory = selectedCategory;
   }
-
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
     return allCategories.values();

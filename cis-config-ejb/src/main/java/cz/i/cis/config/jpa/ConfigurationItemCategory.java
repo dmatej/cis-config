@@ -31,8 +31,19 @@ public class ConfigurationItemCategory implements Serializable {
   private String name;
 
 
+  public ConfigurationItemCategory(){}
+
+  public ConfigurationItemCategory(Integer id){
+    this.id = id;
+  }
+
+
   public Integer getId() {
     return this.id;
+  }
+
+  public int getIdInt(){
+    return id.intValue();
   }
 
   public void setId(Integer id) {

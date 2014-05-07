@@ -19,6 +19,7 @@ import cz.i.cis.config.ejb.dao.exceptions.UniqueKeyException;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
 
+
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
@@ -41,7 +42,8 @@ public class ConfigurationItemKeyDao {
     try {
       this.em.persist(key);
       em.flush();
-    } catch (PersistenceException exc) {
+    }
+    catch (PersistenceException exc) {
       throw new UniqueKeyException("Key" + key.getKey() + " already exists!", exc);
     }
   }
@@ -56,6 +58,8 @@ public class ConfigurationItemKeyDao {
   }
 
   public List<ConfigurationItemKey> filterItemKeys(ConfigurationItemCategory category){
+    category = em.merge(category);
+
     final TypedQuery<ConfigurationItemKey> query = this.em.createQuery(
         "SELECT itemKey FROM ConfigurationItemKey itemKey WHERE itemKey.category = :category", ConfigurationItemKey.class);
     query.setParameter("category", category);

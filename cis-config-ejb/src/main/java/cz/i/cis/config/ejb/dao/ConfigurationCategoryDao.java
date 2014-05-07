@@ -25,25 +25,12 @@ public class ConfigurationCategoryDao {
   private EntityManager em;
 
 
-  public ConfigurationCategoryDao() {
-  }
-
-
   public List<ConfigurationItemCategory> listCategories() {
     final TypedQuery<ConfigurationItemCategory> query = this.em.createQuery(
         "select category from ConfigurationItemCategory category",
         ConfigurationItemCategory.class);
 
     return query.getResultList();
-  }
-
-  public Map<String, ConfigurationItemCategory> getCategoryMap() {
-    Map<String, ConfigurationItemCategory> categoryMap = new HashMap<>();
-    for (ConfigurationItemCategory category : listCategories()) {
-      categoryMap.put(category.getId().toString(), category);
-    }
-
-    return categoryMap;
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -70,5 +57,23 @@ public class ConfigurationCategoryDao {
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public ConfigurationItemCategory updateCategory(ConfigurationItemCategory category) {
     return this.em.merge(category);
+  }
+
+  public Map<String, ConfigurationItemCategory> getCategoryMap() {
+    Map<String, ConfigurationItemCategory> categoryMap = new HashMap<>();
+    for (ConfigurationItemCategory category : listCategories()) {
+      categoryMap.put(category.getId().toString(), category);
+    }
+
+    return categoryMap;
+  }
+
+
+  public static ConfigurationItemCategory getCategory(List<ConfigurationItemCategory> categories, Integer id) {
+    for (ConfigurationItemCategory category : categories) {
+      if(category.getId().intValue() == id.intValue())
+        return category;
+    }
+    return null;
   }
 }

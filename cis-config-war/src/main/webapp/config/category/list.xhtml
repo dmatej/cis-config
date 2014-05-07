@@ -28,8 +28,8 @@
 
     <h:column>
      <f:facet name="header">Smazání</f:facet>
-     <h:commandLink action="#{categoryList.actionDeleteCategory}" value="smazat">
-      <f:setPropertyActionListener target="#{categoryList.categoryID}" value="#{category.id}" />
+     <h:commandLink value="smazat">
+      <f:ajax listener="#{categoryList.actionDeleteCategory(category)}" render="@form" />
      </h:commandLink>
     </h:column>
 

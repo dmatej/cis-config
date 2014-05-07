@@ -53,7 +53,8 @@ public class ConfigurationCategoryDao {
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeCategory(ConfigurationItemCategory category) {
-    this.em.remove(category);
+    ConfigurationItemCategory managed = em.merge(category);
+    this.em.remove(managed);
   }
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)

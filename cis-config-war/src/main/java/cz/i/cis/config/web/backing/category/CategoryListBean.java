@@ -11,6 +11,7 @@ import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
+
 @Named(value = "categoryList")
 @ViewScoped
 public class CategoryListBean {
@@ -18,33 +19,18 @@ public class CategoryListBean {
   @EJB
   private ConfigurationCategoryDao categoryDao;
 
-  private Integer categoryID;
-
 
   public List<ConfigurationItemCategory> getAllCategories() {
     return categoryDao.listCategories();
   }
 
 
-  public String actionDeleteCategory() {
+  public void actionDeleteCategory(ConfigurationItemCategory toDelete) {
     try {
-      categoryDao.removeCategory(categoryID);
-
-      return "list?faces-redirect=true";
-    } catch (Exception exc) {
+      categoryDao.removeCategory(toDelete);
+    }
+    catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat kategorii", FacesUtils.getRootMessage(exc));
     }
-
-    return null;
-  }
-
-
-  public Integer getCategoryID() {
-    return categoryID;
-  }
-
-
-  public void setCategoryID(Integer categoryID) {
-    this.categoryID = categoryID;
   }
 }

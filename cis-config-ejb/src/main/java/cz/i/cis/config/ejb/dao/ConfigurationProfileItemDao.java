@@ -53,7 +53,6 @@ public class ConfigurationProfileItemDao {
   public void removeItem(ConfigurationProfileItem item) {
     ConfigurationProfileItem i = this.em.merge(item);
     this.em.remove(i);
-//     this.em.remove(item);
   }
 
 

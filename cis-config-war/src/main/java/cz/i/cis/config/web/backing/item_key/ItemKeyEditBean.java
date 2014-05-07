@@ -15,6 +15,7 @@ import cz.i.cis.config.jpa.Type;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
+
 @Named(value = "itemKeyEdit")
 @ViewScoped
 public class ItemKeyEditBean {
@@ -39,7 +40,8 @@ public class ItemKeyEditBean {
     allCategories = categoryDao.getCategoryMap();
     try {
       itemKey = itemKeyDao.getItemKey(id);
-    } catch (IllegalArgumentException exc) {
+    }
+    catch (IllegalArgumentException exc) {
       FacesMessagesUtils.addErrorMessage("edit:key", exc.getMessage(), null);
     }
     if (itemKey != null) {
@@ -47,7 +49,8 @@ public class ItemKeyEditBean {
       type = itemKey.getType();
       selectedCategory = itemKey.getCategory().getId().toString();
       description = itemKey.getDescription();
-    } else {
+    }
+    else {
       FacesMessagesUtils.addErrorMessage("Zvolený klíč nebyl nalezen v databázi - ID = " + id, null);
     }
   }
@@ -67,10 +70,12 @@ public class ItemKeyEditBean {
       try {
         itemKey = itemKeyDao.updateItemKey(itemKey);
         FacesUtils.redirect("list.xhtml#itemKey-" + itemKey.getId());
-      } catch (Exception exc) {
+      }
+      catch (Exception exc) {
         FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", FacesUtils.getRootMessage(exc));
       }
-    } else {
+    }
+    else {
       FacesMessagesUtils.addErrorMessage("Musíte editovat existující klíč, abyste mohli uložit jeho změny.", null);
     }
     return null; // stay on the same page to display the messages
@@ -81,56 +86,45 @@ public class ItemKeyEditBean {
     return Type.values();
   }
 
-
   public Integer getId() {
     return id;
   }
-
 
   public void setId(Integer id) {
     this.id = id;
   }
 
-
   public String getKey() {
     return key;
   }
-
 
   public void setKey(String key) {
     this.key = key;
   }
 
-
   public Type getType() {
     return type;
   }
-
 
   public void setType(Type type) {
     this.type = type;
   }
 
-
   public String getSelectedCategory() {
     return selectedCategory;
   }
-
 
   public void setSelectedCategory(String category) {
     this.selectedCategory = category;
   }
 
-
   public String getDescription() {
     return description;
   }
 
-
   public void setDescription(String description) {
     this.description = description;
   }
-
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
     return allCategories.values();

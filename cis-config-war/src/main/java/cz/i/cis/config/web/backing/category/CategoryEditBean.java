@@ -11,6 +11,7 @@ import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
+
 @Named(value = "categoryEdit")
 @ViewScoped
 public class CategoryEditBean {
@@ -28,13 +29,15 @@ public class CategoryEditBean {
   public void init() {
     try {
       category = categoryDao.getCategory(id);
-    } catch (IllegalArgumentException exc) {
+    }
+    catch (IllegalArgumentException exc) {
       FacesMessagesUtils.addErrorMessage("edit:category", exc.getMessage(), null);
     }
 
     if (category != null) {
       name = category.getName();
-    } else {
+    }
+    else {
       FacesMessagesUtils.addErrorMessage("Zvolená kategorie nebyla nalezena v databázi - ID = " + id, null);
     }
   }
@@ -49,12 +52,15 @@ public class CategoryEditBean {
 
         link = "list.xhtml#category-" + category.getId();
         FacesUtils.redirect(link);
-      } catch (IOException exc) {
+      }
+      catch (IOException exc) {
         FacesMessagesUtils.failedRedirectMessage(link, exc);
-      } catch (Exception exc) {
+      }
+      catch (Exception exc) {
         FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", FacesUtils.getRootMessage(exc));
       }
-    } else {
+    }
+    else {
       FacesMessagesUtils.addErrorMessage("Musíte editovat existující kategorii, abyste mohli uložit její změny.", null);
     }
     return null; // stay on the same page to display the messages
@@ -65,16 +71,13 @@ public class CategoryEditBean {
     return id;
   }
 
-
   public void setId(Integer id) {
     this.id = id;
   }
 
-
   public String getName() {
     return name;
   }
-
 
   public void setName(String name) {
     this.name = name;

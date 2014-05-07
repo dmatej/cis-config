@@ -17,6 +17,7 @@ import cz.i.cis.config.jpa.ConfigurationItemKey;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
+
 @Named(value = "itemKeyList")
 @ViewScoped
 public class ItemKeyListBean {

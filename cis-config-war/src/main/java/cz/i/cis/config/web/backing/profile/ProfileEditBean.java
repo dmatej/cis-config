@@ -75,6 +75,7 @@ public class ProfileEditBean {
     refreshItems();
   }
 
+
   private void refreshItemKeys() throws Exception {
     if (NONE_SELECTOR.equals(selectedCategory)) {
       filteredItemKeys = Collections.emptyMap();
@@ -88,6 +89,10 @@ public class ProfileEditBean {
       List<ConfigurationItemKey> itemKeys = itemKeyDao.filterItemKeys(filter);
 
       filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
+
+//      for (ConfigurationProfileItem item : profileItems.values()) {
+//        filteredItemKeys.remove(item.getKey().getId().toString());
+//      }
     }
   }
 
@@ -97,6 +102,7 @@ public class ProfileEditBean {
 
     deletedProfileItems = new HashMap<>();
   }
+
 
   public void actionAddProfileItem() {
     Integer id = newItemID--;
@@ -112,22 +118,16 @@ public class ProfileEditBean {
 
       profileItems.put(item.getId().toString(), item);
 
-      selectedCategory = NONE_SELECTOR;
+      selectedCategory = item.getKey().getCategory().getId().toString();
       selectedItemKey = "";
-      // TODO: remove item key
       profileItemValue = "";
     }
   }
 
-  public void actionDeleteItem(ConfigurationProfileItem item) {
-    throw new RuntimeException(item.toString());
-  }
+  public void actionDeleteItem(Integer id){
+    ConfigurationProfileItem deleteItem = profileItems.get(id.toString());
 
-  public String actionDeleteItemOld(){
-    ConfigurationProfileItem deleteItem = profileItems.get(manipulationID);
-    Integer id = deleteItem.getId();
-
-    if(isDeletedItem(id)) return null; //nothing new to delete
+    if(isDeletedItem(id)) return; //nothing new to delete
 
     if(isNewItem(id)){
       //new items delete from cache right away
@@ -137,20 +137,13 @@ public class ProfileEditBean {
       //existing items mark for deletion
       deletedProfileItems.put(deleteItem.getId().toString(), deleteItem);
     }
-
-    return null;
   }
 
-  public void actionRestoreItem(ConfigurationProfileItem item) {
-    throw new RuntimeException(item.toString());
-  }
-
-  public String actionRestoreItemOld(){
+  public void actionRestoreItem(){
     deletedProfileItems.remove(manipulationID);
-    return null;
   }
 
-  public String actionSaveChanges(){
+  public void actionSaveChanges(){
     try {
       //TODO in one transaction?
       for (ConfigurationProfileItem item : profileItems.values()) {
@@ -158,9 +151,8 @@ public class ProfileEditBean {
 
         //delete
         if(isDeletedItem(id)){
-// if(!isNewItem(id)){ //only existing items are in deleted list
-            itemDao.removeItem(item);
-// }
+          //only existing items are in deleted list
+          itemDao.removeItem(item);
           profileItems.remove(id);
           deletedProfileItems.remove(id);
         }
@@ -177,14 +169,13 @@ public class ProfileEditBean {
         }
       }
 
-
       newItemID = -1;
     }
     catch (UniqueProfileKeyException e) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny: " + FacesUtils.getRootMessage(e), null);
     }
-    return null;
   }
+
 
   public boolean isDeletedItem(Integer id){
     return deletedProfileItems.containsKey(id.toString());

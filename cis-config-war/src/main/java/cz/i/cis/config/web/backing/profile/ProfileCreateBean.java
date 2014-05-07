@@ -15,6 +15,7 @@ import cz.i.cis.config.jpa.ConfigurationProfile;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
+
 @Named(value = "profileCreate")
 @ViewScoped
 public class ProfileCreateBean {
@@ -50,9 +51,11 @@ public class ProfileCreateBean {
 
       return "edit?faces-redirect=true&includeViewParams=true&id=" + profile.getId();
       // FacesUtils.redirect("list.xhtml#user-" + profile.getId());
-    } catch (IllegalArgumentException exc) {
+    }
+    catch (IllegalArgumentException exc) {
       FacesMessagesUtils.addErrorMessage("create:user", exc.getMessage(), null);
-    } catch (Exception exc) {
+    }
+    catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat nový profil", FacesUtils.getRootMessage(exc));
     }
     return null;
@@ -63,16 +66,13 @@ public class ProfileCreateBean {
     return name;
   }
 
-
   public void setName(String name) {
     this.name = name;
   }
 
-
   public String getDescription() {
     return description;
   }
-
 
   public void setDescription(String description) {
     this.description = description;

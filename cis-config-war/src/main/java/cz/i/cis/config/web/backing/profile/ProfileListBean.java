@@ -11,6 +11,7 @@ import cz.i.cis.config.jpa.ConfigurationProfile;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
+
 @Named(value = "profileList")
 @ViewScoped
 public class ProfileListBean {

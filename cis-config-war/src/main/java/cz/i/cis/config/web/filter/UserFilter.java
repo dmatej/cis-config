@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.jpa.CisUser;
 
-
 /**
  * Redirects client to new user registration if the user still does not exist in application.
  *
@@ -47,32 +46,46 @@ public class UserFilter implements Filter {
     ServletException {
     LOG.debug("doFilter(request={}, response={}, chain={})", request, response, chain);
 
-    final HttpServletRequest httpRequest = (HttpServletRequest) request;
-    final String login = httpRequest.getUserPrincipal() == null ? null : httpRequest.getUserPrincipal().getName();
-
-    LOG.info("login={}, servletPath={}", login, httpRequest.getServletPath());
-    if (login == null || httpRequest.getServletPath().equals(CREATE_USER_SERVLET)) {
-      chain.doFilter(httpRequest, response);
-      return;
-    }
-
-    CisUser user = userDao.getUser(login);
-    if (user != null) {
-      if(user.isDeleted()) {
-        final String contextPath = httpRequest.getContextPath();
-        ((HttpServletResponse) response).sendRedirect(contextPath + REMOVED_CONTEXT_SERVLET);
-        LOG.info("Forwarded to {}", REMOVED_CONTEXT_SERVLET);
-
-        return;
+    final long start = System.currentTimeMillis();
+    try {
+      final HttpServletRequest httpRequest = (HttpServletRequest) request;
+      final boolean filter = processUser(httpRequest, response, chain);
+      if (filter) {
+        chain.doFilter(httpRequest, response);
       }
+    } finally {
+      LOG.info("Request processed in {} ms", System.currentTimeMillis() - start);
+    }
+  }
 
-      chain.doFilter(httpRequest, response);
-      return;
+
+  private boolean processUser(HttpServletRequest request, ServletResponse response, FilterChain chain)
+    throws IOException, ServletException {
+    LOG.trace("processUser(request, response, chain)");
+
+    final String login = request.getUserPrincipal() == null ? null : request.getUserPrincipal().getName();
+    LOG.info("login={}, servletPath={}", login, request.getServletPath());
+    if (login == null || request.getServletPath().equals(CREATE_USER_SERVLET)) {
+      chain.doFilter(request, response);
+      return false;
     }
 
-    final String contextPath = httpRequest.getContextPath();
-    ((HttpServletResponse) response).sendRedirect(contextPath + CREATE_USER_SERVLET);
-    LOG.info("Forwarded to {}", CREATE_USER_SERVLET);
+    final CisUser user = userDao.getUser(login);
+    if (user == null) {
+      final String contextPath = request.getContextPath();
+      ((HttpServletResponse) response).sendRedirect(contextPath + CREATE_USER_SERVLET);
+      LOG.info("Forwarded to {}", CREATE_USER_SERVLET);
+      return false;
+    }
+
+    if (user.isDeleted()) {
+      final String contextPath = request.getContextPath();
+      ((HttpServletResponse) response).sendRedirect(contextPath + REMOVED_CONTEXT_SERVLET);
+      LOG.info("Forwarded to {}", REMOVED_CONTEXT_SERVLET);
+
+      return false;
+    }
+    return true;
   }
 
 

@@ -7,6 +7,9 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
@@ -19,6 +22,7 @@ import cz.i.cis.config.web.FacesUtils;
 @Named(value = "itemKeyEdit")
 @ViewScoped
 public class ItemKeyEditBean {
+  private static final Logger LOG = LoggerFactory.getLogger(ItemKeyEditBean.class);
 
   @EJB
   private ConfigurationItemKeyDao itemKeyDao;
@@ -37,6 +41,7 @@ public class ItemKeyEditBean {
 
 
   public void init() {
+    LOG.debug("init()");
     allCategories = categoryDao.getCategoryMap();
     try {
       itemKey = itemKeyDao.getItemKey(id);
@@ -57,6 +62,7 @@ public class ItemKeyEditBean {
 
 
   public String actionUpdateItemKey() throws Exception {
+    LOG.debug("actionUpdateItemKey()");
     if (itemKey != null) {
       if (!allCategories.containsKey(selectedCategory)) {
         throw new Exception("Selected category is not valid.");
@@ -83,50 +89,62 @@ public class ItemKeyEditBean {
 
 
   public Type[] getAllTypes() {
+    LOG.debug("getAllTypes()");
     return Type.values();
   }
 
   public Integer getId() {
+    LOG.trace("getId()");
     return id;
   }
 
   public void setId(Integer id) {
+    LOG.debug("setId(id={})", id);
     this.id = id;
   }
 
   public String getKey() {
+    LOG.trace("getKey()");
     return key;
   }
 
   public void setKey(String key) {
+    LOG.debug("setKey(key={})", key);
     this.key = key;
   }
 
   public Type getType() {
+    LOG.trace("getType()");
     return type;
   }
 
   public void setType(Type type) {
+    LOG.debug("setType(type={})", type);
     this.type = type;
   }
 
   public String getSelectedCategory() {
+    LOG.trace("getSelectedCategory()");
     return selectedCategory;
   }
 
   public void setSelectedCategory(String category) {
+    LOG.debug("setSelectedCategory(category={})", category);
     this.selectedCategory = category;
   }
 
   public String getDescription() {
+    LOG.trace("getDescription()");
     return description;
   }
 
   public void setDescription(String description) {
+    LOG.debug("setDescription(description={})", description);
     this.description = description;
   }
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
+    LOG.debug("getAllCategories()");
     return allCategories.values();
   }
 }

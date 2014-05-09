@@ -9,6 +9,9 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.ejb.dao.exceptions.UniqueKeyException;
@@ -22,6 +25,7 @@ import cz.i.cis.config.web.FacesUtils;
 @Named(value = "itemKeyCreate")
 @ViewScoped
 public class ItemKeyCreateBean {
+  private static final Logger LOG = LoggerFactory.getLogger(ItemKeyCreateBean.class);
 
   @EJB
   private ConfigurationItemKeyDao itemKeyDao;
@@ -38,11 +42,13 @@ public class ItemKeyCreateBean {
 
   @PostConstruct
   public void init() {
+    LOG.debug("init()");
     allCategories = categoryDao.getCategoryMap();
   }
 
 
-  public String actionAddItemKey() {
+  public String actionAddItemKey(){
+    LOG.debug("actionAddItemKey()");
     String link = "";
     try {
       if (!allCategories.containsKey(selectedCategory)) {
@@ -78,42 +84,52 @@ public class ItemKeyCreateBean {
 
 
   public Type[] getAllTypes() {
+    LOG.debug("getAllTypes()");
     return Type.values();
   }
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
+    LOG.debug("getAllCategories()");
     return allCategories.values();
   }
 
   public String getKey() {
+    LOG.trace("getKey()");
     return key;
   }
 
   public void setKey(String key) {
+    LOG.debug("setKey(key={})", key);
     this.key = key;
   }
 
   public Type getType() {
+    LOG.trace("getType()");
     return type;
   }
 
   public void setType(Type type) {
+    LOG.debug("setType(type={})", type);
     this.type = type;
   }
 
   public String getSelectedCategory() {
+    LOG.trace("getSelectedCategory()");
     return selectedCategory;
   }
 
   public void setSelectedCategory(String category) {
+    LOG.debug("setSelectedCategory(category={})", category);
     this.selectedCategory = category;
   }
 
   public String getDescription() {
+    LOG.trace("getDescription()");
     return description;
   }
 
   public void setDescription(String description) {
+    LOG.debug("setDescription(description={})", description);
     this.description = description;
   }
 }

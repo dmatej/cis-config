@@ -8,6 +8,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileDao;
 import cz.i.cis.config.jpa.CisUser;
@@ -19,6 +22,8 @@ import cz.i.cis.config.web.FacesUtils;
 @Named(value = "profileCreate")
 @ViewScoped
 public class ProfileCreateBean {
+  private static final Logger LOG = LoggerFactory.getLogger(ProfileCreateBean.class);
+
 
   @EJB
   private ConfigurationProfileDao profileDao;
@@ -30,6 +35,7 @@ public class ProfileCreateBean {
 
 
   public String actionAddProfile() throws IOException {
+    LOG.debug("actionAddProfile()");
     try {
       String login = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
       if (login == null || login.isEmpty()) {
@@ -63,18 +69,22 @@ public class ProfileCreateBean {
 
 
   public String getName() {
+    LOG.trace("getName()");
     return name;
   }
 
   public void setName(String name) {
+    LOG.debug("setName(name={})", name);
     this.name = name;
   }
 
   public String getDescription() {
+    LOG.trace("getDescription()");
     return description;
   }
 
   public void setDescription(String description) {
+    LOG.debug("setDescription(description={})", description);
     this.description = description;
   }
 }

@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Servlet to logout current user.
@@ -15,10 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/login/logout")
 public class LogoutServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
+  private static final Logger LOG = LoggerFactory.getLogger(LogoutServlet.class);
 
 
   @Override
   protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    LOG.info("service(request, response)");
     request.logout();
     response.sendRedirect("/cis");
   }

@@ -7,6 +7,9 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.web.FacesMessagesUtils;
@@ -15,6 +18,7 @@ import cz.i.cis.config.web.FacesUtils;
 @Named(value = "userEdit")
 @ViewScoped
 public class UserEditBean {
+  private static final Logger LOG = LoggerFactory.getLogger(UserEditBean.class);
 
   @EJB
   private CisUserDao userDao;
@@ -30,6 +34,7 @@ public class UserEditBean {
 
 
   public void init() {
+    LOG.debug("init()");
     user = userDao.getUser(id);
 
     if (user != null) {
@@ -44,6 +49,7 @@ public class UserEditBean {
 
 
   public String actionUpdateUser() {
+    LOG.debug("actionUpdateUser()");
     if (user != null) {
       user.setFirstName(name);
       user.setLastName(surname);
@@ -71,41 +77,49 @@ public class UserEditBean {
 
 
   public Integer getId() {
+    LOG.trace("getId()");
     return id;
   }
 
 
   public void setId(Integer id) {
+    LOG.debug("setId(id={})", id);
     this.id = id;
   }
 
 
   public String getName() {
+    LOG.trace("getName()");
     return name;
   }
 
 
   public void setName(String name) {
+    LOG.debug("setName(name={})", name);
     this.name = name;
   }
 
 
   public String getSurname() {
+    LOG.trace("getSurname()");
     return surname;
   }
 
 
   public void setSurname(String surname) {
+    LOG.debug("setSurname(surname={})", surname);
     this.surname = surname;
   }
 
 
   public String getLogin() {
+    LOG.trace("getLogin()");
     return login;
   }
 
 
   public void setLogin(String login) {
+    LOG.debug("setLogin(login={})", login);
     this.login = login;
   }
 

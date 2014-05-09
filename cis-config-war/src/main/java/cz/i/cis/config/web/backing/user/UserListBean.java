@@ -6,6 +6,9 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.web.FacesMessagesUtils;
@@ -15,6 +18,7 @@ import cz.i.cis.config.web.FacesUtils;
 @Named(value = "userList")
 @ViewScoped
 public class UserListBean {
+  private static final Logger LOG = LoggerFactory.getLogger(UserListBean.class);
 
   @EJB
   private CisUserDao userDao;
@@ -25,25 +29,29 @@ public class UserListBean {
 
 
   public List<CisUser> getAllUsers() {
-    if (allUsers == null)
+    LOG.trace("getAllUsers()");
+    if (allUsers == null) {
       allUsers = userDao.listUsers();
+    }
     return allUsers;
   }
 
 
   public String actionDeleteUser() {
+    LOG.debug("actionDeleteUser()");
     try {
       userDao.removeUser(userID);
       return "list?faces-redirect=true";
     }
     catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat uživatele", FacesUtils.getRootMessage(exc));
+      return null;
     }
-    return null;
   }
 
 
   public String actionRestoreUser() {
+    LOG.debug("actionRestoreUser()");
     try {
       userDao.restoreUser(userID);
       return "list?faces-redirect=true";
@@ -56,6 +64,7 @@ public class UserListBean {
 
 
   public String getRowClasses() {
+    LOG.debug("getRowClasses()");
     StringBuilder classes = new StringBuilder();
     for (CisUser user : getAllUsers()) {
       classes.append(user.getStatus() == CisUser.STATUS_DELETED ? "deleted," : "none,");
@@ -69,11 +78,13 @@ public class UserListBean {
 
 
   public void setUserID(Integer userID) {
+    LOG.debug("setUserID(userID={})", userID);
     this.userID = userID;
   }
 
 
   public Integer getUserID() {
+    LOG.trace("getUserID()");
     return userID;
   }
 }

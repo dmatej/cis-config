@@ -8,6 +8,9 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemDao;
 import cz.i.cis.config.jpa.ConfigurationItem;
@@ -19,6 +22,8 @@ import cz.i.cis.config.web.FacesUtils;
 @Named(value = "activeConfigList")
 @ViewScoped
 public class ActiveConfigListBean {
+  private static final Logger LOG = LoggerFactory.getLogger(ActiveConfigListBean.class);
+
 //TODO asi to nebude fungovat...
   private static final ConfigurationItemCategory NONE_SELECTOR = new ConfigurationItemCategory();
   private static final ConfigurationItemCategory ALL_SELECTOR = new ConfigurationItemCategory();
@@ -35,6 +40,7 @@ public class ActiveConfigListBean {
 
 
   public void init() throws Exception {
+    LOG.debug("init()");
     allCategories = categoryDao.listCategories();
     selectedCategory = NONE_SELECTOR;
 
@@ -43,6 +49,7 @@ public class ActiveConfigListBean {
 
 
   private void refreshActiveItems() throws Exception {
+    LOG.trace("refreshActiveItems()");
     if (selectedCategory == NONE_SELECTOR) {
       filteredActiveItems = Collections.emptyList();
     }
@@ -65,6 +72,7 @@ public class ActiveConfigListBean {
 
 
   public void actionDeleteItem(ConfigurationItem toDelete) {
+    LOG.debug("actionDeleteItem(toDelete={})", toDelete);
     try {
       configItemDao.removeItem(toDelete);
     }
@@ -75,32 +83,38 @@ public class ActiveConfigListBean {
 
 
   public ConfigurationItemCategory getAllSelector() {
+    LOG.debug("getAllSelector()");
     return ALL_SELECTOR;
   }
 
   public ConfigurationItemCategory getNoneSelector() {
+    LOG.debug("getNoneSelector()");
     return NONE_SELECTOR;
   }
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
+    LOG.debug("getAllCategories()");
     return allCategories;
   }
 
   public ConfigurationItemCategory getSelectedCategory() {
+    LOG.debug("getSelectedCategory()");
     return selectedCategory;
   }
 
   public void setSelectedCategory(ConfigurationItemCategory selectedCategory) {
+    LOG.debug("setSelectedCategory(selectedCategory={})", selectedCategory);
     this.selectedCategory = selectedCategory;
   }
 
   public List<ConfigurationItem> getFilteredActiveItems() throws Exception {
+    LOG.debug("getFilteredActiveItems()");
     refreshActiveItems();
-
     return filteredActiveItems;
   }
 
   public void setFilteredActiveItems(List<ConfigurationItem> filteredActiveItems) {
+    LOG.debug("setFilteredActiveItems(filteredActiveItems={})", filteredActiveItems);
     this.filteredActiveItems = filteredActiveItems;
   }
 }

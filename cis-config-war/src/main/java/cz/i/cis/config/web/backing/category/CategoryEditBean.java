@@ -6,6 +6,9 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.web.FacesMessagesUtils;
@@ -15,6 +18,8 @@ import cz.i.cis.config.web.FacesUtils;
 @Named(value = "categoryEdit")
 @ViewScoped
 public class CategoryEditBean {
+  private static final Logger LOG = LoggerFactory.getLogger(CategoryEditBean.class);
+
 
   @EJB
   private ConfigurationCategoryDao categoryDao;
@@ -27,6 +32,7 @@ public class CategoryEditBean {
 
 
   public void init() {
+    LOG.debug("init()");
     try {
       category = categoryDao.getCategory(id);
     }
@@ -44,6 +50,7 @@ public class CategoryEditBean {
 
 
   public String actionUpdateCategory() {
+    LOG.debug("actionUpdateCategory()");
     if (category != null) {
       String link = "";
       try {
@@ -68,18 +75,22 @@ public class CategoryEditBean {
 
 
   public Integer getId() {
+    LOG.trace("getId()");
     return id;
   }
 
   public void setId(Integer id) {
+    LOG.debug("setId(id={})", id);
     this.id = id;
   }
 
   public String getName() {
+    LOG.trace("getName()");
     return name;
   }
 
   public void setName(String name) {
+    LOG.debug("setName(name={})", name);
     this.name = name;
   }
 }

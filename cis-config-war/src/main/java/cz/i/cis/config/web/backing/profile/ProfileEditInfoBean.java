@@ -7,6 +7,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileDao;
 import cz.i.cis.config.jpa.CisUser;
@@ -17,6 +20,7 @@ import cz.i.cis.config.web.FacesUtils;
 @Named(value = "profileEditInfo")
 @ViewScoped
 public class ProfileEditInfoBean {
+  private static final Logger LOG = LoggerFactory.getLogger(ProfileEditInfoBean.class);
 
   @EJB
   private ConfigurationProfileDao profileDao;
@@ -32,6 +36,7 @@ public class ProfileEditInfoBean {
   private String description;
 
   public void init() throws Exception {
+    LOG.debug("init()");
     profile = profileDao.getProfile(id);
 
     if (profile != null) {
@@ -44,6 +49,7 @@ public class ProfileEditInfoBean {
   }
 
   public String actionUpdateProfile() {
+    LOG.debug("actionUpdateProfile()");
     if (profile != null) {
       try {
         String login = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
@@ -76,26 +82,32 @@ public class ProfileEditInfoBean {
 
 
   public Integer getId() {
+    LOG.trace("getId()");
     return id;
   }
 
   public void setId(Integer id) {
+    LOG.debug("setId(id={})", id);
     this.id = id;
   }
 
   public String getName() {
+    LOG.trace("getName()");
     return name;
   }
 
   public void setName(String name) {
+    LOG.debug("setName(name={})", name);
     this.name = name;
   }
 
   public String getDescription() {
+    LOG.trace("getDescription()");
     return description;
   }
 
   public void setDescription(String description) {
+    LOG.debug("setDescription(description={})", description);
     this.description = description;
   }
 }

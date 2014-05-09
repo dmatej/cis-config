@@ -10,6 +10,9 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
@@ -21,6 +24,7 @@ import cz.i.cis.config.web.FacesUtils;
 @Named(value = "itemKeyList")
 @ViewScoped
 public class ItemKeyListBean {
+  private static final Logger LOG = LoggerFactory.getLogger(ItemKeyListBean.class);
 
   private static final String NONE_SELECTOR = "none";
   private static final String ALL_SELECTOR = "all";
@@ -37,6 +41,7 @@ public class ItemKeyListBean {
 
   @PostConstruct
   public void init() {
+    LOG.debug("init()");
     allCategories = categoryDao.getCategoryMap();
 
     String category = (String) FacesUtils.getSession(SESSION_NAME);
@@ -50,6 +55,7 @@ public class ItemKeyListBean {
 
 
   public void actionDeleteItemKey(Integer itemKeyID) {
+    LOG.debug("actionDeleteItemKey(itemKeyID={})", itemKeyID);
     try {
       itemKeyDao.removeItemKey(itemKeyID);
     }
@@ -60,6 +66,7 @@ public class ItemKeyListBean {
 
 
   public List<ConfigurationItemKey> getFilteredItemKeys() {
+    LOG.debug("getFilteredItemKeys()");
     try {
       if (NONE_SELECTOR.equals(selectedCategory)) {
         return Collections.emptyList();
@@ -82,23 +89,28 @@ public class ItemKeyListBean {
 
 
   public String getAllSelector() {
+    LOG.debug("getAllSelector()");
     return ALL_SELECTOR;
   }
 
   public String getNoneSelector() {
+    LOG.debug("getNoneSelector()");
     return NONE_SELECTOR;
   }
 
   public String getSelectedCategory() {
+    LOG.trace("getSelectedCategory()");
     return selectedCategory;
   }
 
   public void setSelectedCategory(String selectedCategory) {
+    LOG.debug("setSelectedCategory(selectedCategory={})", selectedCategory);
     FacesUtils.setSession(SESSION_NAME, selectedCategory);
     this.selectedCategory = selectedCategory;
   }
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
+    LOG.debug("getAllCategories()");
     return allCategories.values();
   }
 }

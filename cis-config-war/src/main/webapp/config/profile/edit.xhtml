@@ -85,10 +85,10 @@
 
     <h:column>
      <h:commandLink value="smazat" rendered="#{!profileEdit.isDeletedItem(item.id)}">
-      <f:ajax listener="#{profileEdit.actionDeleteItem(item.id)}" />
+      <f:ajax listener="#{profileEdit.actionDeleteItem(item.id)}" render="@form" />
      </h:commandLink>
      <h:commandLink value="obnovit" rendered="#{profileEdit.isDeletedItem(item.id)}">
-      <f:ajax listener="#{profileEdit.actionRestoreItem(item.id)}" />
+      <f:ajax listener="#{profileEdit.actionRestoreItem(item.id)}" render="@form" />
      </h:commandLink>
     </h:column>
    </h:dataTable>

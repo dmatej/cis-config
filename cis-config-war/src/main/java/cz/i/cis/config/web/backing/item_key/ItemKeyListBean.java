@@ -56,19 +56,6 @@ public class ItemKeyListBean {
   }
 
 
-  // public void actionDeleteItemKey(Integer itemKeyID) {
-  // LOG.debug("actionDeleteItemKey(itemKeyID={})", itemKeyID);
-  // try {
-  // itemKeyDao.removeItemKey(itemKeyID);
-  // } catch (ActiveItemKeyException exc) {
-  // FacesMessagesUtils.addFatalErrorMessage("Klíč se používá v aktivní konfiguraci a proto nelze smazat",
-  // FacesUtils.getRootMessage(exc));
-  // } catch (Exception exc) {
-  // FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat klíč",
-  // FacesUtils.getRootMessage(exc));
-  // }
-  // }
-
   public String actionDeleteItemKey() {
     LOG.debug("actionDeleteItemKey()");
     try {

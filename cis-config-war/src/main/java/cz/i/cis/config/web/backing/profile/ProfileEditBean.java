@@ -229,6 +229,12 @@ public class ProfileEditBean {
     return selectedCategory;
   }
 
+  public void setSelectedCategory(ValueChangeEvent event) {
+    LOG.debug("setSelectedCategory(event={})", event);
+    this.selectedCategory = (String) event.getNewValue();
+  }
+
+
   public void setSelectedCategory(String selectedCategory) {
     LOG.debug("setSelectedCategory(selectedCategory={})", selectedCategory);
     this.selectedCategory = selectedCategory;

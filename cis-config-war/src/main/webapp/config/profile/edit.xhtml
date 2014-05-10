@@ -19,35 +19,31 @@
     <h:panelGroup>
      <h:outputLabel for="category" value="Kategorie" />
     </h:panelGroup>
-
     <h:panelGroup>
-     <h:selectOneMenu id="category" value="#{profileEdit.selectedCategory}">
-      <f:selectItem itemLabel="vyberte kategorii" itemValue="#{profileEdit.noneSelector}" />
-      <f:selectItems value="#{profileEdit.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
-
-      <f:ajax execute="@form" render="@form" />
+     <h:selectOneMenu id="category" value="#{profileEdit.selectedCategory}" valueChangeListener="#{profileEdit.setSelectedCategory}">
+      <f:selectItem itemLabel="vyberte kategorii" noSelectionOption="true" />
+      <f:selectItems value="#{profileEdit.allCategories}" var="catg" itemLabel="#{catg.name}" itemValue="#{catg.id}" />
+      <f:ajax render="category key value" />
      </h:selectOneMenu>
     </h:panelGroup>
 
     <h:panelGroup>
      <h:outputLabel for="key" value="Klíč" />
     </h:panelGroup>
-
     <h:panelGroup>
      <h:selectOneMenu id="key" value="#{profileEdit.selectedItemKey}" disabled="#{profileEdit.keySelectorDisabled}">
-      <f:selectItem itemLabel="vyberte klíč" itemValue="#{profileEdit.noneSelector}" />
+      <f:selectItem itemLabel="vyberte klíč" noSelectionOption="true" />
       <f:selectItems value="#{profileEdit.filteredItemKeys}" var="itemKey" itemLabel="#{itemKey.key}" itemValue="#{itemKey.id}" />
-
-      <f:ajax execute="@form" render="@form" />
+      <f:ajax render="key value" />
      </h:selectOneMenu>
     </h:panelGroup>
 
     <h:panelGroup>
      <h:outputLabel for="value" value="Hodnota" />
     </h:panelGroup>
-
     <h:panelGroup>
-     <h:inputText id="value" class="important" value="#{profileEdit.profileItemValue}" disabled="#{profileEdit.keyValueDisabled}"></h:inputText>
+     <h:inputText id="value" class="important" value="#{profileEdit.profileItemValue}"
+       disabled="#{profileEdit.keyValueDisabled}"></h:inputText>
     </h:panelGroup>
 
     <h:panelGroup />

@@ -7,7 +7,26 @@ public class UniqueKeyException extends Exception {
 
   public UniqueKeyException(String message, Exception cause) {
     super(message, cause);
+  }
 
+
+  public UniqueKeyException() {
+    super();
+  }
+
+
+  public UniqueKeyException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
+
+  public UniqueKeyException(String message) {
+    super(message);
+  }
+
+
+  public UniqueKeyException(Throwable cause) {
+    super(cause);
   }
 
 }

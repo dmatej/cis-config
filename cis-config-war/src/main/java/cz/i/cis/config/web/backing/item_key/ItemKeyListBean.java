@@ -15,15 +15,16 @@ import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
+import cz.i.cis.config.ejb.dao.exceptions.ActiveItemKeyException;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
-
 @Named(value = "itemKeyList")
 @ViewScoped
 public class ItemKeyListBean {
+
   private static final Logger LOG = LoggerFactory.getLogger(ItemKeyListBean.class);
 
   private static final String NONE_SELECTOR = "none";
@@ -38,6 +39,8 @@ public class ItemKeyListBean {
   private String selectedCategory;
   private Map<String, ConfigurationItemCategory> allCategories;
 
+  private Integer itemKeyID;
+
 
   @PostConstruct
   public void init() {
@@ -47,21 +50,37 @@ public class ItemKeyListBean {
     String category = (String) FacesUtils.getSession(SESSION_NAME);
     if (category == null) {
       selectedCategory = NONE_SELECTOR;
-    }
-    else {
+    } else {
       selectedCategory = category;
     }
   }
 
 
-  public void actionDeleteItemKey(Integer itemKeyID) {
-    LOG.debug("actionDeleteItemKey(itemKeyID={})", itemKeyID);
+  // public void actionDeleteItemKey(Integer itemKeyID) {
+  // LOG.debug("actionDeleteItemKey(itemKeyID={})", itemKeyID);
+  // try {
+  // itemKeyDao.removeItemKey(itemKeyID);
+  // } catch (ActiveItemKeyException exc) {
+  // FacesMessagesUtils.addFatalErrorMessage("Klíč se používá v aktivní konfiguraci a proto nelze smazat",
+  // FacesUtils.getRootMessage(exc));
+  // } catch (Exception exc) {
+  // FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat klíč",
+  // FacesUtils.getRootMessage(exc));
+  // }
+  // }
+
+  public String actionDeleteItemKey() {
+    LOG.debug("actionDeleteItemKey()");
     try {
       itemKeyDao.removeItemKey(itemKeyID);
-    }
-    catch (Exception exc) {
+      return "list?faces-redirect=true";
+    } catch (ActiveItemKeyException exc) {
+      FacesMessagesUtils.addErrorMessage("Klíč se používá v aktivní konfiguraci a proto nelze smazat",
+          FacesUtils.getRootMessage(exc));
+    } catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat klíč", FacesUtils.getRootMessage(exc));
     }
+    return null;
   }
 
 
@@ -78,8 +97,7 @@ public class ItemKeyListBean {
       if (!allCategories.containsKey(selectedCategory)) {
         throw new IllegalArgumentException("Selected category is not valid.");
       }
-    }
-    catch (IllegalArgumentException exc) {
+    } catch (IllegalArgumentException exc) {
       FacesMessagesUtils.addErrorMessage("form:category", exc.getMessage(), null);
     }
     ConfigurationItemCategory filter = allCategories.get(selectedCategory);
@@ -88,26 +106,42 @@ public class ItemKeyListBean {
   }
 
 
+  public Integer getItemKeyID() {
+    LOG.debug("getItemKeyID()");
+    return itemKeyID;
+  }
+
+
+  public void setItemKeyID(Integer itemKeyID) {
+    LOG.debug("setItemKeyID(itemKeyID={})", itemKeyID);
+    this.itemKeyID = itemKeyID;
+  }
+
+
   public String getAllSelector() {
     LOG.debug("getAllSelector()");
     return ALL_SELECTOR;
   }
+
 
   public String getNoneSelector() {
     LOG.debug("getNoneSelector()");
     return NONE_SELECTOR;
   }
 
+
   public String getSelectedCategory() {
     LOG.trace("getSelectedCategory()");
     return selectedCategory;
   }
+
 
   public void setSelectedCategory(String selectedCategory) {
     LOG.debug("setSelectedCategory(selectedCategory={})", selectedCategory);
     FacesUtils.setSession(SESSION_NAME, selectedCategory);
     this.selectedCategory = selectedCategory;
   }
+
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
     LOG.debug("getAllCategories()");

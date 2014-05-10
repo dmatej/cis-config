@@ -54,9 +54,12 @@
 
     <h:column>
      <f:facet name="header">Smazání</f:facet>
-     <h:commandLink value="smazat">
-      <f:ajax listener="#{itemKeyList.actionDeleteItemKey(itemKey.id)}" render="@form" />
+     <h:commandLink action="#{itemKeyList.actionDeleteItemKey}" value="smazat" onclick="return confirm('Opravdu chcete smazat tento klíč? Klíč bude smazán i z neaktivních profilů.');">
+      <f:setPropertyActionListener target="#{itemKeyList.itemKeyID}" value="#{itemKey.id}" />
      </h:commandLink>
+<!--      <h:commandLink value="smazat" onclick="return confirm('Opravdu chcete smazat tento klíč? Klíč bude smazán i z neaktivních profilů.');"> -->
+<!--       <f:ajax listener="# {itemKeyList.actionDeleteItemKey(itemKey.id)}" render="@form" /> -->
+<!--      </h:commandLink> -->
     </h:column>
     <h:column>
      <f:facet name="header">Editace</f:facet>

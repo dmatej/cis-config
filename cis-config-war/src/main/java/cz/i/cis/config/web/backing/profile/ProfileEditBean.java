@@ -27,10 +27,10 @@ import cz.i.cis.config.jpa.ConfigurationProfileItem;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
-
 @Named(value = "profileEdit")
 @ViewScoped
 public class ProfileEditBean {
+
   private static final Logger LOG = LoggerFactory.getLogger(ProfileEditBean.class);
 
   private static final String NONE_SELECTOR = "none";
@@ -69,8 +69,8 @@ public class ProfileEditBean {
 
     if (profile == null) {
       FacesMessagesUtils.addErrorMessage("Zvolený profil nebyl nalezen v databázi - ID = " + id, null);
-    }
-    else {
+      return;
+    } else {
       this.name = profile.getName();
     }
 
@@ -82,30 +82,34 @@ public class ProfileEditBean {
   }
 
 
-  private void refreshItemKeys() throws Exception {
+  private void refreshItemKeys() {
     LOG.debug("refreshItemKeys()");
     if (NONE_SELECTOR.equals(selectedCategory)) {
       filteredItemKeys = Collections.emptyMap();
+      return;
     }
-    else {
-      if (!allCategories.containsKey(selectedCategory)) {
-        throw new Exception("Selected category is not valid.");
-      }
 
-      ConfigurationItemCategory filter = allCategories.get(selectedCategory);
-      List<ConfigurationItemKey> itemKeys = itemKeyDao.filterItemKeys(filter);
-
-      filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
-
-//      for (ConfigurationProfileItem item : profileItems.values()) {
-//        filteredItemKeys.remove(item.getKey().getId().toString());
-//      }
+    if (!allCategories.containsKey(selectedCategory)) {
+      FacesMessagesUtils.addErrorMessage("form:category", "Vybraná kategorie neexistuje", null);
+      filteredItemKeys = Collections.emptyMap();
+      return;
     }
+
+    ConfigurationItemCategory filter = allCategories.get(selectedCategory);
+    List<ConfigurationItemKey> itemKeys = itemKeyDao.filterItemKeys(filter);
+
+    filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
+
+    // for (ConfigurationProfileItem item : profileItems.values()) {
+    // filteredItemKeys.remove(item.getKey().getId().toString());
+    // }
+
   }
 
-  private void refreshItems(){
+
+  private void refreshItems() {
     LOG.debug("refreshItems()");
-    List<ConfigurationProfileItem> items= itemDao.listItems();
+    List<ConfigurationProfileItem> items = itemDao.listItems();
     profileItems = ConfigurationProfileItemDao.getItemMap(items);
 
     deletedProfileItems = new HashMap<>();
@@ -114,186 +118,249 @@ public class ProfileEditBean {
 
   public void actionAddProfileItem() {
     LOG.debug("actionAddProfileItem()");
+    LOG.debug("selectedCategory = " + selectedCategory);
+    LOG.debug("selectedItemKey = " + selectedItemKey);
+    LOG.debug("profileItemValue = " + profileItemValue);
     // FIXME: id is hiding the class attribute id.
-    Integer id = newItemID--;
-    ConfigurationItemKey key = filteredItemKeys.get(selectedItemKey);
-    String value = profileItemValue;
 
-    if(key != null && value != null && !value.isEmpty()){
-      ConfigurationProfileItem item = new ConfigurationProfileItem();
-        item.setId(id);
-        item.setKey(key);
-        item.setProfile(profile);
-        item.setValue(profileItemValue);
-
-      profileItems.put(item.getId().toString(), item);
-
-      selectedCategory = item.getKey().getCategory().getId().toString();
-      selectedItemKey = "";
-      profileItemValue = "";
+    if (NONE_SELECTOR.equals(selectedCategory) || selectedCategory == null) {
+      FacesMessagesUtils.addErrorMessage("form:category", "Nebyla zvolena kategorie", null);
+      return;
     }
+
+    ConfigurationItemKey key = filteredItemKeys.get(selectedItemKey);
+    if (key == null || NONE_SELECTOR.equals(selectedItemKey) || selectedItemKey == null) {
+      FacesMessagesUtils.addErrorMessage("form:key", "Nebyl zvolen klíč", null);
+      return;
+    }
+
+    String value = profileItemValue;
+    if (value == null || value.isEmpty()) {
+      FacesMessagesUtils.addErrorMessage("form:value", "Nebyla vyplněna hodnota klíče", null);
+      return;
+    }
+
+    Integer id = newItemID--;
+    ConfigurationProfileItem item = new ConfigurationProfileItem();
+    item.setId(id);
+    item.setKey(key);
+    item.setProfile(profile);
+    item.setValue(profileItemValue);
+
+    profileItems.put(item.getId().toString(), item);
+
+    setSelectedCategory(NONE_SELECTOR);
   }
 
-  public void actionDeleteItem(Integer id){
+
+  public void actionDeleteItem(Integer id) {
     LOG.debug("actionDeleteItem(id={})", id);
     ConfigurationProfileItem deleteItem = profileItems.get(id.toString());
 
-    if(isDeletedItem(id)) return; //nothing new to delete
+    if (isDeletedItem(id))
+      return; // nothing new to delete
 
-    if(isNewItem(id)){
-      //new items delete from cache right away
+    if (isNewItem(id)) {
+      // new items delete from cache right away
       profileItems.remove(id.toString());
-    }
-    else{
-      //existing items mark for deletion
+    } else {
+      // existing items mark for deletion
       deletedProfileItems.put(deleteItem.getId().toString(), deleteItem);
     }
   }
 
-  public void actionRestoreItem(){
+
+  public void actionRestoreItem() {
     LOG.debug("actionRestoreItem()");
     deletedProfileItems.remove(manipulationID);
   }
 
-  public void actionSaveChanges(){
+
+  public void actionSaveChanges() {
     LOG.debug("actionSaveChanges()");
     try {
-      //TODO in one transaction?
+      // TODO in one transaction?
       for (ConfigurationProfileItem item : profileItems.values()) {
         Integer id = item.getId();
 
-        //delete
-        if(isDeletedItem(id)){
-          //only existing items are in deleted list
+        // delete
+        if (isDeletedItem(id)) {
+          // only existing items are in deleted list
           itemDao.removeItem(item);
           profileItems.remove(id);
           deletedProfileItems.remove(id);
         }
-        //insert
-        else if(isNewItem(id)){
+        // insert
+        else if (isNewItem(id)) {
           itemDao.addItem(item);
-          //assure to have item under new ID in map
+          // assure to have item under new ID in map
           profileItems.remove(id);
           profileItems.put(item.getId().toString(), item);
         }
-        //update
-        else{
+        // update
+        else {
           itemDao.updateItem(item);
         }
       }
 
       newItemID = -1;
-    }
-    catch (UniqueProfileKeyException e) {
+    } catch (UniqueProfileKeyException e) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny: " + FacesUtils.getRootMessage(e), null);
     }
   }
 
 
-  public boolean isDeletedItem(Integer id){
+  public boolean isDeletedItem(Integer id) {
     LOG.debug("isDeletedItem(id={})", id);
     return deletedProfileItems.containsKey(id.toString());
   }
 
-  public boolean isNewItem(Integer id){
+
+  public boolean isNewItem(Integer id) {
     LOG.debug("isNewItem(id={})", id);
     return id.intValue() < 0;
   }
+
 
   public String getProfileItemValue() {
     LOG.trace("getProfileItemValue()");
     return profileItemValue;
   }
 
+
+  public void setChengedItemValue(ValueChangeEvent event) {
+    LOG.debug("setChengedItemValue(event={})", event);
+    setProfileItemValue((String) event.getNewValue());
+  }
+
+
   public void setProfileItemValue(String profileItemValue) {
     LOG.debug("setProfileItemValue(profileItemValue={})", profileItemValue);
     this.profileItemValue = profileItemValue;
+    if (profileItemValue == null) {
+      this.profileItemValue = "";
+    }
   }
+
 
   public boolean isKeySelectorDisabled() {
     LOG.trace("isKeySelectorDisabled()");
     return NONE_SELECTOR.equals(selectedCategory);
   }
 
+
   public boolean isKeyValueDisabled() {
     LOG.trace("isKeyValueDisabled()");
     return NONE_SELECTOR.equals(selectedItemKey);
   }
+
 
   public String getNoneSelector() {
     LOG.trace("getNoneSelector()");
     return NONE_SELECTOR;
   }
 
+
   public String getSelectedCategory() {
     LOG.trace("getSelectedCategory()");
     return selectedCategory;
   }
 
-  public void setSelectedCategory(ValueChangeEvent event) {
+
+  public void setChangedCategory(ValueChangeEvent event) {
     LOG.debug("setSelectedCategory(event={})", event);
-    this.selectedCategory = (String) event.getNewValue();
+    setSelectedCategory((String) event.getNewValue());
   }
 
 
   public void setSelectedCategory(String selectedCategory) {
     LOG.debug("setSelectedCategory(selectedCategory={})", selectedCategory);
     this.selectedCategory = selectedCategory;
+    if (selectedCategory == null || selectedCategory.isEmpty()) {
+      this.selectedCategory = NONE_SELECTOR;
+    }
+    if (this.selectedCategory == NONE_SELECTOR) {
+      setSelectedItemKey(NONE_SELECTOR);
+      refreshItemKeys();
+    }
   }
+
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
     LOG.trace("getAllCategories()");
     return allCategories.values();
   }
 
+
   public Collection<ConfigurationProfileItem> getProfileItems() {
     LOG.trace("getProfileItems()");
     return profileItems.values();
   }
 
-  public Collection<ConfigurationItemKey> getFilteredItemKeys() throws Exception {
+
+  public Collection<ConfigurationItemKey> getFilteredItemKeys() {
     LOG.trace("getFilteredItemKeys()");
     refreshItemKeys();
     return filteredItemKeys.values();
   }
+
 
   public String getSelectedItemKey() {
     LOG.trace("getSelectedItemKey()");
     return selectedItemKey;
   }
 
+
+  public void setChengedItemKey(ValueChangeEvent event) {
+    LOG.debug("setChengedItemKey(event={})", event);
+    setSelectedItemKey((String) event.getNewValue());
+  }
+
+
   public void setSelectedItemKey(String selectedItemKey) {
     LOG.debug("setSelectedItemKey(selectedItemKey={})", selectedItemKey);
     this.selectedItemKey = selectedItemKey;
+    if (selectedItemKey == null || selectedItemKey.isEmpty()) {
+      this.selectedItemKey = NONE_SELECTOR;
+    }
+    if (this.selectedItemKey == NONE_SELECTOR) {
+      setProfileItemValue("");
+    }
   }
+
 
   public void setManipulationID(String manipulationID) {
     LOG.debug("setManipulationID(manipulationID={})", manipulationID);
     this.manipulationID = manipulationID;
   }
 
+
   public boolean refreshAddItemKeyForm() {
     LOG.debug("refreshAddItemKeyForm()");
     if (NONE_SELECTOR.equals(selectedCategory)) {
-      selectedItemKey = NONE_SELECTOR;
+      this.selectedItemKey = NONE_SELECTOR;
     }
     return true;
   }
+
 
   public Integer getId() {
     LOG.trace("getId()");
     return id;
   }
 
+
   public void setId(Integer id) {
     LOG.debug("setId(id={})", id);
     this.id = id;
   }
 
+
   public String getName() {
     LOG.trace("getName()");
     return name;
   }
+
 
   public void setName(String name) {
     LOG.debug("setName(name={})", name);

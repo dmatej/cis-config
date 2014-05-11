@@ -4,98 +4,112 @@
  xmlns:f="http://xmlns.jcp.org/jsf/core"
  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
- <f:metadata>
-  <f:viewParam name="id" value="#{profileEdit.id}" required="true" requiredMessage="Pro editaci profilu je nutné zadat parametr id." />
-  <f:viewAction action="#{profileEdit.init}" />
- </f:metadata>
+  <f:metadata>
+    <f:viewParam name="id" value="#{profileEdit.id}" required="true" requiredMessage="Pro editaci profilu je nutné zadat parametr id." />
+    <f:viewAction action="#{profileEdit.init}" />
+  </f:metadata>
 
- <ui:param name="pageName" value="Konfigurační profily" />
- <ui:param name="pageTitle" value="Editace položek profilu &quot;#{profileEdit.name}&quot;" />
+  <ui:param name="pageName" value="Konfigurační profily" />
+  <ui:param name="pageTitle" value="Editace položek profilu &quot;#{profileEdit.name}&quot;" />
 
- <ui:define name="content">
-  <h:form id="form">
+  <ui:define name="content">
+    <h:form id="form">
 
-   <h:panelGrid columns="2">
-    <h:panelGroup>
-     <h:outputLabel for="category" value="Kategorie" />
-    </h:panelGroup>
-    <h:panelGroup>
-     <h:selectOneMenu id="category" value="#{profileEdit.selectedCategory}" valueChangeListener="#{profileEdit.setSelectedCategory}">
-      <f:selectItem itemLabel="vyberte kategorii" noSelectionOption="true" />
-      <f:selectItems value="#{profileEdit.allCategories}" var="catg" itemLabel="#{catg.name}" itemValue="#{catg.id}" />
-      <f:ajax render="category key value" />
-     </h:selectOneMenu>
-    </h:panelGroup>
+      <h:panelGrid columns="3">
+        <h:panelGroup>
+          <h:outputLabel for="category" value="Kategorie" />
+        </h:panelGroup>
+        <h:panelGroup>
+          <h:selectOneMenu id="category" styleClass="important short" value="#{profileEdit.selectedCategory}" valueChangeListener="#{profileEdit.setChangedCategory}">
+            <f:selectItem itemLabel="vyberte kategorii" noSelectionOption="true" />
+            <f:selectItems value="#{profileEdit.allCategories}" var="catg" itemLabel="#{catg.name}" itemValue="#{catg.id}" />
+            <f:ajax render="category key value" />
+          </h:selectOneMenu>
+        </h:panelGroup>
 
-    <h:panelGroup>
-     <h:outputLabel for="key" value="Klíč" />
-    </h:panelGroup>
-    <h:panelGroup>
-     <h:selectOneMenu id="key" value="#{profileEdit.selectedItemKey}" disabled="#{profileEdit.keySelectorDisabled}">
-      <f:selectItem itemLabel="vyberte klíč" noSelectionOption="true" />
-      <f:selectItems value="#{profileEdit.filteredItemKeys}" var="itemKey" itemLabel="#{itemKey.key}" itemValue="#{itemKey.id}" />
-      <f:ajax render="key value" />
-     </h:selectOneMenu>
-    </h:panelGroup>
+        <h:panelGroup>
+          <h:messages for="category" styleClass="form:table:error" />
+        </h:panelGroup>
 
-    <h:panelGroup>
-     <h:outputLabel for="value" value="Hodnota" />
-    </h:panelGroup>
-    <h:panelGroup>
-     <h:inputText id="value" class="important" value="#{profileEdit.profileItemValue}"
-       disabled="#{profileEdit.keyValueDisabled}"></h:inputText>
-    </h:panelGroup>
+        <h:panelGroup>
+          <h:outputLabel for="key" value="Klíč" />
+        </h:panelGroup>
+        <h:panelGroup>
+          <h:selectOneMenu id="key" styleClass="important short" value="#{profileEdit.selectedItemKey}" disabled="#{profileEdit.keySelectorDisabled}"
+            valueChangeListener="#{profileEdit.setChengedItemKey}">
+            <f:selectItem itemLabel="vyberte klíč" noSelectionOption="true" />
+            <f:selectItems value="#{profileEdit.filteredItemKeys}" var="itemKey" itemLabel="#{itemKey.key}" itemValue="#{itemKey.id}" />
+            <f:ajax render="key value" />
+          </h:selectOneMenu>
+        </h:panelGroup>
+        <h:panelGroup>
+          <h:messages for="key" styleClass="form:table:error" />
+        </h:panelGroup>
 
-    <h:panelGroup />
+        <h:panelGroup>
+          <h:outputLabel for="value" value="Hodnota" />
+        </h:panelGroup>
+        <h:panelGroup>
+          <h:inputText id="value" styleClass="important short" value="#{profileEdit.profileItemValue}" disabled="#{profileEdit.keyValueDisabled}"
+            valueChangeListener="#{profileEdit.setChengedItemValue}"></h:inputText>
+        </h:panelGroup>
+        <h:panelGroup>
+          <h:messages for="value" styleClass="form:table:error" />
+        </h:panelGroup>
 
-    <h:panelGroup>
-     <h:commandButton value="Přidat položku">
-      <f:ajax listener="#{profileEdit.actionAddProfileItem}" execute="@form" render="@form" />
-     </h:commandButton>
-    </h:panelGroup>
-   </h:panelGrid>
+        <h:panelGroup />
 
-   <h:commandButton value="Uložit změny">
-     <f:ajax listener="#{profileEdit.actionSaveChanges}" execute="@form" render="@form" />
-   </h:commandButton>
+        <h:panelGroup styleClass="form:table:buttonline">
+          <h:commandButton onclick="#{profileEdit.actionAddProfileItem()}" value="Přidat položku">
+            <f:ajax event="click" execute="@form" render="@form" />
+          </h:commandButton>
+        </h:panelGroup>
 
-   <ui:param name="items" value="#{profileEdit.profileItems}" />
+        <h:panelGroup />
+      </h:panelGrid>
 
-   <h:dataTable id="data-table" value="#{items}" var="item" rendered="#{not empty items}">
-    <h:column>
-     <f:facet name="header">ID</f:facet>
-     <a id="item-#{item.id}" class="id"><h:outputText value="#{item.id}" /></a>
-    </h:column>
-    <h:column>
-     <f:facet name="header">Klíč</f:facet>
-     <h:outputText value="#{item.key.key}" />
-    </h:column>
-    <h:column>
-     <f:facet name="header">Typ</f:facet>
-     <h:outputText value="#{itemk.key.type}" />
-    </h:column>
-    <h:column>
-     <f:facet name="header">Kategorie</f:facet>
-     <h:outputText value="#{item.key.category.name}" />
-    </h:column>
-    <h:column>
-     <f:facet name="header">Hodnota</f:facet>
-     <h:outputText value="#{item.value}" />
-    </h:column>
 
-    <h:column>
-     <h:commandLink value="smazat" rendered="#{!profileEdit.isDeletedItem(item.id)}">
-      <f:ajax listener="#{profileEdit.actionDeleteItem(item.id)}" render="@form" />
-     </h:commandLink>
-     <h:commandLink value="obnovit" rendered="#{profileEdit.isDeletedItem(item.id)}">
-      <f:ajax listener="#{profileEdit.actionRestoreItem(item.id)}" render="@form" />
-     </h:commandLink>
-    </h:column>
-   </h:dataTable>
-  </h:form>
+<!--       <h:commandButton value="Uložit změny"> -->
+<!--         <f:ajax listener="# {profileEdit.actionSaveChanges}" execute="@form" render="@form" /> -->
+<!--       </h:commandButton> -->
 
-  <ul>
-   <li><h:link outcome="list" value="Zpět na seznam" /></li>
-  </ul>
- </ui:define>
+      <ui:param name="items" value="#{profileEdit.profileItems}" />
+
+      <h:dataTable id="data-table" value="#{items}" var="item" rendered="#{not empty items}">
+        <h:column>
+          <f:facet name="header">ID</f:facet>
+          <a id="item-#{item.id}" class="id"><h:outputText value="#{item.id}" /></a>
+        </h:column>
+        <h:column>
+          <f:facet name="header">Klíč</f:facet>
+          <h:outputText value="#{item.key.key}" />
+        </h:column>
+        <h:column>
+          <f:facet name="header">Typ</f:facet>
+          <h:outputText value="#{itemk.key.type}" />
+        </h:column>
+        <h:column>
+          <f:facet name="header">Kategorie</f:facet>
+          <h:outputText value="#{item.key.category.name}" />
+        </h:column>
+        <h:column>
+          <f:facet name="header">Hodnota</f:facet>
+          <h:outputText value="#{item.value}" />
+        </h:column>
+
+        <h:column>
+          <h:commandLink value="smazat" rendered="#{!profileEdit.isDeletedItem(item.id)}">
+            <f:ajax listener="#{profileEdit.actionDeleteItem(item.id)}" render="@form" />
+          </h:commandLink>
+          <h:commandLink value="obnovit" rendered="#{profileEdit.isDeletedItem(item.id)}">
+            <f:ajax listener="#{profileEdit.actionRestoreItem(item.id)}" render="@form" />
+          </h:commandLink>
+        </h:column>
+      </h:dataTable>
+    </h:form>
+
+    <ul>
+      <li><h:link outcome="list" value="Zpět na seznam" /></li>
+    </ul>
+  </ui:define>
 </ui:composition>

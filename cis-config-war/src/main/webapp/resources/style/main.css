@@ -193,7 +193,7 @@ ul.form\:table\:error {
  margin-left: 10px;
 }
 
-input.login,input.short {
+input.login,input.short,select.short {
  min-width: 200px;
 }
 

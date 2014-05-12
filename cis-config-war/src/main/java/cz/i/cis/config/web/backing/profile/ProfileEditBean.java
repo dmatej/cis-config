@@ -73,6 +73,7 @@ public class ProfileEditBean {
 
     if (profile == null) {
       FacesMessagesUtils.addErrorMessage("Zvolený profil nebyl nalezen v databázi - ID = " + id, null);
+      return;
     } else {
       this.name = profile.getName();
     }
@@ -89,27 +90,28 @@ public class ProfileEditBean {
   }
 
 
-  private void refreshItemKeys() throws Exception {
+  private void refreshItemKeys() {
     LOG.debug("refreshItemKeys()");
     try {
       if (NONE_SELECTOR.equals(selectedCategory)) {
         filteredItemKeys = Collections.emptyMap();
-      } else {
-        if (!allCategories.containsKey(selectedCategory)) {
-          throw new IllegalArgumentException("Selected category is not valid.");
-        }
-
-        ConfigurationItemCategory filter = allCategories.get(selectedCategory);
-        List<ConfigurationItemKey> itemKeys = itemKeyDao.filterItemKeys(filter);
-
-        filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
-
-        // for (ConfigurationProfileItem item : profileItems.values()) {
-        // filteredItemKeys.remove(item.getKey().getId().toString());
-        // }
+        return;
       }
-    } catch (IllegalArgumentException exc) {
-      FacesMessagesUtils.addErrorMessage(exc.getMessage(), null);
+      if (!allCategories.containsKey(selectedCategory)) {
+        FacesMessagesUtils.addErrorMessage("form:category", "Vybraná kategorie neexistuje", null);
+        filteredItemKeys = Collections.emptyMap();
+        return;
+      }
+
+      ConfigurationItemCategory filter = allCategories.get(selectedCategory);
+      List<ConfigurationItemKey> itemKeys = itemKeyDao.filterItemKeys(filter);
+
+      filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
+
+      // for (ConfigurationProfileItem item : profileItems.values()) {
+      // filteredItemKeys.remove(item.getKey().getId().toString());
+      // }
+
     } catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit položky klíče", FacesUtils.getRootMessage(exc));
     }
@@ -130,27 +132,39 @@ public class ProfileEditBean {
 
   public void actionAddProfileItem() {
     LOG.debug("actionAddProfileItem()");
+    LOG.debug("selectedCategory = " + selectedCategory);
+    LOG.debug("selectedItemKey = " + selectedItemKey);
+    LOG.debug("profileItemValue = " + profileItemValue);
     // FIXME: id is hiding the class attribute id.
 
-    Integer id = newItemID--;
-    ConfigurationItemKey key = filteredItemKeys.get(selectedItemKey);
-
-    String value = profileItemValue;
-
-    if (key != null && value != null && !value.isEmpty()) {
-      ConfigurationProfileItem item = new ConfigurationProfileItem();
-      item.setId(id);
-      item.setKey(key);
-      item.setProfile(profile);
-      item.setValue(profileItemValue);
-
-      profileItems.put(item.getId().toString(), item);
-
-      selectedCategory = item.getKey().getCategory().getId().toString();
-      selectedItemKey = "";
-      profileItemValue = "";
+    if (NONE_SELECTOR.equals(selectedCategory) || selectedCategory == null) {
+      FacesMessagesUtils.addErrorMessage("form:category", "Nebyla zvolena kategorie", null);
+      return;
     }
 
+    ConfigurationItemKey key = filteredItemKeys.get(selectedItemKey);
+
+    if (key == null || NONE_SELECTOR.equals(selectedItemKey) || selectedItemKey == null) {
+      FacesMessagesUtils.addErrorMessage("form:key", "Nebyl zvolen klíč", null);
+      return;
+    }
+
+    String value = profileItemValue;
+    if (value == null || value.isEmpty()) {
+      FacesMessagesUtils.addErrorMessage("form:value", "Nebyla vyplněna hodnota klíče", null);
+      return;
+    }
+
+    Integer id = newItemID--;
+    ConfigurationProfileItem item = new ConfigurationProfileItem();
+    item.setId(id);
+    item.setKey(key);
+    item.setProfile(profile);
+    item.setValue(profileItemValue);
+
+    profileItems.put(item.getId().toString(), item);
+
+    setSelectedCategory(NONE_SELECTOR);
   }
 
 
@@ -229,9 +243,18 @@ public class ProfileEditBean {
   }
 
 
+  public void setChengedItemValue(ValueChangeEvent event) {
+    LOG.debug("setChengedItemValue(event={})", event);
+    setProfileItemValue((String) event.getNewValue());
+  }
+
+
   public void setProfileItemValue(String profileItemValue) {
     LOG.debug("setProfileItemValue(profileItemValue={})", profileItemValue);
     this.profileItemValue = profileItemValue;
+    if (profileItemValue == null) {
+      this.profileItemValue = "";
+    }
   }
 
 
@@ -259,15 +282,22 @@ public class ProfileEditBean {
   }
 
 
-  public void setSelectedCategory(ValueChangeEvent event) {
+  public void setChangedCategory(ValueChangeEvent event) {
     LOG.debug("setSelectedCategory(event={})", event);
-    this.selectedCategory = (String) event.getNewValue();
+    setSelectedCategory((String) event.getNewValue());
   }
 
 
   public void setSelectedCategory(String selectedCategory) {
     LOG.debug("setSelectedCategory(selectedCategory={})", selectedCategory);
     this.selectedCategory = selectedCategory;
+    if (selectedCategory == null || selectedCategory.isEmpty()) {
+      this.selectedCategory = NONE_SELECTOR;
+    }
+    if (this.selectedCategory == NONE_SELECTOR) {
+      setSelectedItemKey(NONE_SELECTOR);
+      refreshItemKeys();
+    }
   }
 
 
@@ -283,7 +313,7 @@ public class ProfileEditBean {
   }
 
 
-  public Collection<ConfigurationItemKey> getFilteredItemKeys() throws Exception {
+  public Collection<ConfigurationItemKey> getFilteredItemKeys() {
     LOG.trace("getFilteredItemKeys()");
     refreshItemKeys();
     return filteredItemKeys.values();
@@ -296,9 +326,21 @@ public class ProfileEditBean {
   }
 
 
+  public void setChengedItemKey(ValueChangeEvent event) {
+    LOG.debug("setChengedItemKey(event={})", event);
+    setSelectedItemKey((String) event.getNewValue());
+  }
+
+
   public void setSelectedItemKey(String selectedItemKey) {
     LOG.debug("setSelectedItemKey(selectedItemKey={})", selectedItemKey);
     this.selectedItemKey = selectedItemKey;
+    if (selectedItemKey == null || selectedItemKey.isEmpty()) {
+      this.selectedItemKey = NONE_SELECTOR;
+    }
+    if (this.selectedItemKey == NONE_SELECTOR) {
+      setProfileItemValue("");
+    }
   }
 
 
@@ -311,7 +353,7 @@ public class ProfileEditBean {
   public boolean refreshAddItemKeyForm() {
     LOG.debug("refreshAddItemKeyForm()");
     if (NONE_SELECTOR.equals(selectedCategory)) {
-      selectedItemKey = NONE_SELECTOR;
+      this.selectedItemKey = NONE_SELECTOR;
     }
     return true;
   }

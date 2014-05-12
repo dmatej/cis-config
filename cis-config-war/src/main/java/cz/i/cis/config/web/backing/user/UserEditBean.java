@@ -18,6 +18,7 @@ import cz.i.cis.config.web.FacesUtils;
 @Named(value = "userEdit")
 @ViewScoped
 public class UserEditBean {
+
   private static final Logger LOG = LoggerFactory.getLogger(UserEditBean.class);
 
   @EJB
@@ -35,8 +36,11 @@ public class UserEditBean {
 
   public void init() {
     LOG.debug("init()");
-    user = userDao.getUser(id);
-
+    try {
+      user = userDao.getUser(id);
+    } catch (IllegalArgumentException exp) {
+      FacesMessagesUtils.addErrorMessage("User id " + id + " is not valid", null);
+    }
     if (user != null) {
       name = user.getFirstName();
       surname = user.getLastName();

@@ -18,13 +18,13 @@ import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
-
 @Named(value = "activeConfigList")
 @ViewScoped
 public class ActiveConfigListBean {
+
   private static final Logger LOG = LoggerFactory.getLogger(ActiveConfigListBean.class);
 
-//TODO asi to nebude fungovat...
+  // TODO asi to nebude fungovat...
   private static final ConfigurationItemCategory NONE_SELECTOR = new ConfigurationItemCategory();
   private static final ConfigurationItemCategory ALL_SELECTOR = new ConfigurationItemCategory();
 
@@ -50,24 +50,24 @@ public class ActiveConfigListBean {
 
   private void refreshActiveItems() throws Exception {
     LOG.trace("refreshActiveItems()");
-    if (selectedCategory == NONE_SELECTOR) {
-      filteredActiveItems = Collections.emptyList();
-    }
-    else if (selectedCategory == ALL_SELECTOR) {
-      filteredActiveItems = configItemDao.listItems();
-    }
-    else {
-      if (!allCategories.contains(selectedCategory)) {
-        throw new Exception("Selected category is not valid.");
-      }
-      try {
+    try {
+      if (selectedCategory == NONE_SELECTOR) {
+        filteredActiveItems = Collections.emptyList();
+      } else if (selectedCategory == ALL_SELECTOR) {
+        filteredActiveItems = configItemDao.listItems();
+      } else {
+        if (!allCategories.contains(selectedCategory)) {
+          throw new IllegalArgumentException("Selected category is not valid.");
+        }
+
         filteredActiveItems = configItemDao.listConfigurationItems(selectedCategory);
       }
-      catch (IllegalArgumentException exc) {
-        FacesMessagesUtils.addErrorMessage("list:item", exc.getMessage(), null);
-      }
-
+    } catch (IllegalArgumentException exc) {
+      FacesMessagesUtils.addErrorMessage(exc.getMessage(), null);
+    } catch (Exception exc) {
+      FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit aktivní položky",FacesUtils.getRootMessage(exc));
     }
+
   }
 
 
@@ -75,8 +75,7 @@ public class ActiveConfigListBean {
     LOG.debug("actionDeleteItem(toDelete={})", toDelete);
     try {
       configItemDao.removeItem(toDelete);
-    }
-    catch (Exception exc) {
+    } catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat profil", FacesUtils.getRootMessage(exc));
     }
   }
@@ -87,31 +86,37 @@ public class ActiveConfigListBean {
     return ALL_SELECTOR;
   }
 
+
   public ConfigurationItemCategory getNoneSelector() {
     LOG.debug("getNoneSelector()");
     return NONE_SELECTOR;
   }
+
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
     LOG.debug("getAllCategories()");
     return allCategories;
   }
 
+
   public ConfigurationItemCategory getSelectedCategory() {
     LOG.debug("getSelectedCategory()");
     return selectedCategory;
   }
+
 
   public void setSelectedCategory(ConfigurationItemCategory selectedCategory) {
     LOG.debug("setSelectedCategory(selectedCategory={})", selectedCategory);
     this.selectedCategory = selectedCategory;
   }
 
+
   public List<ConfigurationItem> getFilteredActiveItems() throws Exception {
     LOG.debug("getFilteredActiveItems()");
     refreshActiveItems();
     return filteredActiveItems;
   }
+
 
   public void setFilteredActiveItems(List<ConfigurationItem> filteredActiveItems) {
     LOG.debug("setFilteredActiveItems(filteredActiveItems={})", filteredActiveItems);

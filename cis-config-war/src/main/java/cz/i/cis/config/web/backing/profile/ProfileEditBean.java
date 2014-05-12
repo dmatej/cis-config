@@ -27,10 +27,10 @@ import cz.i.cis.config.jpa.ConfigurationProfileItem;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
-
 @Named(value = "profileEdit")
 @ViewScoped
 public class ProfileEditBean {
+
   private static final Logger LOG = LoggerFactory.getLogger(ProfileEditBean.class);
 
   private static final String NONE_SELECTOR = "none";
@@ -65,18 +65,25 @@ public class ProfileEditBean {
 
   public void init() throws Exception {
     LOG.debug("init()");
-    profile = profileDao.getProfile(id);
+    try {
+      profile = profileDao.getProfile(id);
+    } catch (IllegalArgumentException exp) {
+      FacesMessagesUtils.addErrorMessage("Profile id " + id + " is not valid", null);
+    }
 
     if (profile == null) {
       FacesMessagesUtils.addErrorMessage("Zvolený profil nebyl nalezen v databázi - ID = " + id, null);
-    }
-    else {
+    } else {
       this.name = profile.getName();
     }
 
     selectedCategory = NONE_SELECTOR;
     selectedItemKey = NONE_SELECTOR;
-    allCategories = categoryDao.getCategoryMap();
+    try {
+      allCategories = categoryDao.getCategoryMap();
+    } catch (IllegalArgumentException exc) {
+      FacesMessagesUtils.addErrorMessage("Cannot select categories from database", null);
+    }
     refreshItemKeys();
     refreshItems();
   }
@@ -84,30 +91,39 @@ public class ProfileEditBean {
 
   private void refreshItemKeys() throws Exception {
     LOG.debug("refreshItemKeys()");
-    if (NONE_SELECTOR.equals(selectedCategory)) {
-      filteredItemKeys = Collections.emptyMap();
-    }
-    else {
-      if (!allCategories.containsKey(selectedCategory)) {
-        throw new Exception("Selected category is not valid.");
+    try {
+      if (NONE_SELECTOR.equals(selectedCategory)) {
+        filteredItemKeys = Collections.emptyMap();
+      } else {
+        if (!allCategories.containsKey(selectedCategory)) {
+          throw new IllegalArgumentException("Selected category is not valid.");
+        }
+
+        ConfigurationItemCategory filter = allCategories.get(selectedCategory);
+        List<ConfigurationItemKey> itemKeys = itemKeyDao.filterItemKeys(filter);
+
+        filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
+
+        // for (ConfigurationProfileItem item : profileItems.values()) {
+        // filteredItemKeys.remove(item.getKey().getId().toString());
+        // }
       }
-
-      ConfigurationItemCategory filter = allCategories.get(selectedCategory);
-      List<ConfigurationItemKey> itemKeys = itemKeyDao.filterItemKeys(filter);
-
-      filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
-
-//      for (ConfigurationProfileItem item : profileItems.values()) {
-//        filteredItemKeys.remove(item.getKey().getId().toString());
-//      }
+    } catch (IllegalArgumentException exc) {
+      FacesMessagesUtils.addErrorMessage(exc.getMessage(), null);
+    } catch (Exception exc) {
+      FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit položky klíče", FacesUtils.getRootMessage(exc));
     }
   }
 
-  private void refreshItems(){
-    LOG.debug("refreshItems()");
-    List<ConfigurationProfileItem> items= itemDao.listItems();
-    profileItems = ConfigurationProfileItemDao.getItemMap(items);
 
+  private void refreshItems() {
+    LOG.debug("refreshItems()");
+    try {
+      List<ConfigurationProfileItem> items = itemDao.listItems();
+      profileItems = ConfigurationProfileItemDao.getItemMap(items);
+    } catch (Exception exc) {
+      FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit položky", FacesUtils.getRootMessage(exc));
+    }
     deletedProfileItems = new HashMap<>();
   }
 
@@ -115,16 +131,18 @@ public class ProfileEditBean {
   public void actionAddProfileItem() {
     LOG.debug("actionAddProfileItem()");
     // FIXME: id is hiding the class attribute id.
+
     Integer id = newItemID--;
     ConfigurationItemKey key = filteredItemKeys.get(selectedItemKey);
+
     String value = profileItemValue;
 
-    if(key != null && value != null && !value.isEmpty()){
+    if (key != null && value != null && !value.isEmpty()) {
       ConfigurationProfileItem item = new ConfigurationProfileItem();
-        item.setId(id);
-        item.setKey(key);
-        item.setProfile(profile);
-        item.setValue(profileItemValue);
+      item.setId(id);
+      item.setKey(key);
+      item.setProfile(profile);
+      item.setValue(profileItemValue);
 
       profileItems.put(item.getId().toString(), item);
 
@@ -132,103 +150,114 @@ public class ProfileEditBean {
       selectedItemKey = "";
       profileItemValue = "";
     }
+
   }
 
-  public void actionDeleteItem(Integer id){
+
+  public void actionDeleteItem(Integer id) {
     LOG.debug("actionDeleteItem(id={})", id);
     ConfigurationProfileItem deleteItem = profileItems.get(id.toString());
 
-    if(isDeletedItem(id)) return; //nothing new to delete
+    if (isDeletedItem(id))
+      return; // nothing new to delete
 
-    if(isNewItem(id)){
-      //new items delete from cache right away
+    if (isNewItem(id)) {
+      // new items delete from cache right away
       profileItems.remove(id.toString());
-    }
-    else{
-      //existing items mark for deletion
+    } else {
+      // existing items mark for deletion
       deletedProfileItems.put(deleteItem.getId().toString(), deleteItem);
     }
   }
 
-  public void actionRestoreItem(){
+
+  public void actionRestoreItem() {
     LOG.debug("actionRestoreItem()");
     deletedProfileItems.remove(manipulationID);
   }
 
-  public void actionSaveChanges(){
+
+  public void actionSaveChanges() {
     LOG.debug("actionSaveChanges()");
     try {
-      //TODO in one transaction?
+      // TODO in one transaction?
       for (ConfigurationProfileItem item : profileItems.values()) {
         Integer id = item.getId();
 
-        //delete
-        if(isDeletedItem(id)){
-          //only existing items are in deleted list
+        // delete
+        if (isDeletedItem(id)) {
+          // only existing items are in deleted list
           itemDao.removeItem(item);
           profileItems.remove(id);
           deletedProfileItems.remove(id);
         }
-        //insert
-        else if(isNewItem(id)){
+        // insert
+        else if (isNewItem(id)) {
           itemDao.addItem(item);
-          //assure to have item under new ID in map
+          // assure to have item under new ID in map
           profileItems.remove(id);
           profileItems.put(item.getId().toString(), item);
         }
-        //update
-        else{
+        // update
+        else {
           itemDao.updateItem(item);
         }
       }
 
       newItemID = -1;
-    }
-    catch (UniqueProfileKeyException e) {
+    } catch (UniqueProfileKeyException e) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny: " + FacesUtils.getRootMessage(e), null);
     }
   }
 
 
-  public boolean isDeletedItem(Integer id){
+  public boolean isDeletedItem(Integer id) {
     LOG.debug("isDeletedItem(id={})", id);
     return deletedProfileItems.containsKey(id.toString());
   }
 
-  public boolean isNewItem(Integer id){
+
+  public boolean isNewItem(Integer id) {
     LOG.debug("isNewItem(id={})", id);
     return id.intValue() < 0;
   }
+
 
   public String getProfileItemValue() {
     LOG.trace("getProfileItemValue()");
     return profileItemValue;
   }
 
+
   public void setProfileItemValue(String profileItemValue) {
     LOG.debug("setProfileItemValue(profileItemValue={})", profileItemValue);
     this.profileItemValue = profileItemValue;
   }
+
 
   public boolean isKeySelectorDisabled() {
     LOG.trace("isKeySelectorDisabled()");
     return NONE_SELECTOR.equals(selectedCategory);
   }
 
+
   public boolean isKeyValueDisabled() {
     LOG.trace("isKeyValueDisabled()");
     return NONE_SELECTOR.equals(selectedItemKey);
   }
+
 
   public String getNoneSelector() {
     LOG.trace("getNoneSelector()");
     return NONE_SELECTOR;
   }
 
+
   public String getSelectedCategory() {
     LOG.trace("getSelectedCategory()");
     return selectedCategory;
   }
+
 
   public void setSelectedCategory(ValueChangeEvent event) {
     LOG.debug("setSelectedCategory(event={})", event);
@@ -241,15 +270,18 @@ public class ProfileEditBean {
     this.selectedCategory = selectedCategory;
   }
 
+
   public Collection<ConfigurationItemCategory> getAllCategories() {
     LOG.trace("getAllCategories()");
     return allCategories.values();
   }
 
+
   public Collection<ConfigurationProfileItem> getProfileItems() {
     LOG.trace("getProfileItems()");
     return profileItems.values();
   }
+
 
   public Collection<ConfigurationItemKey> getFilteredItemKeys() throws Exception {
     LOG.trace("getFilteredItemKeys()");
@@ -257,20 +289,24 @@ public class ProfileEditBean {
     return filteredItemKeys.values();
   }
 
+
   public String getSelectedItemKey() {
     LOG.trace("getSelectedItemKey()");
     return selectedItemKey;
   }
+
 
   public void setSelectedItemKey(String selectedItemKey) {
     LOG.debug("setSelectedItemKey(selectedItemKey={})", selectedItemKey);
     this.selectedItemKey = selectedItemKey;
   }
 
+
   public void setManipulationID(String manipulationID) {
     LOG.debug("setManipulationID(manipulationID={})", manipulationID);
     this.manipulationID = manipulationID;
   }
+
 
   public boolean refreshAddItemKeyForm() {
     LOG.debug("refreshAddItemKeyForm()");
@@ -280,20 +316,24 @@ public class ProfileEditBean {
     return true;
   }
 
+
   public Integer getId() {
     LOG.trace("getId()");
     return id;
   }
+
 
   public void setId(Integer id) {
     LOG.debug("setId(id={})", id);
     this.id = id;
   }
 
+
   public String getName() {
     LOG.trace("getName()");
     return name;
   }
+
 
   public void setName(String name) {
     LOG.debug("setName(name={})", name);

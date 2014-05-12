@@ -1,5 +1,6 @@
 package cz.i.cis.config.web.backing.item_key;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -18,10 +19,10 @@ import cz.i.cis.config.jpa.Type;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
-
 @Named(value = "itemKeyEdit")
 @ViewScoped
 public class ItemKeyEditBean {
+
   private static final Logger LOG = LoggerFactory.getLogger(ItemKeyEditBean.class);
 
   @EJB
@@ -45,17 +46,15 @@ public class ItemKeyEditBean {
     allCategories = categoryDao.getCategoryMap();
     try {
       itemKey = itemKeyDao.getItemKey(id);
-    }
-    catch (IllegalArgumentException exc) {
-      FacesMessagesUtils.addErrorMessage("edit:key", exc.getMessage(), null);
+    } catch (IllegalArgumentException exc) {
+      FacesMessagesUtils.addErrorMessage("ItemKey id " + id + " is not valid", null);
     }
     if (itemKey != null) {
       key = itemKey.getKey();
       type = itemKey.getType();
       selectedCategory = itemKey.getCategory().getId().toString();
       description = itemKey.getDescription();
-    }
-    else {
+    } else {
       FacesMessagesUtils.addErrorMessage("Zvolený klíč nebyl nalezen v databázi - ID = " + id, null);
     }
   }
@@ -63,25 +62,32 @@ public class ItemKeyEditBean {
 
   public String actionUpdateItemKey() throws Exception {
     LOG.debug("actionUpdateItemKey()");
+    String link = "";
     if (itemKey != null) {
-      if (!allCategories.containsKey(selectedCategory)) {
-        throw new Exception("Selected category is not valid.");
-      }
-
-      itemKey.setKey(key);
-      itemKey.setType(type);
-      itemKey.setCategory(allCategories.get(selectedCategory));
-      itemKey.setDescription(description);
-
       try {
+        if (!allCategories.containsKey(selectedCategory)) {
+          throw new IllegalArgumentException("Selected category is not valid.");
+        }
+
+        itemKey.setKey(key);
+        itemKey.setType(type);
+        itemKey.setCategory(allCategories.get(selectedCategory));
+        itemKey.setDescription(description);
+
         itemKey = itemKeyDao.updateItemKey(itemKey);
-        FacesUtils.redirect("list.xhtml#itemKey-" + itemKey.getId());
+        link = "list.xhtml#itemKey-" + itemKey.getId();
+        FacesUtils.redirect(link);
+      }
+      catch (IOException exc) {
+        FacesMessagesUtils.failedRedirectMessage(link, exc);
+      }
+      catch (IllegalArgumentException exc) {
+        FacesMessagesUtils.addErrorMessage("form:category", exc.getMessage(), null);
       }
       catch (Exception exc) {
         FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", FacesUtils.getRootMessage(exc));
       }
-    }
-    else {
+    } else {
       FacesMessagesUtils.addErrorMessage("Musíte editovat existující klíč, abyste mohli uložit jeho změny.", null);
     }
     return null; // stay on the same page to display the messages
@@ -93,55 +99,66 @@ public class ItemKeyEditBean {
     return Type.values();
   }
 
+
   public Integer getId() {
     LOG.trace("getId()");
     return id;
   }
+
 
   public void setId(Integer id) {
     LOG.debug("setId(id={})", id);
     this.id = id;
   }
 
+
   public String getKey() {
     LOG.trace("getKey()");
     return key;
   }
+
 
   public void setKey(String key) {
     LOG.debug("setKey(key={})", key);
     this.key = key;
   }
 
+
   public Type getType() {
     LOG.trace("getType()");
     return type;
   }
+
 
   public void setType(Type type) {
     LOG.debug("setType(type={})", type);
     this.type = type;
   }
 
+
   public String getSelectedCategory() {
     LOG.trace("getSelectedCategory()");
     return selectedCategory;
   }
+
 
   public void setSelectedCategory(String category) {
     LOG.debug("setSelectedCategory(category={})", category);
     this.selectedCategory = category;
   }
 
+
   public String getDescription() {
     LOG.trace("getDescription()");
     return description;
   }
 
+
   public void setDescription(String description) {
     LOG.debug("setDescription(description={})", description);
     this.description = description;
   }
+
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
     LOG.debug("getAllCategories()");

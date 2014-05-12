@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.EJB;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -56,7 +59,6 @@ public class ProfileEditBean {
   private Map<String, ConfigurationProfileItem> profileItems;
   private Map<String, ConfigurationProfileItem> deletedProfileItems;
   private int newItemID = -1;
-  private String manipulationID;
 
   private String selectedCategory;
   private String selectedItemKey;
@@ -70,13 +72,12 @@ public class ProfileEditBean {
     if (profile == null) {
       FacesMessagesUtils.addErrorMessage("Zvolený profil nebyl nalezen v databázi - ID = " + id, null);
       return;
-    } else {
-      this.name = profile.getName();
     }
 
-    selectedCategory = NONE_SELECTOR;
-    selectedItemKey = NONE_SELECTOR;
-    allCategories = categoryDao.getCategoryMap();
+    this.name = profile.getName();
+    this.selectedCategory = NONE_SELECTOR;
+    this.selectedItemKey = NONE_SELECTOR;
+    this.allCategories = categoryDao.getCategoryMap();
     refreshItemKeys();
     refreshItems();
   }
@@ -103,7 +104,6 @@ public class ProfileEditBean {
     // for (ConfigurationProfileItem item : profileItems.values()) {
     // filteredItemKeys.remove(item.getKey().getId().toString());
     // }
-
   }
 
 
@@ -116,13 +116,8 @@ public class ProfileEditBean {
   }
 
 
-  public void actionAddProfileItem() {
-    LOG.debug("actionAddProfileItem()");
-    LOG.debug("selectedCategory = " + selectedCategory);
-    LOG.debug("selectedItemKey = " + selectedItemKey);
-    LOG.debug("profileItemValue = " + profileItemValue);
-    // FIXME: id is hiding the class attribute id.
-
+  public void actionAddItem(ActionEvent event) {
+    LOG.debug("actionAddItem(event={})", event);
     if (NONE_SELECTOR.equals(selectedCategory) || selectedCategory == null) {
       FacesMessagesUtils.addErrorMessage("form:category", "Nebyla zvolena kategorie", null);
       return;
@@ -140,29 +135,29 @@ public class ProfileEditBean {
       return;
     }
 
-    Integer id = newItemID--;
+    final Integer itemId = newItemID--;
     ConfigurationProfileItem item = new ConfigurationProfileItem();
-    item.setId(id);
+    item.setId(itemId);
     item.setKey(key);
     item.setProfile(profile);
     item.setValue(profileItemValue);
 
     profileItems.put(item.getId().toString(), item);
-
-    setSelectedCategory(NONE_SELECTOR);
   }
 
 
-  public void actionDeleteItem(Integer id) {
-    LOG.debug("actionDeleteItem(id={})", id);
-    ConfigurationProfileItem deleteItem = profileItems.get(id.toString());
-
-    if (isDeletedItem(id))
-      return; // nothing new to delete
-
-    if (isNewItem(id)) {
+  public void actionDeleteItem() {
+    LOG.debug("actionDeleteItem()");
+    final String itemIdStr = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("itemId");
+    LOG.debug("itemIdStr={}, class={}", itemIdStr, itemIdStr.getClass());
+    final Integer itemId = Integer.valueOf(itemIdStr);
+    if (isDeletedItem(itemId)) {
+      return;
+    }
+    final ConfigurationProfileItem deleteItem = profileItems.get(itemIdStr);
+    if (isNewItem(itemId)) {
       // new items delete from cache right away
-      profileItems.remove(id.toString());
+      profileItems.remove(itemIdStr);
     } else {
       // existing items mark for deletion
       deletedProfileItems.put(deleteItem.getId().toString(), deleteItem);
@@ -172,7 +167,9 @@ public class ProfileEditBean {
 
   public void actionRestoreItem() {
     LOG.debug("actionRestoreItem()");
-    deletedProfileItems.remove(manipulationID);
+    final String itemIdStr = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("itemId");
+    LOG.debug("itemIdStr={}, class={}", itemIdStr, itemIdStr.getClass());
+    deletedProfileItems.remove(itemIdStr);
   }
 
 
@@ -228,8 +225,8 @@ public class ProfileEditBean {
   }
 
 
-  public void setChengedItemValue(ValueChangeEvent event) {
-    LOG.debug("setChengedItemValue(event={})", event);
+  public void setProfileItemValue(ValueChangeEvent event) {
+    LOG.debug("setProfileItemValue(event={})", event);
     setProfileItemValue((String) event.getNewValue());
   }
 
@@ -267,7 +264,7 @@ public class ProfileEditBean {
   }
 
 
-  public void setChangedCategory(ValueChangeEvent event) {
+  public void setSelectedCategory(ValueChangeEvent event) {
     LOG.debug("setSelectedCategory(event={})", event);
     setSelectedCategory((String) event.getNewValue());
   }
@@ -311,8 +308,8 @@ public class ProfileEditBean {
   }
 
 
-  public void setChengedItemKey(ValueChangeEvent event) {
-    LOG.debug("setChengedItemKey(event={})", event);
+  public void setSelectedItemKey(ValueChangeEvent event) {
+    LOG.debug("setSelectedItemKey(event={})", event);
     setSelectedItemKey((String) event.getNewValue());
   }
 
@@ -326,12 +323,6 @@ public class ProfileEditBean {
     if (this.selectedItemKey == NONE_SELECTOR) {
       setProfileItemValue("");
     }
-  }
-
-
-  public void setManipulationID(String manipulationID) {
-    LOG.debug("setManipulationID(manipulationID={})", manipulationID);
-    this.manipulationID = manipulationID;
   }
 
 

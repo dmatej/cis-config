@@ -24,6 +24,10 @@
       <scope>provided</scope>
     </dependency>
    <dependency>
+     <groupId>org.apache.commons</groupId>
+     <artifactId>commons-lang3</artifactId>
+   </dependency>
+   <dependency>
       <groupId>javax.faces</groupId>
       <artifactId>javax.faces-api</artifactId>
     </dependency>
@@ -43,11 +47,13 @@
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
     </dependency>
+    <!-- FIXME: proc je to tu? Puvodne jako compile. -->
     <dependency>
-	  <groupId>org.glassfish.web</groupId>
-	  <artifactId>el-impl</artifactId>
-	  <version>2.2</version>
-     </dependency>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>el-impl</artifactId>
+      <version>2.2</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>

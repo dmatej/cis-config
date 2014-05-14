@@ -70,4 +70,14 @@ public class ConfigurationProfileItemDao {
 
     return itemMap;
   }
+
+
+  public List<ConfigurationProfileItem> listItems(Integer profileID) {
+    final TypedQuery<ConfigurationProfileItem> query = this.em.createQuery(
+        "SELECT item FROM ConfigurationProfileItem item WHERE item.profile.id = :profileID", ConfigurationProfileItem.class);
+
+    query.setParameter("profileID", profileID);
+
+    return query.getResultList();
+  }
 }

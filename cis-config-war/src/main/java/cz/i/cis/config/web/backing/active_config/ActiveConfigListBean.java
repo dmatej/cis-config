@@ -39,7 +39,7 @@ public class ActiveConfigListBean {
 
   private String selectedCategory;
 
-  private Integer activeConfigID;
+  private Integer activeItemID;
 
 
   public void init() throws Exception {
@@ -81,10 +81,10 @@ public class ActiveConfigListBean {
   }
 
 
-  public void actionDeleteItem(ConfigurationItem toDelete) {
-    LOG.debug("actionDeleteItem(toDelete={})", toDelete);
+  public void actionDeleteItem() {
+    LOG.debug("actionDeleteItem()");
     try {
-      configItemDao.removeItem(toDelete);
+      configItemDao.removeItem(activeItemID);
     } catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat položku", FacesUtils.getRootMessage(exc));
     }
@@ -135,14 +135,15 @@ public class ActiveConfigListBean {
   }
 
 
-  public Integer getActiveConfigID() {
-    LOG.debug("getActiveConfigID()");
-    return activeConfigID;
+  public Integer getActiveItemID() {
+    LOG.debug("getActiveItemID()");
+    return activeItemID;
   }
 
 
-  public void setActiveConfigID(Integer activeConfigID) {
-    LOG.debug("setActiveConfigID(activeConfigID={})", activeConfigID);
-    this.activeConfigID = activeConfigID;
+  public void setActiveItemID(Integer activeItemID) {
+    LOG.debug("setActiveItemID(activeConfigID={})", activeItemID);
+    this.activeItemID = activeItemID;
   }
+
 }

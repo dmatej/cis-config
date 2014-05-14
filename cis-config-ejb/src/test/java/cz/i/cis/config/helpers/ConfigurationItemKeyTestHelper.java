@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
-import cz.i.cis.config.jpa.Type;
+import cz.i.cis.config.jpa.ConfigurationItemKeyType;
 
 @Stateless
 @Local
@@ -43,7 +43,7 @@ public class ConfigurationItemKeyTestHelper {
     ConfigurationItemKey key = new ConfigurationItemKey();
     key.setKey((RandomStringUtils.random(3, true, true)));
     key.setDescription("my key");
-    key.setType(Type.URL);
+    key.setType(ConfigurationItemKeyType.URL);
     key.setCategory(configuration_category);
     em.persist(key);
     em.flush();

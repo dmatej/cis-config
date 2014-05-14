@@ -35,7 +35,7 @@ import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
 import cz.i.cis.config.jpa.ConfigurationProfile;
 import cz.i.cis.config.jpa.ConfigurationProfileItem;
-import cz.i.cis.config.jpa.Type;
+import cz.i.cis.config.jpa.ConfigurationItemKeyType;
 import cz.i.cis.config.test.ArquillianITest;
 
 public class ConfigurationProfileItemDaoITest extends ArquillianITest {
@@ -100,7 +100,7 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
     key.setCategory(category);
     key.setDescription("base configuration key");
     key.setKey("base");
-    key.setType(Type.Text);
+    key.setType(ConfigurationItemKeyType.Text);
     dao_key.addItemKey(key);
     key_helper.addToDelete(key);
 

@@ -17,7 +17,7 @@ import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.ejb.dao.exceptions.UniqueKeyException;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
-import cz.i.cis.config.jpa.Type;
+import cz.i.cis.config.jpa.ConfigurationItemKeyType;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
@@ -35,7 +35,7 @@ public class ItemKeyCreateBean {
   private Map<String, ConfigurationItemCategory> allCategories;
 
   private String key;
-  private Type type;
+  private ConfigurationItemKeyType type;
   private String selectedCategory;
   private String description;
 
@@ -83,9 +83,9 @@ public class ItemKeyCreateBean {
   }
 
 
-  public Type[] getAllTypes() {
+  public ConfigurationItemKeyType[] getAllTypes() {
     LOG.debug("getAllTypes()");
-    return Type.values();
+    return ConfigurationItemKeyType.values();
   }
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
@@ -103,12 +103,12 @@ public class ItemKeyCreateBean {
     this.key = key;
   }
 
-  public Type getType() {
+  public ConfigurationItemKeyType getType() {
     LOG.trace("getType()");
     return type;
   }
 
-  public void setType(Type type) {
+  public void setType(ConfigurationItemKeyType type) {
     LOG.debug("setType(type={})", type);
     this.type = type;
   }

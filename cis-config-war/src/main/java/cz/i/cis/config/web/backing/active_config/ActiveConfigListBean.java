@@ -3,6 +3,7 @@ package cz.i.cis.config.web.backing.active_config;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -24,70 +25,79 @@ public class ActiveConfigListBean {
 
   private static final Logger LOG = LoggerFactory.getLogger(ActiveConfigListBean.class);
 
-  // TODO asi to nebude fungovat...
-  private static final ConfigurationItemCategory NONE_SELECTOR = new ConfigurationItemCategory();
-  private static final ConfigurationItemCategory ALL_SELECTOR = new ConfigurationItemCategory();
+  private static final String NONE_SELECTOR = "none";
+  private static final String ALL_SELECTOR = "all";
+  private static final String SESSION_NAME = "active-config-category";
 
   @EJB
   private ConfigurationCategoryDao categoryDao;
   @EJB
   private ConfigurationItemDao configItemDao;
 
-  private List<ConfigurationItemCategory> allCategories;
+  private Map<String, ConfigurationItemCategory> allCategories;
   private List<ConfigurationItem> filteredActiveItems;
 
-  private ConfigurationItemCategory selectedCategory;
+  private String selectedCategory;
+
+  private Integer activeItemID;
 
 
   public void init() throws Exception {
     LOG.debug("init()");
-    allCategories = categoryDao.listCategories();
-    selectedCategory = NONE_SELECTOR;
+    allCategories = categoryDao.getCategoryMap();
+
+    String category = (String) FacesUtils.getSession(SESSION_NAME);
+    if (category == null) {
+      selectedCategory = NONE_SELECTOR;
+    } else {
+      selectedCategory = category;
+    }
 
     refreshActiveItems();
   }
 
 
-  private void refreshActiveItems() throws Exception {
+  private void refreshActiveItems() {
     LOG.trace("refreshActiveItems()");
     try {
-      if (selectedCategory == NONE_SELECTOR) {
+      if (NONE_SELECTOR.equals(selectedCategory)) {
         filteredActiveItems = Collections.emptyList();
-      } else if (selectedCategory == ALL_SELECTOR) {
+      } else if (ALL_SELECTOR.equals(selectedCategory)) {
         filteredActiveItems = configItemDao.listItems();
       } else {
-        if (!allCategories.contains(selectedCategory)) {
-          throw new IllegalArgumentException("Selected category is not valid.");
+        if (!allCategories.containsKey(selectedCategory)) {
+          throw new IllegalArgumentException("Vybraná kategorie neexistuje");
         }
 
-        filteredActiveItems = configItemDao.listConfigurationItems(selectedCategory);
+        ConfigurationItemCategory filter = allCategories.get(selectedCategory);
+        filteredActiveItems = configItemDao.listConfigurationItems(filter);
       }
     } catch (IllegalArgumentException exc) {
       FacesMessagesUtils.addErrorMessage(exc.getMessage(), null);
     } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit aktivní položky",FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se obnovit aktivní položky", FacesUtils.getRootMessage(exc));
     }
 
   }
 
 
-  public void actionDeleteItem(ConfigurationItem toDelete) {
-    LOG.debug("actionDeleteItem(toDelete={})", toDelete);
+  public void actionDeleteItem() {
+    LOG.debug("actionDeleteItem()");
     try {
-      configItemDao.removeItem(toDelete);
+      configItemDao.removeItem(activeItemID);
     } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat profil", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat položku", FacesUtils.getRootMessage(exc));
     }
   }
 
 
-  public ConfigurationItemCategory getAllSelector() {
+  public String getAllSelector() {
     LOG.debug("getAllSelector()");
     return ALL_SELECTOR;
   }
 
 
-  public ConfigurationItemCategory getNoneSelector() {
+  public String getNoneSelector() {
     LOG.debug("getNoneSelector()");
     return NONE_SELECTOR;
   }
@@ -95,23 +105,24 @@ public class ActiveConfigListBean {
 
   public Collection<ConfigurationItemCategory> getAllCategories() {
     LOG.debug("getAllCategories()");
-    return allCategories;
+    return allCategories.values();
   }
 
 
-  public ConfigurationItemCategory getSelectedCategory() {
+  public String getSelectedCategory() {
     LOG.debug("getSelectedCategory()");
     return selectedCategory;
   }
 
 
-  public void setSelectedCategory(ConfigurationItemCategory selectedCategory) {
+  public void setSelectedCategory(String selectedCategory) {
     LOG.debug("setSelectedCategory(selectedCategory={})", selectedCategory);
+    FacesUtils.setSession(SESSION_NAME, selectedCategory);
     this.selectedCategory = selectedCategory;
   }
 
 
-  public List<ConfigurationItem> getFilteredActiveItems() throws Exception {
+  public List<ConfigurationItem> getFilteredActiveItems() {
     LOG.debug("getFilteredActiveItems()");
     refreshActiveItems();
     return filteredActiveItems;
@@ -122,4 +133,17 @@ public class ActiveConfigListBean {
     LOG.debug("setFilteredActiveItems(filteredActiveItems={})", filteredActiveItems);
     this.filteredActiveItems = filteredActiveItems;
   }
+
+
+  public Integer getActiveItemID() {
+    LOG.debug("getActiveItemID()");
+    return activeItemID;
+  }
+
+
+  public void setActiveItemID(Integer activeItemID) {
+    LOG.debug("setActiveItemID(activeConfigID={})", activeItemID);
+    this.activeItemID = activeItemID;
+  }
+
 }

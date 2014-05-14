@@ -53,8 +53,8 @@
           <h:outputText value="#{item.user.login}" />
         </h:column>
         <h:column>
-          <h:commandLink value="smazat" onclick="return confirm('Opravdu chcete smazat tuto položku?')">
-            <f:ajax listener="#{activeConfigList.actionDeleteItem(item)}" render="configItems" />
+          <h:commandLink action="#{activeConfigList.actionDeleteItem}" value="smazat" onclick="return confirm('Opravdu chcete smazat tuto položku?');">
+            <f:setPropertyActionListener target="#{activeConfigList.activeItemID}" value="#{item.id}" />
           </h:commandLink>
         </h:column>
       </h:dataTable>

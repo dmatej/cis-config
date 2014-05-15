@@ -56,4 +56,10 @@ public final class FacesUtils {
 
     return t.getMessage();
   }
+
+
+  public static String getRequestParameter(String key) {
+    LOG.debug("getRequestParameter(key={})", key);
+    return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(key);
+  }
 }

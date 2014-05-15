@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.view.ViewScoped;
@@ -31,7 +30,7 @@ import cz.i.cis.config.web.FacesUtils;
 
 @Named(value = "profileEdit")
 @ViewScoped
-public class ProfileEditBean {
+public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifier{
 
   private static final Logger LOG = LoggerFactory.getLogger(ProfileEditBean.class);
 
@@ -78,10 +77,10 @@ public class ProfileEditBean {
     }
 
     try {
-    this.name = profile.getName();
-    this.selectedCategory = NONE_SELECTOR;
-    this.selectedItemKey = NONE_SELECTOR;
-    this.allCategories = categoryDao.getCategoryMap();
+      this.name = profile.getName();
+      this.selectedCategory = NONE_SELECTOR;
+      this.selectedItemKey = NONE_SELECTOR;
+      this.allCategories = categoryDao.getCategoryMap();
     } catch (IllegalArgumentException exc) {
       FacesMessagesUtils.addErrorMessage("Cannot select categories from database", null);
     }
@@ -112,25 +111,25 @@ public class ProfileEditBean {
       // filteredItemKeys.remove(item.getKey().getId().toString());
       // }
 
-    } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit položky klíče", FacesUtils.getRootMessage(exc));
+    } catch (Exception e) {
+      LOG.error("Failed to refresh item keys.", e);
+      FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit klíče položek", FacesUtils.getRootMessage(e));
     }
-
-    if (!allCategories.containsKey(selectedCategory)) {
-      FacesMessagesUtils.addErrorMessage("form:category", "Vybraná kategorie neexistuje", null);
-      filteredItemKeys = Collections.emptyMap();
-      return;
-    }
-
-    ConfigurationItemCategory filter = allCategories.get(selectedCategory);
-    List<ConfigurationItemKey> itemKeys = itemKeyDao.filterItemKeys(filter);
-
-    filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
-
-    // for (ConfigurationProfileItem item : profileItems.values()) {
-    // filteredItemKeys.remove(item.getKey().getId().toString());
-    // }
-
+//  //TODO proč to tu je podruhý?
+//    if (!allCategories.containsKey(selectedCategory)) {
+//      FacesMessagesUtils.addErrorMessage("form:category", "Vybraná kategorie neexistuje", null);
+//      filteredItemKeys = Collections.emptyMap();
+//      return;
+//    }
+//
+//    ConfigurationItemCategory filter = allCategories.get(selectedCategory);
+//    List<ConfigurationItemKey> itemKeys = itemKeyDao.filterItemKeys(filter);
+//
+//    filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
+//
+//    // for (ConfigurationProfileItem item : profileItems.values()) {
+//    // filteredItemKeys.remove(item.getKey().getId().toString());
+//    // }
   }
 
 
@@ -139,8 +138,9 @@ public class ProfileEditBean {
     try {
       List<ConfigurationProfileItem> items = itemDao.listItems();
       profileItems = ConfigurationProfileItemDao.getItemMap(items);
-    } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit položky", FacesUtils.getRootMessage(exc));
+    } catch (Exception e) {
+      LOG.error("Failed to retrieve items.", e);
+      FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit položky", FacesUtils.getRootMessage(e));
     }
     deletedProfileItems = new HashMap<>();
   }
@@ -168,10 +168,10 @@ public class ProfileEditBean {
 
     final Integer itemId = newItemID--;
     ConfigurationProfileItem item = new ConfigurationProfileItem();
-    item.setId(itemId);
-    item.setKey(key);
-    item.setProfile(profile);
-    item.setValue(profileItemValue);
+      item.setId(itemId);
+      item.setKey(key);
+      item.setProfile(profile);
+      item.setValue(profileItemValue);
 
     profileItems.put(item.getId().toString(), item);
   }
@@ -179,61 +179,44 @@ public class ProfileEditBean {
 
   public void actionDeleteItem() {
     LOG.debug("actionDeleteItem()");
-    final String itemIdStr = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("itemId");
+    final String itemIdStr = FacesUtils.getRequestParameter("itemId");
     LOG.debug("itemIdStr={}, class={}", itemIdStr, itemIdStr.getClass());
+
     final Integer itemId = Integer.valueOf(itemIdStr);
     if (isDeletedItem(itemId)) {
       return;
     }
+
     final ConfigurationProfileItem deleteItem = profileItems.get(itemIdStr);
     if (isNewItem(itemId)) {
       // new items delete from cache right away
       profileItems.remove(itemIdStr);
+      LOG.debug("New item removed: {}", deleteItem);
     } else {
       // existing items mark for deletion
       deletedProfileItems.put(deleteItem.getId().toString(), deleteItem);
+      LOG.debug("Existing item marked for deletion: {}", deleteItem);
     }
   }
 
 
   public void actionRestoreItem() {
     LOG.debug("actionRestoreItem()");
-    final String itemIdStr = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-        .get("itemId");
+    final String itemIdStr = FacesUtils.getRequestParameter("itemId");
     LOG.debug("itemIdStr={}, class={}", itemIdStr, itemIdStr.getClass());
     deletedProfileItems.remove(itemIdStr);
-    }
+  }
 
 
   public void actionSaveChanges() {
     LOG.debug("actionSaveChanges()");
     try {
-      // TODO in one transaction?
-      for (ConfigurationProfileItem item : profileItems.values()) {
-        Integer id = item.getId();
+      itemDao.saveChanges(profileItems, this);
 
-        // delete
-        if (isDeletedItem(id)) {
-          // only existing items are in deleted list
-          itemDao.removeItem(item);
-          profileItems.remove(id);
-          deletedProfileItems.remove(id);
-        }
-        // insert
-        else if (isNewItem(id)) {
-          itemDao.addItem(item);
-          // assure to have item under new ID in map
-          profileItems.remove(id);
-          profileItems.put(item.getId().toString(), item);
-        }
-        // update
-        else {
-          itemDao.updateItem(item);
-        }
-      }
-
+      deletedProfileItems.clear();
       newItemID = -1;
     } catch (UniqueProfileKeyException e) {
+      LOG.error("Failed to save changes.", e);
       FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny: " + FacesUtils.getRootMessage(e), null);
     }
   }

@@ -68,9 +68,9 @@
    </h:panelGrid>
 
 
-   <!--       <h:commandButton value="Uložit změny"> -->
-   <!--         <f:ajax listener="# {profileEdit.actionSaveChanges}" execute="@form" render="@form" /> -->
-   <!--       </h:commandButton> -->
+   <h:commandButton value="Uložit změny">
+     <f:ajax listener="#{profileEdit.actionSaveChanges}" />
+   </h:commandButton>
 
    <ui:param name="items" value="#{profileEdit.profileItems}" />
 

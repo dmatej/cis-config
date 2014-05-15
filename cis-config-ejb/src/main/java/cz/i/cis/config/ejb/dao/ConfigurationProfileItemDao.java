@@ -80,4 +80,38 @@ public class ConfigurationProfileItemDao {
 
     return query.getResultList();
   }
+
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void saveChanges(Map<String, ConfigurationProfileItem> profileItems, ItemClassifier classifier) throws UniqueProfileKeyException {
+    for (ConfigurationProfileItem item : profileItems.values()) {
+      Integer id = item.getId();
+
+      // delete
+      if (classifier.isDeletedItem(id)) {
+        // only existing items are in deleted list
+        removeItem(item);
+        profileItems.remove(id);
+      }
+      // insert
+      else if (classifier.isNewItem(id)) {
+        addItem(item);
+        // assure to have item under new ID in map
+        profileItems.remove(id);
+        profileItems.put(item.getId().toString(), item);
+      }
+      // update
+      else {
+        updateItem(item);
+      }
+    }
+  }
+
+
+
+
+  public interface ItemClassifier{
+    public boolean isDeletedItem(Integer id);
+    public boolean isNewItem(Integer id);
+  }
 }

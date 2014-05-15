@@ -1,7 +1,6 @@
 package cz.i.cis.config.web;
 
 import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -20,14 +19,9 @@ public class UserManager {
   private CisUserDao userDao;
 
 
-  private String getRemoteUser() {
-    LOG.trace("getRemoteUser()");
-    return FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
-  }
-
   public boolean isValid() {
     LOG.debug("isValid()");
-    String login = this.getRemoteUser();
+    String login = FacesUtils.getRemoteUser();
 
     if (login == null || login.isEmpty()) {
       return false;
@@ -43,7 +37,7 @@ public class UserManager {
 
   public boolean isRegistered() {
     LOG.debug("isRegistered()");
-    String login = this.getRemoteUser();
+    String login = FacesUtils.getRemoteUser();
 
     if (login == null || login.isEmpty()) {
       return false;

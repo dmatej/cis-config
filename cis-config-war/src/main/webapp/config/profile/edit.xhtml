@@ -68,7 +68,10 @@
 
     <h:panelGroup />
 
-    <h:panelGroup styleClass="form:table:buttonline2">
+
+   <ui:param name="items" value="#{profileEdit.profileItems}" />
+
+    <h:panelGroup styleClass="form:table:buttonline2" rendered="#{not empty items}">
 <!--      <h:commandButton value="Uložit změny"> -->
 <!--       <f:ajax listener="# {profileEdit.actionSaveChanges}" render="data-table" /> -->
 <!--      </h:commandButton> -->
@@ -83,7 +86,7 @@
     <h:panelGroup />
    </h:panelGrid>
 
-   <ui:param name="items" value="#{profileEdit.profileItems}" />
+   <h:outputText rendered="#{empty items}" escape="false" value="&lt;p&gt;V profilu nebyly nalezeny žádné položky.&lt;/p&gt;" />
 
    <h:dataTable id="data-table" value="#{items}" var="item" rendered="#{not empty items}">
     <h:column>

@@ -108,7 +108,6 @@ public class ProfileEditBean {
       for (ConfigurationProfileItem item : profileItems.values()) {
         filteredItemKeys.remove(item.getKey().getId() + "");
       }
-
     } catch (Exception e) {
       LOG.error("Failed to refresh item keys.", e);
       FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit klíče položek", FacesUtils.getRootMessage(e));

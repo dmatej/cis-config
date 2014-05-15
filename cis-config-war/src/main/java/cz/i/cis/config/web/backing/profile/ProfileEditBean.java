@@ -2,7 +2,6 @@ package cz.i.cis.config.web.backing.profile;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +29,7 @@ import cz.i.cis.config.web.FacesUtils;
 
 @Named(value = "profileEdit")
 @ViewScoped
-public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifier{
+public class ProfileEditBean {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProfileEditBean.class);
 
@@ -55,7 +54,6 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
   private Map<String, ConfigurationItemCategory> allCategories;
 
   private Map<String, ConfigurationProfileItem> profileItems;
-  private Map<String, ConfigurationProfileItem> deletedProfileItems;
   private int newItemID = -1;
 
   private String selectedCategory;
@@ -127,7 +125,6 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
       LOG.error("Failed to retrieve items.", e);
       FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit položky", FacesUtils.getRootMessage(e));
     }
-    deletedProfileItems = new HashMap<>();
   }
 
 
@@ -158,7 +155,7 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
       item.setProfile(profile);
       item.setValue(profileItemValue);
 
-    profileItems.put(item.getId().toString(), item);
+    profileItems.put(item.getId() + "", item);
 
     this.setSelectedItemKey(NONE_SELECTOR);
   }
@@ -181,7 +178,7 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
       LOG.debug("New item removed: {}", deleteItem);
     } else {
       // existing items mark for deletion
-      deletedProfileItems.put(deleteItem.getId().toString(), deleteItem);
+      deleteItem.setDeleted(true);
       LOG.debug("Existing item marked for deletion: {}", deleteItem);
     }
   }
@@ -191,16 +188,19 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
     LOG.debug("actionRestoreItem()");
     final String itemIdStr = FacesUtils.getRequestParameter("itemId");
     LOG.debug("itemIdStr={}, class={}", itemIdStr, itemIdStr.getClass());
-    deletedProfileItems.remove(itemIdStr);
+
+    final ConfigurationProfileItem restoreItem = profileItems.get(itemIdStr);
+    if(restoreItem != null) {
+      restoreItem.setDeleted(false);
+    }
   }
 
 
   public void actionSaveChanges(ActionEvent event) {
     LOG.debug("actionSaveChanges()");
     try {
-      itemDao.saveChanges(profileItems, this);
+      itemDao.saveChanges(profileItems);
 
-      deletedProfileItems.clear();
       newItemID = -1;
     } catch (UniqueProfileKeyException e) {
       LOG.error("Failed to save changes.", e);
@@ -211,7 +211,13 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
 
   public boolean isDeletedItem(Integer id) {
     LOG.debug("isDeletedItem(id={})", id);
-    return deletedProfileItems.containsKey(id.toString());
+    ConfigurationProfileItem item = profileItems.get(id + "");
+    if(item == null) {
+      // TODO: error
+      return false;
+    }
+
+    return item.isDeleted();
   }
 
 
@@ -301,6 +307,7 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
   public Collection<ConfigurationItemKey> getFilteredItemKeys() {
     LOG.trace("getFilteredItemKeys()");
     refreshItemKeys();
+
     return filteredItemKeys.values();
   }
 
@@ -335,6 +342,7 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
     if (NONE_SELECTOR.equals(selectedCategory)) {
       this.selectedItemKey = NONE_SELECTOR;
     }
+
     return true;
   }
 

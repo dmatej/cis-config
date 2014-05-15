@@ -16,14 +16,17 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.i.cis.config.ejb.dao.exceptions.UniqueProfileKeyException;
 import cz.i.cis.config.jpa.ConfigurationProfileItem;
-
 
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class ConfigurationProfileItemDao {
+  private static final Logger LOG = LoggerFactory.getLogger(ConfigurationProfileItemDao.class);
 
   @PersistenceContext(name = "cis-jta")
   private EntityManager em;
@@ -39,21 +42,20 @@ public class ConfigurationProfileItemDao {
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addItem(ConfigurationProfileItem item) throws UniqueProfileKeyException {
-//    this.em.persist(item);
+    // this.em.persist(item);
     try {
       this.em.persist(item);
       em.flush();
-    }
-    catch (PersistenceException exc) {
-      throw new UniqueProfileKeyException("Key" + item.getKey().getKey() +" and profile " + item.getProfile().getName() + " already exists!", exc);
+    } catch (PersistenceException exc) {
+      throw new UniqueProfileKeyException("Key" + item.getKey().getKey() + " and profile "
+          + item.getProfile().getName() + " already exists!", exc);
     }
   }
 
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeItem(ConfigurationProfileItem item) {
-    ConfigurationProfileItem i = this.em.merge(item);
-    this.em.remove(i);
+    this.em.remove(this.em.getReference(ConfigurationProfileItem.class, item.getId()));
   }
 
 
@@ -75,7 +77,8 @@ public class ConfigurationProfileItemDao {
 
   public List<ConfigurationProfileItem> listItems(Integer profileID) {
     final TypedQuery<ConfigurationProfileItem> query = this.em.createQuery(
-        "SELECT item FROM ConfigurationProfileItem item WHERE item.profile.id = :profileID", ConfigurationProfileItem.class);
+        "SELECT item FROM ConfigurationProfileItem item WHERE item.profile.id = :profileID",
+        ConfigurationProfileItem.class);
 
     query.setParameter("profileID", profileID);
 
@@ -84,35 +87,24 @@ public class ConfigurationProfileItemDao {
 
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void saveChanges(Map<String, ConfigurationProfileItem> profileItems, ItemClassifier classifier) throws UniqueProfileKeyException {
+  public void saveChanges(Map<String, ConfigurationProfileItem> profileItems) throws UniqueProfileKeyException {
     for (ConfigurationProfileItem item : new ArrayList<>(profileItems.values())) {
       Integer id = item.getId();
 
-      // delete
-      if (classifier.isDeletedItem(id)) {
-        // only existing items are in deleted list
+      if (item.isDeleted()) {
+        profileItems.remove(id + "");
         removeItem(item);
-        profileItems.remove(id);
+
+        continue;
       }
-      // insert
-      else if (classifier.isNewItem(id)) {
-        addItem(item);
-        // assure to have item under new ID in map
-        profileItems.remove(id);
-        profileItems.put(item.getId().toString(), item);
+
+      if (id == null || id < 0) {
+        profileItems.remove(id + "");
+        item.setId(null);
       }
-      // update
-      else {
-        updateItem(item);
-      }
+
+      ConfigurationProfileItem newItem = updateItem(item);
+      profileItems.put(newItem.getId() + "", newItem);
     }
-  }
-
-
-
-
-  public interface ItemClassifier{
-    public boolean isDeletedItem(Integer id);
-    public boolean isNewItem(Integer id);
   }
 }

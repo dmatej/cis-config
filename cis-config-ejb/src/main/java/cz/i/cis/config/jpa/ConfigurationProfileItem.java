@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 /**
@@ -52,6 +53,11 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
   @Column(name = "item_value", nullable = false)
   private String value;
 
+  /**
+   * Information whether is this item deleted. This field serves only for edit profile bean.
+   */
+  @Transient
+  private boolean deleted = false;
 
   /**
    * Returns identifier number of this profile item.
@@ -125,6 +131,23 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
     this.value = value;
   }
 
+  /**
+   * Returns information whether is this item deleted.
+   *
+   * @return Information whether is this item deleted.
+   */
+  public boolean isDeleted() {
+    return deleted;
+  }
+
+  /**
+   * Sets information whether is this item deleted.
+   *
+   * @param deleted information whether is this item deleted.
+   */
+  public void setDeleted(boolean deleted) {
+    this.deleted = deleted;
+  }
 
   /**
    * Compares this object with the entered object for order. Returns a

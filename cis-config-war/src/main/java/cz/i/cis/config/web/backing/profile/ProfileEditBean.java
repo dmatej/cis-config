@@ -121,7 +121,7 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
   private void refreshItems() {
     LOG.debug("refreshItems()");
     try {
-      List<ConfigurationProfileItem> items = itemDao.listItems();
+      List<ConfigurationProfileItem> items = itemDao.listItems(profile.getId());
       profileItems = ConfigurationProfileItemDao.getItemMap(items);
     } catch (Exception e) {
       LOG.error("Failed to retrieve items.", e);

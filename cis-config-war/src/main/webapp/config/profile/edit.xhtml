@@ -65,24 +65,12 @@
     </h:panelGroup>
 
     <h:panelGroup />
+   </h:panelGrid>
 
-           <h:panelGroup />
 
-<<<<<<< HEAD
    <h:commandButton value="Uložit změny">
      <f:ajax listener="#{profileEdit.actionSaveChanges}" />
    </h:commandButton>
-=======
-    <h:panelGroup styleClass="form:table:buttonline">
-     <h:commandButton value="Uložit změny">
-      <!-- <f:ajax listener="# {profileEdit.actionSaveChanges}" execute="@form" render="@form" /> -->
-     </h:commandButton>
-     <h:button outcome="list" value="Storno" />
-    </h:panelGroup>
-
-    <h:panelGroup />
-   </h:panelGrid>
->>>>>>> origin/master
 
    <ui:param name="items" value="#{profileEdit.profileItems}" />
 

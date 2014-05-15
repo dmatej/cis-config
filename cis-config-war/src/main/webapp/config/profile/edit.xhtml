@@ -69,8 +69,12 @@
     <h:panelGroup />
 
     <h:panelGroup styleClass="form:table:buttonline2">
-     <h:commandButton value="Uložit změny">
-      <f:ajax listener="#{profileEdit.actionSaveChanges}" />
+<!--      <h:commandButton value="Uložit změny"> -->
+<!--       <f:ajax listener="# {profileEdit.actionSaveChanges}" render="data-table" /> -->
+<!--      </h:commandButton> -->
+     <h:commandButton value="Uložit změny" actionListener="#{profileEdit.actionSaveChanges}">
+      <f:param name="id" value="#{profileEdit.id}" />
+      <f:ajax render="data-table" />
      </h:commandButton>
 
      <h:button value="Storno" outcome="list" />

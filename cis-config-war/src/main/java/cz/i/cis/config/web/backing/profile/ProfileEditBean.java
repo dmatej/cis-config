@@ -195,7 +195,7 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
   }
 
 
-  public void actionSaveChanges() {
+  public void actionSaveChanges(ActionEvent event) {
     LOG.debug("actionSaveChanges()");
     try {
       itemDao.saveChanges(profileItems, this);

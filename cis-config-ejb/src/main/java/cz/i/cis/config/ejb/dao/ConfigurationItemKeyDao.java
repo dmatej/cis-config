@@ -25,6 +25,7 @@ import cz.i.cis.config.jpa.ConfigurationItem;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
 
+
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
@@ -48,7 +49,6 @@ public class ConfigurationItemKeyDao {
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addItemKey(ConfigurationItemKey key) throws UniqueKeyException {
     LOG.debug("addItemKey(key={})", key);
-    // this.em.persist(key);
     try {
       this.em.persist(key);
       em.flush();

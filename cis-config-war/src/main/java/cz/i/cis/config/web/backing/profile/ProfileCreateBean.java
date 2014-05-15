@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Date;
 
 import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.NoResultException;
@@ -37,7 +36,7 @@ public class ProfileCreateBean {
   public String actionAddProfile() throws IOException {
     LOG.debug("actionAddProfile()");
     try {
-      String login = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
+      String login = FacesUtils.getRemoteUser();
       if (login == null || login.isEmpty()) {
         throw new NullPointerException(
             "Somehow no user is not logged in and phantoms are not allowed to create configuration profiles.");

@@ -49,7 +49,6 @@ public final class FacesUtils {
     sessions.put(sessionName, value);
   }
 
-
   public static String getRootMessage(Throwable t) {
     LOG.debug("getRootMessage(t={})", t);
     while (t.getCause() != null) {
@@ -59,9 +58,13 @@ public final class FacesUtils {
     return t.getMessage();
   }
 
-
   public static String getRequestParameter(String key) {
     LOG.debug("getRequestParameter(key={})", key);
     return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(key);
+  }
+
+  public static String getRemoteUser(){
+    LOG.trace("getRemoteUser()");
+    return FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
   }
 }

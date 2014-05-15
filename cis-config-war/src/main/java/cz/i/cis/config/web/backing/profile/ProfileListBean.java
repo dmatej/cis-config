@@ -3,7 +3,6 @@ package cz.i.cis.config.web.backing.profile;
 import java.util.List;
 
 import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.NoResultException;
@@ -20,6 +19,7 @@ import cz.i.cis.config.jpa.ConfigurationProfile;
 import cz.i.cis.config.jpa.ConfigurationProfileItem;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
+
 
 @Named(value = "profileList")
 @ViewScoped
@@ -62,20 +62,19 @@ public class ProfileListBean {
   public String actionActivateProfile() {
     LOG.trace("actionActivateProfile()");
     try {
+      String login = FacesUtils.getRemoteUser();
+      if (login == null || login.isEmpty()) {
+        throw new NullPointerException(
+            "Somehow no user is not logged in and phantoms are not allowed to create configuration profiles.");
+      }
 
-    String login = FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
-    if (login == null || login.isEmpty()) {
-      throw new NullPointerException(
-          "Somehow no user is not logged in and phantoms are not allowed to create configuration profiles.");
-    }
+      CisUser editor = userDao.getUser(login);
+      if (editor == null) {
+        throw new NoResultException("Logged in user has not been found in the database.");
+      }
 
-    CisUser editor = userDao.getUser(login);
-    if (editor == null) {
-      throw new NoResultException("Logged in user has not been found in the database.");
-    }
-
-    List<ConfigurationProfileItem> profileItems= profileItemDao.listItems(profileID);
-    itemDao.activateProfile(profileItems, editor);
+      List<ConfigurationProfileItem> profileItems= profileItemDao.listItems(profileID);
+      itemDao.activateProfile(profileItems, editor);
     } catch (Exception exc) {
       //TODO osetrit vyjimky
     }

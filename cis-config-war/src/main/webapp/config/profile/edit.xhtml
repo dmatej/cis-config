@@ -35,7 +35,7 @@
     </h:panelGroup>
     <h:panelGroup>
      <h:selectOneMenu id="key" styleClass="important short" value="#{profileEdit.selectedItemKey}" disabled="#{profileEdit.keySelectorDisabled}"
-          valueChangeListener="#{profileEdit.setSelectedItemKey}">
+       valueChangeListener="#{profileEdit.setSelectedItemKey}">
       <f:selectItem itemLabel="vyberte klíč" noSelectionOption="true" />
       <f:selectItems value="#{profileEdit.filteredItemKeys}" var="itemKey" itemLabel="#{itemKey.key}" itemValue="#{itemKey.id}" />
       <f:ajax execute="category key" render="key value" />
@@ -50,7 +50,7 @@
     </h:panelGroup>
     <h:panelGroup>
      <h:inputText id="value" styleClass="important short" value="#{profileEdit.profileItemValue}" disabled="#{profileEdit.keyValueDisabled}"
-          valueChangeListener="#{profileEdit.setProfileItemValue}" />
+       valueChangeListener="#{profileEdit.setProfileItemValue}" />
     </h:panelGroup>
     <h:panelGroup>
      <h:messages for="value" styleClass="form:table:error" />
@@ -65,20 +65,23 @@
     </h:panelGroup>
 
     <h:panelGroup />
+
+    <h:panelGroup />
+
+    <h:panelGroup styleClass="form:table:buttonline2">
+     <h:commandButton value="Uložit změny">
+      <f:ajax listener="#{profileEdit.actionSaveChanges}" />
+     </h:commandButton>
+
+     <h:button value="Storno" outcome="list" />
+    </h:panelGroup>
+
+    <h:panelGroup />
    </h:panelGrid>
-
-
-   <h:commandButton value="Uložit změny">
-     <f:ajax listener="#{profileEdit.actionSaveChanges}" />
-   </h:commandButton>
 
    <ui:param name="items" value="#{profileEdit.profileItems}" />
 
    <h:dataTable id="data-table" value="#{items}" var="item" rendered="#{not empty items}">
-    <h:column>
-     <f:facet name="header">ID</f:facet>
-     <a id="item-#{item.id}" class="id"><h:outputText value="#{item.id}" /></a>
-    </h:column>
     <h:column>
      <f:facet name="header">Klíč</f:facet>
      <h:outputText value="#{item.key.key}" />

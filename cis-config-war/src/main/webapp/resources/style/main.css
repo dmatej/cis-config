@@ -184,13 +184,17 @@ ul.form\:table\:error {
  padding: 0px;
 }
 
-.form\:table\:buttonline {
+.form\:table\:buttonline, .form\:table\:buttonline2 {
  display: inline-block;
  float: right;
 }
 
-.form\:table\:buttonline * {
+.form\:table\:buttonline *, .form\:table\:buttonline2 * {
  margin-left: 10px;
+}
+
+.form\:table\:buttonline2 {
+ margin-top: 30px;
 }
 
 input.login,input.short,select.short {

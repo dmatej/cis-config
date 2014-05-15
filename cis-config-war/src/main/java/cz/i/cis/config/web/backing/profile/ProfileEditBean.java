@@ -159,6 +159,8 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
       item.setValue(profileItemValue);
 
     profileItems.put(item.getId().toString(), item);
+
+    this.setSelectedItemKey(NONE_SELECTOR);
   }
 
 

@@ -1,5 +1,6 @@
 package cz.i.cis.config.ejb.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +85,7 @@ public class ConfigurationProfileItemDao {
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void saveChanges(Map<String, ConfigurationProfileItem> profileItems, ItemClassifier classifier) throws UniqueProfileKeyException {
-    for (ConfigurationProfileItem item : profileItems.values()) {
+    for (ConfigurationProfileItem item : new ArrayList<>(profileItems.values())) {
       Integer id = item.getId();
 
       // delete

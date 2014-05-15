@@ -10,16 +10,16 @@
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputText id="name" class="important short" required="true" requiredMessage="Nebyl vyplněn název" value="#{category.name}" size="40" />
+    <h:inputText id="name" styleClass="important short" required="true" requiredMessage="Nebyl vyplněn název" value="#{category.name}" size="40" />
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:message for="name" styleClass="form:table:error" />
+    <h:messages for="name" styleClass="form:table:error" />
    </h:panelGroup>
 
    <h:panelGroup />
 
-   <h:panelGroup class="form:table:buttonline">
+   <h:panelGroup styleClass="form:table:buttonline">
     <h:commandButton action="#{category[categoryAction]}" type="submit" value="#{categoryButtonName}" />
     <h:button outcome="list" value="Storno" />
    </h:panelGroup>

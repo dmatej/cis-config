@@ -10,7 +10,7 @@
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputText id="key" class="important" required="true" requiredMessage="Nebyl vyplněn klíč" value="#{itemKey.key}" />
+    <h:inputText id="key" styleClass="important" required="true" requiredMessage="Nebyl vyplněn klíč" value="#{itemKey.key}" />
    </h:panelGroup>
 
    <h:panelGroup>
@@ -51,11 +51,13 @@
     <h:inputTextarea id="description" required="false" value="#{itemKey.description}" rows="4" cols="40" />
    </h:panelGroup>
 
-   <h:panelGroup />
+   <h:panelGroup>
+    <h:messages for="description" styleClass="form:table:error" />
+   </h:panelGroup>
 
    <h:panelGroup />
 
-   <h:panelGroup class="form:table:buttonline">
+   <h:panelGroup styleClass="form:table:buttonline">
     <h:commandButton action="#{itemKey[itemKeyAction]}" type="submit" value="#{itemKeyButtonName}" />
     <h:button outcome="list" value="Storno" />
    </h:panelGroup>

@@ -4,42 +4,37 @@
   xmlns:f="http://xmlns.jcp.org/jsf/core"
   xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-  <ui:param name="pageName" value="Kategorie konfiguračních položek" />
-  <ui:param name="pageTitle" value="Seznam kategorií konfiguračních položek" />
+ <ui:param name="pageName" value="Kategorie konfiguračních položek" />
+ <ui:param name="pageTitle" value="Seznam kategorií konfiguračních položek" />
 
-  <ui:define name="content">
-    <p>
-      <h:link outcome="create" value="Vytvořit novou kategorii" />
-    </p>
+ <ui:define name="content">
+  <p>
+   <h:link outcome="create" value="Vytvořit novou kategorii" />
+  </p>
 
-    <h:form id="form">
-      <ui:param name="items" value="#{categoryList.allCategories}" />
+  <h:form id="form">
+   <ui:param name="items" value="#{categoryList.allCategories}" />
 
-      <h:dataTable id="data-table" value="#{items}" var="category" rendered="#{not empty items}">
-        <h:column>
-          <f:facet name="header">ID</f:facet>
-          <a id="category-#{category.id}" class="id"><h:outputText value="#{category.id}" /></a>
-        </h:column>
+   <h:dataTable id="data-table" value="#{items}" var="category" rendered="#{not empty items}">
+    <h:column>
+     <f:facet name="header">Název</f:facet>
+     <h:outputText value="#{category.name}" />
+    </h:column>
 
-        <h:column>
-          <f:facet name="header">Název</f:facet>
-          <h:outputText value="#{category.name}" />
-        </h:column>
+    <h:column>
+     <f:facet name="header">Smazání</f:facet>
+     <h:commandLink action="#{categoryList.actionDeleteCategory}" value="smazat" onclick="return confirm('Opravdu chcete smazat tuto kategorii?');">
+      <f:setPropertyActionListener target="#{categoryList.categoryID}" value="#{category.id}" />
+     </h:commandLink>
+    </h:column>
 
-        <h:column>
-          <f:facet name="header">Smazání</f:facet>
-          <h:commandLink action="#{categoryList.actionDeleteCategory}" value="smazat" onclick="return confirm('Opravdu chcete smazat tuto kategorii?');">
-            <f:setPropertyActionListener target="#{categoryList.categoryID}" value="#{category.id}" />
-          </h:commandLink>
-        </h:column>
-
-        <h:column>
-          <f:facet name="header">Editace</f:facet>
-          <h:link outcome="edit" value="upravit">
-            <f:param name="id" value="#{category.id}" />
-          </h:link>
-        </h:column>
-      </h:dataTable>
-    </h:form>
-  </ui:define>
+    <h:column>
+     <f:facet name="header">Editace</f:facet>
+     <h:link outcome="edit" value="upravit">
+      <f:param name="id" value="#{category.id}" />
+     </h:link>
+    </h:column>
+   </h:dataTable>
+  </h:form>
+ </ui:define>
 </ui:composition>

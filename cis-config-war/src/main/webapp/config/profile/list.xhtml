@@ -4,68 +4,63 @@
  xmlns:f="http://xmlns.jcp.org/jsf/core"
  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-  <ui:param name="pageName" value="Konfigurační profily" />
-  <ui:param name="pageTitle" value="Seznam konfiguračních profilů" />
+ <ui:param name="pageName" value="Konfigurační profily" />
+ <ui:param name="pageTitle" value="Seznam konfiguračních profilů" />
 
-  <ui:define name="content">
-    <p>
-      <h:link outcome="create" value="Vytvořit nový profil" />
-    </p>
+ <ui:define name="content">
+  <p>
+   <h:link outcome="create" value="Vytvořit nový profil" />
+  </p>
 
-    <h:form id="form">
-      <ui:param name="items" value="#{profileList.allProfiles}" />
+  <h:form id="form">
+   <ui:param name="items" value="#{profileList.allProfiles}" />
 
-      <h:dataTable id="data-table" value="#{items}" var="profile" rendered="#{not empty items}">
-        <h:column>
-          <f:facet name="header">ID</f:facet>
-          <a id="profile-#{profile.id}" class="id"><h:outputText value="#{profile.id}" /></a>
-        </h:column>
+   <h:dataTable id="data-table" value="#{items}" var="profile" rendered="#{not empty items}">
+    <h:column>
+     <f:facet name="header">Název</f:facet>
+     <h:outputText value="#{profile.name}" />
+    </h:column>
 
-        <h:column>
-          <f:facet name="header">Název</f:facet>
-          <h:outputText value="#{profile.name}" />
-        </h:column>
+    <h:column>
+     <f:facet name="header">Naposledy změněno</f:facet>
+     <h:outputText value="#{profile.update}">
+      <f:convertDateTime type="date" pattern="dd.MM.yyyy HH:mm" />
+     </h:outputText>
+    </h:column>
 
-        <h:column>
-          <f:facet name="header">Naposledy změněno</f:facet>
-          <h:outputText value="#{profile.update}">
-            <f:convertDateTime type="date" pattern="dd.MM.yyyy HH:mm" />
-          </h:outputText>
-        </h:column>
+    <h:column>
+     <f:facet name="header">Změnil</f:facet>
+     <h:outputText value="#{profile.user.login}" />
+    </h:column>
 
-        <h:column>
-          <f:facet name="header">Změnil</f:facet>
-          <h:outputText value="#{profile.user.login}" />
-        </h:column>
+    <h:column>
+     <f:facet name="header">Smazání</f:facet>
+     <h:commandLink action="#{profileList.actionDeleteProfile}" value="smazat" onclick="return confirm('Opravdu chcete smazat tento profil?');">
+      <f:setPropertyActionListener target="#{profileList.profileID}" value="#{profile.id}" />
+     </h:commandLink>
+    </h:column>
 
-        <h:column>
-          <f:facet name="header">Smazání</f:facet>
-          <h:commandLink action="#{profileList.actionDeleteProfile}" value="smazat" onclick="return confirm('Opravdu chcete smazat tento profil?');">
-            <f:setPropertyActionListener target="#{profileList.profileID}" value="#{profile.id}" />
-          </h:commandLink>
-        </h:column>
+    <h:column>
+     <f:facet name="header">Editace</f:facet>
+     <h:link outcome="edit-info" value="upravit">
+      <f:param name="id" value="#{profile.id}" />
+     </h:link>
+    </h:column>
 
-        <h:column>
-          <f:facet name="header">Editace</f:facet>
-          <h:link outcome="edit-info" value="upravit">
-            <f:param name="id" value="#{profile.id}" />
-          </h:link>
-        </h:column>
+    <h:column>
+     <f:facet name="header">Položky</f:facet>
+     <h:link outcome="edit" value="položky">
+      <f:param name="id" value="#{profile.id}" />
+     </h:link>
+    </h:column>
 
-        <h:column>
-          <f:facet name="header">Položky</f:facet>
-          <h:link outcome="edit" value="položky">
-            <f:param name="id" value="#{profile.id}" />
-          </h:link>
-        </h:column>
-
-        <h:column>
-          <f:facet name="header">Aktivace</f:facet>
-          <h:commandLink action="#{profileList.actionActivateProfile}" value="aktivovat">
-            <f:setPropertyActionListener target="#{profileList.profileID}" value="#{profile.id}" />
-          </h:commandLink>
-        </h:column>
-      </h:dataTable>
-    </h:form>
-  </ui:define>
+    <h:column>
+     <f:facet name="header">Aktivace</f:facet>
+     <h:commandLink action="#{profileList.actionActivateProfile}" value="aktivovat">
+      <f:setPropertyActionListener target="#{profileList.profileID}" value="#{profile.id}" />
+     </h:commandLink>
+    </h:column>
+   </h:dataTable>
+  </h:form>
+ </ui:define>
 </ui:composition>

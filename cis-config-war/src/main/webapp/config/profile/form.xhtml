@@ -10,11 +10,11 @@
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputText id="name" class="important" required="true" requiredMessage="Nenbyl vyplněn název" value="#{profile.name}" size="40" />
+    <h:inputText id="name" styleClass="important" required="true" requiredMessage="Nenbyl vyplněn název" value="#{profile.name}" size="40" />
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:message for="name" styleClass="form:table:error" />
+    <h:messages for="name" styleClass="form:table:error" />
    </h:panelGroup>
 
    <h:panelGroup>
@@ -25,11 +25,13 @@
     <h:inputTextarea id="description" required="false" value="#{profile.description}" rows="4" cols="40" />
    </h:panelGroup>
 
-   <h:panelGroup />
+   <h:panelGroup>
+    <h:messages for="description" styleClass="form:table:error" />
+   </h:panelGroup>
 
    <h:panelGroup />
 
-   <h:panelGroup class="form:table:buttonline">
+   <h:panelGroup styleClass="form:table:buttonline">
     <h:commandButton action="#{profile[profileAction]}" type="submit" value="#{profileButtonName}" />
     <h:button outcome="list" value="Storno" />
    </h:panelGroup>

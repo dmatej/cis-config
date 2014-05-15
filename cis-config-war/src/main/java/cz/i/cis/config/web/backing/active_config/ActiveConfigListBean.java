@@ -81,13 +81,15 @@ public class ActiveConfigListBean {
   }
 
 
-  public void actionDeleteItem() {
+  public String actionDeleteItem() {
     LOG.debug("actionDeleteItem()");
     try {
       configItemDao.removeItem(activeItemID);
     } catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat položku", FacesUtils.getRootMessage(exc));
     }
+
+    return null;
   }
 
 

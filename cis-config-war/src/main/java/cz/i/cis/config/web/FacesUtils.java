@@ -8,8 +8,10 @@ import javax.faces.context.FacesContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public final class FacesUtils {
   private static final Logger LOG = LoggerFactory.getLogger(FacesUtils.class);
+
 
   private FacesUtils() {
     // hidden

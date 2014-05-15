@@ -116,7 +116,7 @@ public class ConfigurationItemKeyDao {
     LOG.debug("getItemKeyMap(itemKeys={})", itemKeys);
     Map<String, ConfigurationItemKey> itemKeyMap = new HashMap<>();
     for (ConfigurationItemKey itemKey : itemKeys) {
-      itemKeyMap.put(itemKey.getId().toString(), itemKey);
+      itemKeyMap.put(itemKey.getId() + "", itemKey);
     }
 
     return itemKeyMap;

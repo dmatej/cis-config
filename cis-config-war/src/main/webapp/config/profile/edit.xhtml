@@ -65,12 +65,24 @@
     </h:panelGroup>
 
     <h:panelGroup />
-   </h:panelGrid>
 
+           <h:panelGroup />
 
+<<<<<<< HEAD
    <h:commandButton value="Uložit změny">
      <f:ajax listener="#{profileEdit.actionSaveChanges}" />
    </h:commandButton>
+=======
+    <h:panelGroup styleClass="form:table:buttonline">
+     <h:commandButton value="Uložit změny">
+      <!-- <f:ajax listener="# {profileEdit.actionSaveChanges}" execute="@form" render="@form" /> -->
+     </h:commandButton>
+     <h:button outcome="list" value="Storno" />
+    </h:panelGroup>
+
+    <h:panelGroup />
+   </h:panelGrid>
+>>>>>>> origin/master
 
    <ui:param name="items" value="#{profileEdit.profileItems}" />
 
@@ -85,7 +97,7 @@
     </h:column>
     <h:column>
      <f:facet name="header">Typ</f:facet>
-     <h:outputText value="#{itemk.key.type}" />
+     <h:outputText value="#{item.key.type}" />
     </h:column>
     <h:column>
      <f:facet name="header">Kategorie</f:facet>
@@ -94,6 +106,14 @@
     <h:column>
      <f:facet name="header">Hodnota</f:facet>
      <h:outputText value="#{item.value}" />
+    </h:column>
+
+    <h:column>
+     <f:facet name="header">Editace</f:facet>
+     <h:commandLink value="smazat" rendered="#{!profileEdit.isDeletedItem(item.id)}">
+      <f:param name="itemId" value="#{item.id}" />
+      <!-- <f:ajax execute="item-#{item.id}" render="@form" listener="# {profileEdit.actionUpdateItem}" immediate="true" /> -->
+     </h:commandLink>
     </h:column>
 
     <h:column>

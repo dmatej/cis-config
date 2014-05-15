@@ -107,29 +107,14 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
 
       filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
 
-      // for (ConfigurationProfileItem item : profileItems.values()) {
-      // filteredItemKeys.remove(item.getKey().getId().toString());
-      // }
+      for (ConfigurationProfileItem item : profileItems.values()) {
+        filteredItemKeys.remove(item.getKey().getId() + "");
+      }
 
     } catch (Exception e) {
       LOG.error("Failed to refresh item keys.", e);
       FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit klíče položek", FacesUtils.getRootMessage(e));
     }
-//  //TODO proč to tu je podruhý?
-//    if (!allCategories.containsKey(selectedCategory)) {
-//      FacesMessagesUtils.addErrorMessage("form:category", "Vybraná kategorie neexistuje", null);
-//      filteredItemKeys = Collections.emptyMap();
-//      return;
-//    }
-//
-//    ConfigurationItemCategory filter = allCategories.get(selectedCategory);
-//    List<ConfigurationItemKey> itemKeys = itemKeyDao.filterItemKeys(filter);
-//
-//    filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
-//
-//    // for (ConfigurationProfileItem item : profileItems.values()) {
-//    // filteredItemKeys.remove(item.getKey().getId().toString());
-//    // }
   }
 
 

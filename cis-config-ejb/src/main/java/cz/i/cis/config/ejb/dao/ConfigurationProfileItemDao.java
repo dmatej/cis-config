@@ -16,17 +16,14 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import cz.i.cis.config.ejb.dao.exceptions.UniqueProfileKeyException;
 import cz.i.cis.config.jpa.ConfigurationProfileItem;
+
 
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class ConfigurationProfileItemDao {
-  private static final Logger LOG = LoggerFactory.getLogger(ConfigurationProfileItemDao.class);
 
   @PersistenceContext(name = "cis-jta")
   private EntityManager em;
@@ -87,24 +84,24 @@ public class ConfigurationProfileItemDao {
 
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void saveChanges(Map<String, ConfigurationProfileItem> profileItems) throws UniqueProfileKeyException {
-    for (ConfigurationProfileItem item : new ArrayList<>(profileItems.values())) {
-      Integer id = item.getId();
+  public List<ConfigurationProfileItem> saveChanges(Map<String, ConfigurationProfileItem> profileItems) throws UniqueProfileKeyException {
+    List<ConfigurationProfileItem> updatedItems = new ArrayList<>(profileItems.size());
 
+    for (ConfigurationProfileItem item : profileItems.values()) {
       if (item.isDeleted()) {
-        profileItems.remove(id + "");
         removeItem(item);
+      }else{
+//        Integer id = item.getId();
+//        //TODO zkusil jsem a funguje mi to i bez toho, potvrďte a případně smažte
+//        if (id != null && id < 0) {
+//          //new item, should have null id for successful merge
+//          item.setId(null);
+//        }
 
-        continue;
+        ConfigurationProfileItem updatedItem = updateItem(item);
+        updatedItems.add(updatedItem);
       }
-
-      if (id == null || id < 0) {
-        profileItems.remove(id + "");
-        item.setId(null);
-      }
-
-      ConfigurationProfileItem newItem = updateItem(item);
-      profileItems.put(newItem.getId() + "", newItem);
     }
+    return updatedItems;
   }
 }

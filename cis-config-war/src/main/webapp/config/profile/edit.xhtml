@@ -86,7 +86,7 @@
    <ui:param name="items" value="#{profileEdit.profileItems}" />
 
    <h:dataTable id="data-table" value="#{items}" var="item" rendered="#{not empty items}">
-       <h:column>
+    <h:column>
      <f:facet name="header">ID</f:facet>
      <a id="item-#{item.id}" class="id"><h:outputText value="#{item.id}" /></a>
     </h:column>

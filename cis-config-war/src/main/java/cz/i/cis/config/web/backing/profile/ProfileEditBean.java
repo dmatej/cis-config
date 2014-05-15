@@ -199,7 +199,8 @@ public class ProfileEditBean {
   public void actionSaveChanges(ActionEvent event) {
     LOG.debug("actionSaveChanges()");
     try {
-      itemDao.saveChanges(profileItems);
+      List<ConfigurationProfileItem> updatedItems = itemDao.saveChanges(profileItems);
+      profileItems = ConfigurationProfileItemDao.getItemMap(updatedItems);
 
       newItemID = -1;
     } catch (UniqueProfileKeyException e) {
@@ -214,6 +215,7 @@ public class ProfileEditBean {
     ConfigurationProfileItem item = profileItems.get(id + "");
     if(item == null) {
       // TODO: error
+      LOG.error("isDeletedItem null");
       return false;
     }
 

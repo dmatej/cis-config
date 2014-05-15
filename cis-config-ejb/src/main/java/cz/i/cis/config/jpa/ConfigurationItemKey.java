@@ -171,7 +171,8 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
   }
 
   /**
-   * Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by {@link java.util.HashMap}.
+   * Returns a hash code value for the object. This method is supported for the benefit
+   * of hash tables such as those provided by {@link java.util.HashMap}.
    *
    * @return A hash code value for this object.
    */

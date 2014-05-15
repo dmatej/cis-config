@@ -47,7 +47,7 @@ public enum ConfigurationItemKeyType {
    * Returns description of this configuration item key type as string value of
    * this enumerate.
    *
-   * @return Description of onfiguration item key type.
+   * @return Description of configuration item key type.
    */
   @Override
   public String toString() {

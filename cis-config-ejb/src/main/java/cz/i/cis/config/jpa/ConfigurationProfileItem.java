@@ -25,9 +25,8 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
   /**
    * Determines if a de-serialized file is compatible with this class.
    * Maintainers must change this value if and only if the new version of this
-   * class is not compatible with old versions. See Oracle docs for <a
-   * href="http://docs.oracle.com/javase/1.4.2/docs/guide/
-   * serialization/">details</a>.
+   * class is not compatible with old versions. See Oracle docs for
+   * <a href="http://docs.oracle.com/javase/1.4.2/docs/guide/serialization/">details</a>.
    * Not necessary to include in first version of the class, but included here
    * as a reminder of its importance.
    */
@@ -55,13 +54,6 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
 
 
   /**
-   * Constructs configuration profile item.
-   */
-  public ConfigurationProfileItem() {
-  }
-
-
-  /**
    * Returns identifier number of this profile item.
    *
    * @return Identifier number of this profile item.
@@ -69,7 +61,6 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
   public Integer getId() {
     return this.id;
   }
-
 
   /**
    * Sets identifier number of this profile item.
@@ -80,7 +71,6 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
     this.id = id;
   }
 
-
   /**
    * Returns configuration profile of this item.
    *
@@ -89,7 +79,6 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
   public ConfigurationProfile getProfile() {
     return this.profile;
   }
-
 
   /**
    * Sets configuration profile of this item.
@@ -100,7 +89,6 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
     this.profile = profile;
   }
 
-
   /**
    * Returns configuration item key of this profile item.
    *
@@ -109,7 +97,6 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
   public ConfigurationItemKey getKey() {
     return this.key;
   }
-
 
   /**
    * Sets configuration item key of this profile item.
@@ -120,7 +107,6 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
     this.key = key;
   }
 
-
   /**
    * Returns value of profile item.
    *
@@ -129,7 +115,6 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
   public String getValue() {
     return this.value;
   }
-
 
   /**
    * Sets value of profile item.
@@ -236,7 +221,6 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
 
     return true;
   }
-
 
   /**
    * Returns string value of configuration profile item in format:

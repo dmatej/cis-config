@@ -35,7 +35,7 @@
     </h:panelGroup>
     <h:panelGroup>
      <h:selectOneMenu id="key" styleClass="important short" value="#{profileEdit.selectedItemKey}" disabled="#{profileEdit.keySelectorDisabled}"
-      valueChangeListener="#{profileEdit.setSelectedItemKey}">
+          valueChangeListener="#{profileEdit.setSelectedItemKey}">
       <f:selectItem itemLabel="vyberte klíč" noSelectionOption="true" />
       <f:selectItems value="#{profileEdit.filteredItemKeys}" var="itemKey" itemLabel="#{itemKey.key}" itemValue="#{itemKey.id}" />
       <f:ajax execute="category key" render="key value" />
@@ -50,7 +50,7 @@
     </h:panelGroup>
     <h:panelGroup>
      <h:inputText id="value" styleClass="important short" value="#{profileEdit.profileItemValue}" disabled="#{profileEdit.keyValueDisabled}"
-      valueChangeListener="#{profileEdit.setProfileItemValue}"></h:inputText>
+          valueChangeListener="#{profileEdit.setProfileItemValue}" />
     </h:panelGroup>
     <h:panelGroup>
      <h:messages for="value" styleClass="form:table:error" />
@@ -98,7 +98,7 @@
 
     <h:column>
      <f:facet name="header">Editace</f:facet>
-     <h:commandLink value="smazat" rendered="#{!profileEdit.isDeletedItem(item.id)}">
+     <h:commandLink value="upravit" rendered="#{!profileEdit.isDeletedItem(item.id)}">
       <f:param name="itemId" value="#{item.id}" />
       <!-- <f:ajax execute="item-#{item.id}" render="@form" listener="# {profileEdit.actionUpdateItem}" immediate="true" /> -->
      </h:commandLink>

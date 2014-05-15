@@ -31,6 +31,8 @@
 
    <ui:param name="items" value="#{itemKeyList.filteredItemKeys}" />
 
+   <h:outputText rendered="#{empty items}" escape="false" value="&lt;p&gt;Nebyly nalezeny žádné klíče.&lt;/p&gt;" />
+
    <h:dataTable id="data-table" value="#{items}" var="itemKey" rendered="#{not empty items}">
     <h:column>
      <f:facet name="header">Klíč</f:facet>

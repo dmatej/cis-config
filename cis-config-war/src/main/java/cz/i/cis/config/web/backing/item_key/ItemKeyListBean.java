@@ -77,6 +77,7 @@ public class ItemKeyListBean {
       if (NONE_SELECTOR.equals(selectedCategory)) {
         return Collections.emptyList();
       }
+
       if (ALL_SELECTOR.equals(selectedCategory)) {
         return itemKeyDao.listItemKeys();
       }

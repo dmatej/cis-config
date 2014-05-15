@@ -33,6 +33,8 @@
 
    <ui:param name="items" value="#{activeConfigList.filteredActiveItems}" />
 
+   <h:outputText rendered="#{empty items}" escape="false" value="&lt;p&gt;Pro zvolenou kategorii nebyli nalezeny žádné položky.&lt;/p&gt;" />
+
    <h:dataTable id="data-table" value="#{items}" var="item" rendered="#{not empty items}">
     <h:column>
      <f:facet name="header">Klíč</f:facet>

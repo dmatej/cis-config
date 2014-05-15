@@ -250,7 +250,7 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
 
   public boolean isKeyValueDisabled() {
     LOG.trace("isKeyValueDisabled()");
-    return NONE_SELECTOR.equals(selectedItemKey);
+    return NONE_SELECTOR.equals(selectedItemKey) || !this.filteredItemKeys.containsKey(selectedItemKey);
   }
 
 
@@ -278,6 +278,7 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
     if (selectedCategory == null || selectedCategory.isEmpty()) {
       this.selectedCategory = NONE_SELECTOR;
     }
+
     if (this.selectedCategory == NONE_SELECTOR) {
       setSelectedItemKey(NONE_SELECTOR);
       refreshItemKeys();
@@ -322,6 +323,7 @@ public class ProfileEditBean implements ConfigurationProfileItemDao.ItemClassifi
     if (selectedItemKey == null || selectedItemKey.isEmpty()) {
       this.selectedItemKey = NONE_SELECTOR;
     }
+
     if (this.selectedItemKey == NONE_SELECTOR) {
       setProfileItemValue("");
     }

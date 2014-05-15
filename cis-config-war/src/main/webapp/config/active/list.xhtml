@@ -25,13 +25,15 @@
       <f:selectItem itemLabel="všechny" itemValue="#{activeConfigList.allSelector}" />
       <f:selectItems value="#{activeConfigList.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
 
-      <f:ajax execute="category" render="configItems" />
+      <f:ajax execute="category" render="@form" />
      </h:selectOneMenu>
     </h:panelGroup>
 
    </h:panelGrid>
 
-   <h:dataTable id="configItems" value="#{activeConfigList.filteredActiveItems}" var="item">
+   <ui:param name="items" value="#{activeConfigList.filteredActiveItems}" />
+
+   <h:dataTable id="data-table" value="#{items}" var="item" rendered="#{not empty items}">
     <h:column>
      <f:facet name="header">Klíč</f:facet>
      <h:outputText value="#{item.key.key}" />

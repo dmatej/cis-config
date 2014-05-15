@@ -78,10 +78,10 @@ public class ProfileEditBean {
     }
 
     try {
-    this.name = profile.getName();
-    this.selectedCategory = NONE_SELECTOR;
-    this.selectedItemKey = NONE_SELECTOR;
-    this.allCategories = categoryDao.getCategoryMap();
+      this.name = profile.getName();
+      this.selectedCategory = NONE_SELECTOR;
+      this.selectedItemKey = NONE_SELECTOR;
+      this.allCategories = categoryDao.getCategoryMap();
     } catch (IllegalArgumentException exc) {
       FacesMessagesUtils.addErrorMessage("Cannot select categories from database", null);
     }
@@ -108,29 +108,13 @@ public class ProfileEditBean {
 
       filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
 
-      // for (ConfigurationProfileItem item : profileItems.values()) {
-      // filteredItemKeys.remove(item.getKey().getId().toString());
-      // }
+      for (ConfigurationProfileItem item : profileItems.values()) {
+        filteredItemKeys.remove(item.getKey().getId() + "");
+      }
 
     } catch (Exception exc) {
       FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit položky klíče", FacesUtils.getRootMessage(exc));
     }
-
-    if (!allCategories.containsKey(selectedCategory)) {
-      FacesMessagesUtils.addErrorMessage("form:category", "Vybraná kategorie neexistuje", null);
-      filteredItemKeys = Collections.emptyMap();
-      return;
-    }
-
-    ConfigurationItemCategory filter = allCategories.get(selectedCategory);
-    List<ConfigurationItemKey> itemKeys = itemKeyDao.filterItemKeys(filter);
-
-    filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
-
-    // for (ConfigurationProfileItem item : profileItems.values()) {
-    // filteredItemKeys.remove(item.getKey().getId().toString());
-    // }
-
   }
 
 
@@ -174,12 +158,15 @@ public class ProfileEditBean {
     item.setValue(profileItemValue);
 
     profileItems.put(item.getId().toString(), item);
+
+    this.setSelectedItemKey(NONE_SELECTOR);
   }
 
 
   public void actionDeleteItem() {
     LOG.debug("actionDeleteItem()");
-    final String itemIdStr = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("itemId");
+    final String itemIdStr = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+        .get("itemId");
     LOG.debug("itemIdStr={}, class={}", itemIdStr, itemIdStr.getClass());
     final Integer itemId = Integer.valueOf(itemIdStr);
     if (isDeletedItem(itemId)) {
@@ -202,7 +189,7 @@ public class ProfileEditBean {
         .get("itemId");
     LOG.debug("itemIdStr={}, class={}", itemIdStr, itemIdStr.getClass());
     deletedProfileItems.remove(itemIdStr);
-    }
+  }
 
 
   public void actionSaveChanges() {

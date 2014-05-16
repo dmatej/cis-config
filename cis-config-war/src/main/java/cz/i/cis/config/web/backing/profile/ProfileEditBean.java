@@ -60,6 +60,8 @@ public class ProfileEditBean {
   private String selectedItemKey;
   private String profileItemValue;
 
+  private ConfigurationProfileItem editItem;
+
 
   public void init() throws Exception {
     LOG.debug("init()");
@@ -106,6 +108,10 @@ public class ProfileEditBean {
       filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
 
       for (ConfigurationProfileItem item : profileItems.values()) {
+        if(item == editItem) {
+          continue;
+        }
+
         filteredItemKeys.remove(item.getKey().getId() + "");
       }
     } catch (Exception e) {
@@ -159,6 +165,21 @@ public class ProfileEditBean {
     this.setSelectedItemKey(NONE_SELECTOR);
   }
 
+  public void actionEditItem() {
+    LOG.debug("actionDeleteItem()");
+    final String itemIdStr = FacesUtils.getRequestParameter("itemId");
+    LOG.debug("itemIdStr={}, class={}", itemIdStr, itemIdStr.getClass());
+
+    editItem = profileItems.get(itemIdStr);
+    if(editItem != null) {
+      ConfigurationItemKey key = editItem.getKey();
+      ConfigurationItemCategory category = key.getCategory();
+
+      this.setSelectedCategory(category.getId() + "");
+      this.setSelectedItemKey(key.getId() + "");
+      this.setProfileItemValue(editItem.getValue());
+    }
+  }
 
   public void actionDeleteItem() {
     LOG.debug("actionDeleteItem()");
@@ -193,7 +214,6 @@ public class ProfileEditBean {
       restoreItem.setDeleted(false);
     }
   }
-
 
   public void actionSaveChanges(ActionEvent event) {
     LOG.debug("actionSaveChanges()");

@@ -62,6 +62,23 @@ public class ProfileEditBean {
 
   private ConfigurationProfileItem editItem;
 
+  private static class ProfileItemValues {
+    private ConfigurationItemKey key;
+    private String value;
+
+    public ProfileItemValues(ConfigurationItemKey key, String value) {
+      this.key = key;
+      this.value = value;
+    }
+
+    public ConfigurationItemKey getKey() {
+      return key;
+    }
+
+    public String getValue() {
+      return value;
+    }
+  }
 
   public void init() throws Exception {
     LOG.debug("init()");
@@ -132,40 +149,75 @@ public class ProfileEditBean {
     }
   }
 
-
-  public void actionAddItem(ActionEvent event) {
-    LOG.debug("actionAddItem(event={})", event);
+  protected ProfileItemValues itemValidation() {
     if (NONE_SELECTOR.equals(selectedCategory) || selectedCategory == null) {
       FacesMessagesUtils.addErrorMessage("form:category", "Nebyla zvolena kategorie", null);
-      return;
+      return null;
     }
 
     ConfigurationItemKey key = filteredItemKeys.get(selectedItemKey);
 
     if (key == null || NONE_SELECTOR.equals(selectedItemKey) || selectedItemKey == null) {
       FacesMessagesUtils.addErrorMessage("form:key", "Nebyl zvolen klíč", null);
-      return;
+      return null;
     }
 
     String value = profileItemValue;
     if (value == null || value.isEmpty()) {
       FacesMessagesUtils.addErrorMessage("form:value", "Nebyla vyplněna hodnota klíče", null);
+      return null;
+    }
+
+    return new ProfileItemValues(key, value);
+  }
+
+  public void actionAddItem(ActionEvent event) {
+    LOG.debug("actionAddItem(event={})", event);
+
+    ProfileItemValues values = this.itemValidation();
+    if(values == null) {
       return;
     }
 
     final Integer itemId = newItemID--;
     ConfigurationProfileItem item = new ConfigurationProfileItem();
       item.setId(itemId);
-      item.setKey(key);
+      item.setKey(values.getKey());
       item.setProfile(profile);
-      item.setValue(profileItemValue);
+      item.setValue(values.getValue());
 
     profileItems.put(item.getId() + "", item);
 
     this.setSelectedItemKey(NONE_SELECTOR);
   }
 
-  public void actionEditItem() {
+  public void actionEditItem(ActionEvent event) {
+    LOG.debug("actionEditItem(event={})", event);
+
+    if(this.editItem == null) {
+      return;
+    }
+
+    ProfileItemValues values = this.itemValidation();
+    if(values == null) {
+      return;
+    }
+
+    this.editItem.setKey(values.getKey());
+    this.editItem.setValue(values.getValue());
+    this.editItem = null;
+
+    this.setSelectedItemKey(NONE_SELECTOR);
+  }
+
+  public void actionStornoEditItem(ActionEvent event) {
+    LOG.debug("actionStornoEditItem(event={})", event);
+
+    editItem = null;
+    this.setSelectedCategory(NONE_SELECTOR);
+  }
+
+  public void actionSetEditItem() {
     LOG.debug("actionDeleteItem()");
     final String itemIdStr = FacesUtils.getRequestParameter("itemId");
     LOG.debug("itemIdStr={}, class={}", itemIdStr, itemIdStr.getClass());
@@ -226,14 +278,6 @@ public class ProfileEditBean {
       LOG.error("Failed to save changes.", e);
       FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny: " + FacesUtils.getRootMessage(e), null);
     }
-  }
-
-
-  public void actionStornoEditItem(ActionEvent event) {
-    LOG.debug("actionStornoEditItem(event={})", event);
-
-    editItem = null;
-    this.setSelectedCategory(NONE_SELECTOR);
   }
 
   public boolean isDeletedItem(Integer id) {

@@ -128,7 +128,7 @@
      <f:facet name="header">Editace</f:facet>
      <h:commandLink value="upravit" rendered="#{!profileEdit.isDeletedItem(item.id) and !profileEdit.isEditingItem(item.id)}">
       <f:param name="itemId" value="#{item.id}" />
-      <f:ajax execute="item-#{item.id}" render="@form" listener="#{profileEdit.actionEditItem}" immediate="true" />
+      <f:ajax execute="item-#{item.id}" render="@form" listener="#{profileEdit.actionSetEditItem}" immediate="true" />
      </h:commandLink>
     </h:column>
    </h:dataTable>

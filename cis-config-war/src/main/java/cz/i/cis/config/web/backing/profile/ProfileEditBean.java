@@ -247,6 +247,18 @@ public class ProfileEditBean {
     return id.intValue() < 0;
   }
 
+  public boolean isEditingItem() {
+    return (editItem != null);
+  }
+
+  public boolean isEditingItem(Integer id) {
+    LOG.debug("isEditingItem(id={})", id);
+    if(editItem == null) {
+      return false;
+    }
+
+    return (editItem.getId() == id);
+  }
 
   public String getProfileItemValue() {
     LOG.trace("getProfileItemValue()");

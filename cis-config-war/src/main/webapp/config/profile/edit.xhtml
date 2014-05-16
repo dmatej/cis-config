@@ -19,6 +19,7 @@
     <h:panelGroup>
      <h:outputLabel for="category" value="Kategorie" />
     </h:panelGroup>
+
     <h:panelGroup>
      <h:selectOneMenu id="category" styleClass="important short" value="#{profileEdit.selectedCategory}" valueChangeListener="#{profileEdit.setSelectedCategory}">
       <f:selectItem itemLabel="vyberte kategorii" noSelectionOption="true" />
@@ -59,7 +60,13 @@
     <h:panelGroup />
 
     <h:panelGroup styleClass="form:table:buttonline">
-     <h:commandButton value="Přidat položku" actionListener="#{profileEdit.actionAddItem}">
+     <h:commandButton id="add" value="Přidat položku" actionListener="#{profileEdit.actionAddItem}" rendered="#{!profileEdit.editingItem}">
+      <f:param name="id" value="#{profileEdit.id}" />
+     </h:commandButton>
+     <h:commandButton id="edit" value="Upravit položku" actionListener="#{profileEdit.actionEditItem}" rendered="#{profileEdit.editingItem}">
+      <f:param name="id" value="#{profileEdit.id}" />
+     </h:commandButton>
+     <h:commandButton id="edit-storno" value="Storno" actionListener="#{profileEdit.actionStornoEditItem}" rendered="#{profileEdit.editingItem}">
       <f:param name="id" value="#{profileEdit.id}" />
      </h:commandButton>
     </h:panelGroup>
@@ -68,24 +75,18 @@
 
     <h:panelGroup />
 
-
-   <ui:param name="items" value="#{profileEdit.profileItems}" />
-
-    <h:panelGroup styleClass="form:table:buttonline2" rendered="#{not empty items}">
-<!--      <h:commandButton value="Uložit změny"> -->
-<!--       <f:ajax listener="# {profileEdit.actionSaveChanges}" render="data-table" /> -->
-<!--      </h:commandButton> -->
-     <h:commandButton value="Uložit změny" actionListener="#{profileEdit.actionSaveChanges}">
+    <h:panelGroup styleClass="form:table:buttonline2">
+     <h:commandButton id="save" value="Uložit změny" actionListener="#{profileEdit.actionSaveChanges}">
       <f:param name="id" value="#{profileEdit.id}" />
-      <!-- <f:ajax render="data-table" /> -->
      </h:commandButton>
 
-     <h:button value="Storno" outcome="list" />
+     <h:button id="storno" value="Storno" outcome="list" />
     </h:panelGroup>
 
     <h:panelGroup />
    </h:panelGrid>
 
+   <ui:param name="items" value="#{profileEdit.profileItems}" />
    <h:outputText rendered="#{empty items}" escape="false" value="&lt;p&gt;V profilu nebyly nalezeny žádné položky.&lt;/p&gt;" />
 
    <h:dataTable id="data-table" value="#{items}" var="item" rendered="#{not empty items}">
@@ -112,28 +113,25 @@
     </h:column>
 
     <h:column>
-     <f:facet name="header">Editace</f:facet>
-     <h:commandLink value="upravit" rendered="#{!profileEdit.isDeletedItem(item.id)}">
-      <f:param name="itemId" value="#{item.id}" />
-      <f:ajax execute="item-#{item.id}" render="@form" listener="#{profileEdit.actionEditItem}" immediate="true" />
-     </h:commandLink>
-    </h:column>
-
-    <h:column>
-     <h:commandLink value="smazat" rendered="#{!profileEdit.isDeletedItem(item.id)}">
+     <f:facet name="header">Smazání</f:facet>
+     <h:commandLink value="smazat" rendered="#{!profileEdit.isDeletedItem(item.id) and !profileEdit.isEditingItem(item.id)}">
       <f:param name="itemId" value="#{item.id}" />
       <f:ajax execute="item-#{item.id}" render="@form" listener="#{profileEdit.actionDeleteItem}" immediate="true" />
      </h:commandLink>
-     <h:commandLink value="obnovit" rendered="#{profileEdit.isDeletedItem(item.id)}">
+     <h:commandLink value="obnovit" rendered="#{profileEdit.isDeletedItem(item.id) and !profileEdit.isEditingItem(item.id)}">
       <f:param name="itemId" value="#{item.id}" />
       <f:ajax execute="item-#{item.id}" render="@form" listener="#{profileEdit.actionRestoreItem}" immediate="true" />
      </h:commandLink>
     </h:column>
+
+    <h:column>
+     <f:facet name="header">Editace</f:facet>
+     <h:commandLink value="upravit" rendered="#{!profileEdit.isDeletedItem(item.id) and !profileEdit.isEditingItem(item.id)}">
+      <f:param name="itemId" value="#{item.id}" />
+      <f:ajax execute="item-#{item.id}" render="@form" listener="#{profileEdit.actionEditItem}" immediate="true" />
+     </h:commandLink>
+    </h:column>
    </h:dataTable>
   </h:form>
-
-  <ul>
-   <li><h:link outcome="list" value="Zpět na seznam" /></li>
-  </ul>
  </ui:define>
 </ui:composition>

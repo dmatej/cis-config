@@ -216,7 +216,7 @@ public class ProfileEditBean {
   }
 
   public void actionSaveChanges(ActionEvent event) {
-    LOG.debug("actionSaveChanges()");
+    LOG.debug("actionSaveChanges(event={})", event);
     try {
       List<ConfigurationProfileItem> updatedItems = itemDao.saveChanges(profileItems);
       profileItems = ConfigurationProfileItemDao.getItemMap(updatedItems);
@@ -228,6 +228,13 @@ public class ProfileEditBean {
     }
   }
 
+
+  public void actionStornoEditItem(ActionEvent event) {
+    LOG.debug("actionStornoEditItem(event={})", event);
+
+    editItem = null;
+    this.setSelectedCategory(NONE_SELECTOR);
+  }
 
   public boolean isDeletedItem(Integer id) {
     LOG.debug("isDeletedItem(id={})", id);

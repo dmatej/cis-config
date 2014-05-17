@@ -34,11 +34,15 @@ public class UserFilter implements Filter {
   /**Logger object used for logging.*/
   private static final Logger LOG = LoggerFactory.getLogger(UserFilter.class);
 
+  /**Navigation part for user related pages.*/
   private static final String USER_CONTEXT = "/config/user";
+  /**Navigation path to new user creation.*/
   private static final String CREATE_USER_SERVLET = USER_CONTEXT + "/create.xhtml";
+  /**Navigation path to removed user announcement.*/
   private static final String REMOVED_CONTEXT_SERVLET = "/removed.xhtml";
 
   @EJB
+  /**Data access object for user manipulation.*/
   private CisUserDao userDao;
 
 
@@ -59,7 +63,10 @@ public class UserFilter implements Filter {
     }
   }
 
-
+  /**
+   * Ensures access only for logged in user with record in database.
+   * New user is let to create DB record, deleted user is not allowed.
+   */
   private boolean processUser(HttpServletRequest request, ServletResponse response, FilterChain chain)
     throws IOException, ServletException {
     LOG.trace("processUser(request, response, chain)");

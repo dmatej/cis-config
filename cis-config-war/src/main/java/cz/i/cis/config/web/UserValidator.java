@@ -14,13 +14,20 @@ import cz.i.cis.config.jpa.CisUser;
 
 @Named(value = "userValidator")
 public class UserValidator {
+
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(UserValidator.class);
 
 
   @EJB
+  /**Data access object for user manipulation.*/
   private CisUserDao userDao;
 
 
+  /**
+   * Tests login existence.
+   * @return True if login is not used or related user is marked as deleted.
+   */
   public boolean loginExist() {
     LOG.debug("loginExist()");
     Principal currentUser = FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal();
@@ -29,7 +36,7 @@ public class UserValidator {
     if (temp == null)
       return false;
     else if (temp.isDeleted())
-      return false;
+      return false; //FIXME toto je doporučení pro přidání uživatele -> duplicitní login v DB -> chyba
 
     return true;
   }

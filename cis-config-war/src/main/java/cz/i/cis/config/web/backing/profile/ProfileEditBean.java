@@ -58,7 +58,7 @@ public class ProfileEditBean {
   private ConfigurationProfile profile;
   /**Collection of item keys filtered by selected category.*/
   private Map<String, ConfigurationItemKey> filteredItemKeys;
-  /**Collection of all item categories.*/
+  /**Collection of available item categories.*/
   private Map<String, ConfigurationItemCategory> allCategories;
 
   /**Collection of items in current profile.*/

@@ -37,8 +37,8 @@
 
     <h:column>
      <f:facet name="header">Smazání</f:facet>
-     <h:commandLink action="#{profileList.actionDeleteProfile}" value="smazat" onclick="return confirm('Opravdu chcete smazat tento profil?');">
-      <f:setPropertyActionListener target="#{profileList.profileID}" value="#{profile.id}" />
+     <h:commandLink actionListener="#{profileList.actionDeleteProfile(profile.id)}" value="smazat" onclick="return confirm('Opravdu chcete smazat tento profil?');">
+      <f:ajax render="form" />
      </h:commandLink>
     </h:column>
 
@@ -58,8 +58,8 @@
 
     <h:column>
      <f:facet name="header">Aktivace</f:facet>
-     <h:commandLink action="#{profileList.actionActivateProfile}" value="aktivovat">
-      <f:setPropertyActionListener target="#{profileList.profileID}" value="#{profile.id}" />
+     <h:commandLink actionListener="#{profileList.actionActivateProfile(profile.id)}" value="aktivovat">
+      <f:ajax />
      </h:commandLink>
     </h:column>
    </h:dataTable>

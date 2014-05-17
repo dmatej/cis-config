@@ -1,6 +1,5 @@
 package cz.i.cis.config.web.backing.profile;
 
-import java.io.IOException;
 import java.util.Date;
 
 import javax.ejb.EJB;
@@ -18,22 +17,34 @@ import cz.i.cis.config.jpa.ConfigurationProfile;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
+
+/**
+ * Backing bean for profile creation.
+ */
 @Named(value = "profileCreate")
 @ViewScoped
 public class ProfileCreateBean {
-
+  /**Logger object used for logging.*/
   private static final Logger LOG = LoggerFactory.getLogger(ProfileCreateBean.class);
 
   @EJB
+  /**Data access object for profile manipulation.*/
   private ConfigurationProfileDao profileDao;
   @EJB
+  /**Data access object for user manipulation.*/
   private CisUserDao userDao;
 
+  /**New profile name.*/
   private String name;
+  /**New profile description.*/
   private String description;
 
 
-  public String actionAddProfile() throws IOException {
+  /**
+   * Adds new profile to database.
+   * @return Navigation outcome.
+   */
+  public String actionAddProfile() {
     LOG.debug("actionAddProfile()");
     try {
       String login = FacesUtils.getRemoteUser();
@@ -47,44 +58,57 @@ public class ProfileCreateBean {
       }
 
       ConfigurationProfile profile = new ConfigurationProfile();
-      profile.setName(name);
-      profile.setDescription(description);
-      profile.setUser(editor);
-      profile.setUpdate(new Date(System.currentTimeMillis()));
+        profile.setName(name);
+        profile.setDescription(description);
+        profile.setUser(editor);
+        profile.setUpdate(new Date());
 
       profileDao.addProfile(profile);
 
       return "edit?faces-redirect=true&includeViewParams=true&id=" + profile.getId();
       // FacesUtils.redirect("list.xhtml#user-" + profile.getId());
-    } catch (NullPointerException exc) {
-      FacesMessagesUtils.addErrorMessage(exc.getMessage(), "");
-    } catch (NoResultException exc) {
-      FacesMessagesUtils.addErrorMessage(exc.getMessage(), "");
-    } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat nový profil", FacesMessagesUtils.getRootMessage(exc));
+    } catch (NullPointerException e) {
+      FacesMessagesUtils.addErrorMessage(FacesMessagesUtils.getRootMessage(e), "");
+    } catch (NoResultException e) {
+      FacesMessagesUtils.addErrorMessage(FacesMessagesUtils.getRootMessage(e), "");
+    } catch (Exception e) {
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat nový profil", e);
     }
     return null;
   }
 
 
+  /**
+   * Returns profile name.
+   * @return Profile name.
+   */
   public String getName() {
     LOG.trace("getName()");
     return name;
   }
 
-
+  /**
+   * Sets profile name.
+   * @param name Profile name.
+   */
   public void setName(String name) {
     LOG.debug("setName(name={})", name);
     this.name = name;
   }
 
-
+  /**
+   * Returns profile description.
+   * @return Profile description.
+   */
   public String getDescription() {
     LOG.trace("getDescription()");
     return description;
   }
 
-
+  /**
+   * Sets profile description.
+   * @param description Profile description.
+   */
   public void setDescription(String description) {
     LOG.debug("setDescription(description={})", description);
     this.description = description;

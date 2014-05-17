@@ -53,7 +53,6 @@ public class ProfileEditBean {
 
   /**ID of currently edited profile. It is set via request parameter.*/
   private Integer id;
-
   /**Currently edited profile. It is initialized in init() method with use of id field.*/
   private ConfigurationProfile profile;
   /**Collection of item keys filtered by selected category.*/
@@ -83,9 +82,8 @@ public class ProfileEditBean {
   /**
    * Initializes backing bean before user manipulation.
    * Loads profile, its items and prepares select boxes.
-   * @throws Exception If initialization fails.
    */
-  public void init() throws Exception {
+  public void init() {
     LOG.debug("init()");
     //load profile
     try {

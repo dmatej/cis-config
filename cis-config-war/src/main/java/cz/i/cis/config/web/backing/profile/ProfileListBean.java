@@ -21,46 +21,59 @@ import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
 
+/**
+ * Backing bean for profile listing.
+ */
 @Named(value = "profileList")
 @ViewScoped
 public class ProfileListBean {
-
+  /**Logger object used for logging.*/
   private static final Logger LOG = LoggerFactory.getLogger(ProfileListBean.class);
 
   @EJB
+  /**Data access object for profile manipulation.*/
   private ConfigurationProfileDao profileDao;
   @EJB
+  /**Data access object for profile items manipulation.*/
   private ConfigurationProfileItemDao profileItemDao;
   @EJB
+  /**Data access object for active configuration manipulation.*/
   private ConfigurationItemDao itemDao;
   @EJB
+  /**Data access object for user manipulation.*/
   private CisUserDao userDao;
 
-  private Integer profileID;
 
-
-
+  /**
+   * Returns all configuration profiles.
+   * @return All configuration profiles.
+   */
   public List<ConfigurationProfile> getAllProfiles() {
     LOG.trace("getAllProfiles()");
     return profileDao.listProfiles();
   }
 
-
-  public String actionDeleteProfile() {
-    LOG.debug("actionDeleteProfile()");
+  /**
+   * Deletes selected profile.
+   * @param id ID of profile to delete.
+   */
+  public void actionDeleteProfile(String id) {
+    LOG.debug("actionDeleteProfile(id={})", id);
     try {
+      Integer profileID = Integer.valueOf(id);
       profileDao.removeProfile(profileID);
-
-      return "list?faces-redirect=true";
-    } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat profil", FacesMessagesUtils.getRootMessage(exc));
+    } catch (Exception e) {
+      LOG.error("Failed to delete profile: ID = " + id, e);
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat profil: ID = " + id, e);
     }
-    return null;
   }
 
-
-  public String actionActivateProfile() {
-    LOG.trace("actionActivateProfile()");
+  /**
+   * Activates selected profile. All profile item will be set to active configuration.
+   * @param id ID of profile to activate.
+   */
+  public void actionActivateProfile(String id) {
+    LOG.trace("actionActivateProfile(id={})", id);
     try {
       String login = FacesUtils.getRemoteUser();
       if (login == null || login.isEmpty()) {
@@ -73,23 +86,12 @@ public class ProfileListBean {
         throw new NoResultException("Logged in user has not been found in the database.");
       }
 
+      Integer profileID = Integer.valueOf(id);
       List<ConfigurationProfileItem> profileItems= profileItemDao.listItems(profileID);
       itemDao.activateProfile(profileItems, editor);
-    } catch (Exception exc) {
-      //TODO osetrit vyjimky
+    } catch (Exception e) {
+      LOG.error("Failed to activate profile: ID = " + id, e);
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se aktivovat profil: ID = " + id, e);
     }
-    return null;
-  }
-
-
-  public Integer getProfileID() {
-    LOG.debug("getProfileID()");
-    return profileID;
-  }
-
-
-  public void setProfileID(Integer profileID) {
-    LOG.debug("setProfileID(profileID={})", profileID);
-    this.profileID = profileID;
   }
 }

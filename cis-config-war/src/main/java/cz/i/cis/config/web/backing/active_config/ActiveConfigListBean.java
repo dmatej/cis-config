@@ -105,6 +105,7 @@ public class ActiveConfigListBean {
 
   /**
    * Deletes selected item.
+   *
    * @param id ID of item to delete.
    */
   public void actionDeleteItem(String id) {
@@ -113,6 +114,7 @@ public class ActiveConfigListBean {
       Integer activeItemID = Integer.valueOf(id);
       configItemDao.removeItem(activeItemID);
     } catch (Exception e) {
+      LOG.error("Failed to delete item.", e);
       FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat položku", e);
     }
   }
@@ -120,6 +122,7 @@ public class ActiveConfigListBean {
 
   /**
    * Returns representation for "all" selection.
+   *
    * @return Representation for "all" selection.
    */
   public String getAllSelector() {
@@ -129,6 +132,7 @@ public class ActiveConfigListBean {
 
   /**
    * Returns representation for "no selection".
+   *
    * @return Representation for "no selection".
    */
   public String getNoneSelector() {
@@ -138,6 +142,7 @@ public class ActiveConfigListBean {
 
   /**
    * Returns collection of available categories.
+   *
    * @return Collection of available categories.
    */
   public Collection<ConfigurationItemCategory> getAllCategories() {
@@ -147,6 +152,7 @@ public class ActiveConfigListBean {
 
   /**
    * Returns selected category.
+   *
    * @return Selected category.
    */
   public String getSelectedCategory() {
@@ -156,6 +162,7 @@ public class ActiveConfigListBean {
 
   /**
    * Sets selected category.
+   *
    * @param selectedCategory New selected category.
    */
   public void setSelectedCategory(String selectedCategory) {
@@ -166,6 +173,7 @@ public class ActiveConfigListBean {
 
   /**
    * Returns collection of active items filtered by selected category.
+   *
    * @return Collection of active items filtered by selected category.
    */
   public List<ConfigurationItem> getFilteredActiveItems() {

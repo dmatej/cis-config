@@ -33,6 +33,7 @@ import cz.i.cis.config.web.FacesUtils;
 @Named(value = "profileEdit")
 @ViewScoped
 public class ProfileEditBean {
+
   /**Logger object used for logging.*/
   private static final Logger LOG = LoggerFactory.getLogger(ProfileEditBean.class);
   /**Selection placeholder for "no selection".*/

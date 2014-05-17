@@ -25,8 +25,8 @@
 
     <h:column>
      <f:facet name="header">Smazání</f:facet>
-     <h:commandLink action="#{categoryList.actionDeleteCategory}" value="smazat" onclick="return confirm('Opravdu chcete smazat tuto kategorii?');">
-      <f:setPropertyActionListener target="#{categoryList.categoryID}" value="#{category.id}" />
+     <h:commandLink actionListener="#{categoryList.actionDeleteCategory(category.id)}" value="smazat" onclick="return confirm('Opravdu chcete smazat tuto kategorii?');">
+      <f:ajax render="form" />
      </h:commandLink>
     </h:column>
 

@@ -95,7 +95,7 @@ public class ProfileEditBean {
     }
 
     if (profile == null) {
-      LOG.error("Profile not loaded while initializing, redirecting to list: ID = {}", id);
+      LOG.error("Profile not loaded during initialization, redirecting to list: ID = {}", id);
       FacesMessagesUtils.addErrorMessage("Zvolený profil nebyl nalezen v databázi - ID = " + id, "");
       FacesUtils.redirectToOutcome("list");
       return;

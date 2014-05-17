@@ -31,6 +31,7 @@ import cz.i.cis.config.jpa.CisUser;
 @WebFilter(filterName = "UserFilter", urlPatterns = {"/config/*"}, dispatcherTypes = DispatcherType.REQUEST)
 public class UserFilter implements Filter {
 
+  /**Logger object used for logging.*/
   private static final Logger LOG = LoggerFactory.getLogger(UserFilter.class);
 
   private static final String USER_CONTEXT = "/config/user";

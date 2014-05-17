@@ -18,9 +18,15 @@ public final class FacesUtils {
   }
 
 
-  public static void redirect(String where) throws IOException {
-    LOG.debug("redirect(where={})", where);
-    FacesContext.getCurrentInstance().getExternalContext().redirect(where);
+  public static void redirectToURL(String url) throws IOException {
+    LOG.debug("redirectToURL(url={})", url);
+    FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+  }
+
+  public static void redirectToOutcome(String outcome){
+    LOG.debug("redirectToOutcome(outcome={})", outcome);
+    FacesContext facesContext = FacesContext.getCurrentInstance();
+    facesContext.getApplication().getNavigationHandler().handleNavigation(facesContext, null, outcome);
   }
 
   public static Map<String, Object> getSessions() {
@@ -47,15 +53,6 @@ public final class FacesUtils {
     }
 
     sessions.put(sessionName, value);
-  }
-
-  public static String getRootMessage(Throwable t) {
-    LOG.debug("getRootMessage(t={})", t);
-    while (t.getCause() != null) {
-      t = t.getCause();
-    }
-
-    return t.getMessage();
   }
 
   public static String getRequestParameter(String key) {

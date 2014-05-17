@@ -35,13 +35,13 @@ public class CategoryEditBean {
     try {
       category = categoryDao.getCategory(id);
     } catch (IllegalArgumentException exc) {
-      FacesMessagesUtils.addErrorMessage("Category id " + id + " is not valid", null);
+      FacesMessagesUtils.addErrorMessage("Category id " + id + " is not valid", "");
     }
 
     if (category != null) {
       name = category.getName();
     } else {
-      FacesMessagesUtils.addErrorMessage("Zvolená kategorie nebyla nalezena v databázi - ID = " + id, null);
+      FacesMessagesUtils.addErrorMessage("Zvolená kategorie nebyla nalezena v databázi - ID = " + id, "");
     }
   }
 
@@ -55,14 +55,14 @@ public class CategoryEditBean {
         category = categoryDao.updateCategory(category);
 
         link = "list.xhtml#category-" + category.getId();
-        FacesUtils.redirect(link);
+        FacesUtils.redirectToURL(link);
       } catch (IOException exc) {
         FacesMessagesUtils.failedRedirectMessage(link, exc);
       } catch (Exception exc) {
-        FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", FacesUtils.getRootMessage(exc));
+        FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", FacesMessagesUtils.getRootMessage(exc));
       }
     } else {
-      FacesMessagesUtils.addErrorMessage("Musíte editovat existující kategorii, abyste mohli uložit její změny.", null);
+      FacesMessagesUtils.addErrorMessage("Musíte editovat existující kategorii, abyste mohli uložit její změny.", "");
     }
     return null; // stay on the same page to display the messages
   }

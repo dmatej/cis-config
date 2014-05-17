@@ -57,11 +57,11 @@ public class ProfileCreateBean {
       return "edit?faces-redirect=true&includeViewParams=true&id=" + profile.getId();
       // FacesUtils.redirect("list.xhtml#user-" + profile.getId());
     } catch (NullPointerException exc) {
-      FacesMessagesUtils.addErrorMessage(exc.getMessage(), null);
+      FacesMessagesUtils.addErrorMessage(exc.getMessage(), "");
     } catch (NoResultException exc) {
-      FacesMessagesUtils.addErrorMessage(exc.getMessage(), null);
+      FacesMessagesUtils.addErrorMessage(exc.getMessage(), "");
     } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat nový profil", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat nový profil", FacesMessagesUtils.getRootMessage(exc));
     }
     return null;
   }

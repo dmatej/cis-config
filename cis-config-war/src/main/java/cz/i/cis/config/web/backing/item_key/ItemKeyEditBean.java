@@ -47,7 +47,7 @@ public class ItemKeyEditBean {
     try {
       itemKey = itemKeyDao.getItemKey(id);
     } catch (IllegalArgumentException exc) {
-      FacesMessagesUtils.addErrorMessage("ItemKey id " + id + " is not valid", null);
+      FacesMessagesUtils.addErrorMessage("ItemKey id " + id + " is not valid", "");
     }
     if (itemKey != null) {
       key = itemKey.getKey();
@@ -55,7 +55,7 @@ public class ItemKeyEditBean {
       selectedCategory = itemKey.getCategory().getId().toString();
       description = itemKey.getDescription();
     } else {
-      FacesMessagesUtils.addErrorMessage("Zvolený klíč nebyl nalezen v databázi - ID = " + id, null);
+      FacesMessagesUtils.addErrorMessage("Zvolený klíč nebyl nalezen v databázi - ID = " + id, "");
     }
   }
 
@@ -76,7 +76,7 @@ public class ItemKeyEditBean {
 
         itemKey = itemKeyDao.updateItemKey(itemKey);
         link = "list.xhtml#itemKey-" + itemKey.getId();
-        FacesUtils.redirect(link);
+        FacesUtils.redirectToURL(link);
       }
       catch (IOException exc) {
         FacesMessagesUtils.failedRedirectMessage(link, exc);
@@ -85,10 +85,10 @@ public class ItemKeyEditBean {
         FacesMessagesUtils.addErrorMessage("form:category", exc.getMessage(), null);
       }
       catch (Exception exc) {
-        FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", FacesUtils.getRootMessage(exc));
+        FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", exc);
       }
     } else {
-      FacesMessagesUtils.addErrorMessage("Musíte editovat existující klíč, abyste mohli uložit jeho změny.", null);
+      FacesMessagesUtils.addErrorMessage("Musíte editovat existující klíč, abyste mohli uložit jeho změny.", "");
     }
     return null; // stay on the same page to display the messages
   }

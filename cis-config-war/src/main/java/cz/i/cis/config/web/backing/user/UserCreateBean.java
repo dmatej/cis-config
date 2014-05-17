@@ -45,11 +45,11 @@ public class UserCreateBean {
 
       // return "edit?faces-redirect=true&includeViewParams=true&id=" + newUser.getId();
       link = "list.xhtml#user-" + newUser.getId();
-      FacesUtils.redirect(link);
+      FacesUtils.redirectToURL(link);
     } catch (IOException exc) {
       FacesMessagesUtils.failedRedirectMessage(link, exc);
     } catch (UserAlreadyExistsException exc) {
-      FacesMessagesUtils.addErrorMessage("Uživatel již existuje", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addErrorMessage("Uživatel již existuje", FacesMessagesUtils.getRootMessage(exc));
     }
 
     return null;

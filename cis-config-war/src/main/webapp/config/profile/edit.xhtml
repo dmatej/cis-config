@@ -10,7 +10,7 @@
  </f:metadata>
 
  <ui:param name="pageName" value="Konfigurační profily" />
- <ui:param name="pageTitle" value="Editace položek profilu &quot;#{profileEdit.name}&quot;" />
+ <ui:param name="pageTitle" value="Editace položek profilu &quot;#{profileEdit.profileName}&quot;" />
 
  <ui:define name="content">
   <h:form id="form">
@@ -50,7 +50,7 @@
      <h:outputLabel for="value" value="Hodnota" />
     </h:panelGroup>
     <h:panelGroup>
-     <h:inputText id="value" styleClass="important short" value="#{profileEdit.profileItemValue}" disabled="#{profileEdit.keyValueDisabled}"
+     <h:inputText id="value" styleClass="important short" value="#{profileEdit.profileItemValue}" disabled="#{profileEdit.itemValueDisabled}"
        valueChangeListener="#{profileEdit.setProfileItemValue}" />
     </h:panelGroup>
     <h:panelGroup>
@@ -62,12 +62,15 @@
     <h:panelGroup styleClass="form:table:buttonline">
      <h:commandButton id="add" value="Přidat položku" actionListener="#{profileEdit.actionAddItem}" rendered="#{!profileEdit.editingItem}">
       <f:param name="id" value="#{profileEdit.id}" />
+      <f:ajax execute="category key value" render="form" />
      </h:commandButton>
      <h:commandButton id="edit" value="Upravit položku" actionListener="#{profileEdit.actionEditItem}" rendered="#{profileEdit.editingItem}">
       <f:param name="id" value="#{profileEdit.id}" />
+      <f:ajax execute="category key value" render="form" />
      </h:commandButton>
      <h:commandButton id="edit-storno" value="Storno" actionListener="#{profileEdit.actionStornoEditItem}" rendered="#{profileEdit.editingItem}">
       <f:param name="id" value="#{profileEdit.id}" />
+      <f:ajax execute="category key value" render="form" />
      </h:commandButton>
     </h:panelGroup>
 
@@ -78,6 +81,7 @@
     <h:panelGroup styleClass="form:table:buttonline2">
      <h:commandButton id="save" value="Uložit změny" actionListener="#{profileEdit.actionSaveChanges}">
       <f:param name="id" value="#{profileEdit.id}" />
+      <f:ajax render="form" />
      </h:commandButton>
 
      <h:button id="storno" value="Storno" outcome="list" />
@@ -109,21 +113,21 @@
 
     <h:column>
      <f:facet name="header">Smazání</f:facet>
-     <h:commandLink value="smazat" rendered="#{!profileEdit.isDeletedItem(item.id) and !profileEdit.isEditingItem(item.id)}">
-      <f:param name="itemId" value="#{item.id}" />
-      <f:ajax execute="item-#{item.id}" render="@form" listener="#{profileEdit.actionDeleteItem}" immediate="true" />
+     <h:commandLink value="smazat" actionListener="#{profileEdit.actionDeleteItem(item.id)}" rendered="#{!profileEdit.isDeletedItem(item.id) and !profileEdit.isEditingItem(item.id)}">
+      <f:param name="id" value="#{profileEdit.id}" />
+      <f:ajax render="form" />
      </h:commandLink>
-     <h:commandLink value="obnovit" rendered="#{profileEdit.isDeletedItem(item.id) and !profileEdit.isEditingItem(item.id)}">
-      <f:param name="itemId" value="#{item.id}" />
-      <f:ajax execute="item-#{item.id}" render="@form" listener="#{profileEdit.actionRestoreItem}" immediate="true" />
+     <h:commandLink value="obnovit" actionListener="#{profileEdit.actionRestoreItem(item.id)}" rendered="#{profileEdit.isDeletedItem(item.id) and !profileEdit.isEditingItem(item.id)}">
+      <f:param name="id" value="#{profileEdit.id}" />
+      <f:ajax render="form" />
      </h:commandLink>
     </h:column>
 
     <h:column>
      <f:facet name="header">Editace</f:facet>
-     <h:commandLink value="upravit" rendered="#{!profileEdit.isDeletedItem(item.id) and !profileEdit.isEditingItem(item.id)}">
-      <f:param name="itemId" value="#{item.id}" />
-      <f:ajax execute="item-#{item.id}" render="@form" listener="#{profileEdit.actionSetEditItem}" immediate="true" />
+     <h:commandLink value="upravit" actionListener="#{profileEdit.actionSetEditItem(item.id)}" rendered="#{!profileEdit.isDeletedItem(item.id) and !profileEdit.isEditingItem(item.id)}">
+      <f:param name="id" value="#{profileEdit.id}" />
+      <f:ajax render="form" />
      </h:commandLink>
     </h:column>
    </h:dataTable>

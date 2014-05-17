@@ -36,13 +36,13 @@ public class CategoryCreateBean {
 
       // return "edit?faces-redirect=true&includeViewParams=true&id=" + category.getId();
       link = "list.xhtml#category-" + category.getId();
-      FacesUtils.redirect(link);
+      FacesUtils.redirectToURL(link);
     }
     catch (IOException exc) {
       FacesMessagesUtils.failedRedirectMessage(link, exc);
     }
     catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat novou kategorii", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat novou kategorii", FacesMessagesUtils.getRootMessage(exc));
     }
 
     return null;

@@ -39,7 +39,7 @@ public class CategoryListBean {
 
       return "list?faces-redirect=true";
     } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat kategorii", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat kategorii", FacesMessagesUtils.getRootMessage(exc));
     }
 
     return null;

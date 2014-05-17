@@ -43,13 +43,13 @@ public class ProfileEditInfoBean {
     try {
       profile = profileDao.getProfile(id);
     } catch (IllegalArgumentException exp) {
-      FacesMessagesUtils.addErrorMessage("Profile id " + id + " is not valid", null);
+      FacesMessagesUtils.addErrorMessage("Profil není validní - ID = " + id, "");
     }
     if (profile != null) {
       name = profile.getName();
       description = profile.getDescription();
     } else {
-      FacesMessagesUtils.addErrorMessage("Zvolený profil nebyl nalezen v databázi - ID = " + id, null);
+      FacesMessagesUtils.addErrorMessage("Zvolený profil nebyl nalezen v databázi - ID = " + id, "");
     }
   }
 
@@ -77,18 +77,18 @@ public class ProfileEditInfoBean {
         profile = profileDao.updateProfile(profile);
         FacesMessagesUtils.addInfoMessage("Změny byly uloženy.", null);
         link = "list.xhtml#profile-" + profile.getId();
-        FacesUtils.redirect("list.xhtml#profile-" + profile.getId());
+        FacesUtils.redirectToURL("list.xhtml#profile-" + profile.getId());
       } catch (IOException exc) {
         FacesMessagesUtils.failedRedirectMessage(link, exc);
       } catch (NullPointerException exc) {
-        FacesMessagesUtils.addErrorMessage(exc.getMessage(), null);
+        FacesMessagesUtils.addErrorMessage(exc.getMessage(), "");
       } catch (NoResultException exc) {
-        FacesMessagesUtils.addErrorMessage(exc.getMessage(), null);
+        FacesMessagesUtils.addErrorMessage(exc.getMessage(), "");
       } catch (Exception e) {
-        FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", FacesUtils.getRootMessage(e));
+        FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", FacesMessagesUtils.getRootMessage(e));
       }
     } else {
-      FacesMessagesUtils.addErrorMessage("Musíte editovat existující profil, abyste mohli uložit jeho změny", null);
+      FacesMessagesUtils.addErrorMessage("Musíte editovat existující profil, abyste mohli uložit jeho změny", "");
     }
     return null;
   }

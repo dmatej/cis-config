@@ -63,9 +63,9 @@ public class ItemKeyListBean {
       return "list?faces-redirect=true";
     } catch (ActiveItemKeyException exc) {
       FacesMessagesUtils.addErrorMessage("Klíč se používá v aktivní konfiguraci a proto nelze smazat",
-          FacesUtils.getRootMessage(exc));
+          FacesMessagesUtils.getRootMessage(exc));
     } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat klíč", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat klíč", FacesMessagesUtils.getRootMessage(exc));
     }
     return null;
   }

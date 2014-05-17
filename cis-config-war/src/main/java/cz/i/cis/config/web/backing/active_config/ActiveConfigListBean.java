@@ -73,9 +73,9 @@ public class ActiveConfigListBean {
         filteredActiveItems = configItemDao.listConfigurationItems(filter);
       }
     } catch (IllegalArgumentException exc) {
-      FacesMessagesUtils.addErrorMessage(exc.getMessage(), null);
+      FacesMessagesUtils.addErrorMessage(exc.getMessage(), "");
     } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se obnovit aktivní položky", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se obnovit aktivní položky", FacesMessagesUtils.getRootMessage(exc));
     }
 
   }
@@ -86,7 +86,7 @@ public class ActiveConfigListBean {
     try {
       configItemDao.removeItem(activeItemID);
     } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat položku", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat položku", FacesMessagesUtils.getRootMessage(exc));
     }
 
     return null;

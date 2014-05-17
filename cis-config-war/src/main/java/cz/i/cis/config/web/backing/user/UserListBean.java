@@ -47,7 +47,7 @@ public class UserListBean {
       userDao.removeUser(userID);
       return "list?faces-redirect=true";
     } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat uživatele", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat uživatele", FacesMessagesUtils.getRootMessage(exc));
       return null;
     }
   }
@@ -59,7 +59,7 @@ public class UserListBean {
       userDao.restoreUser(userID);
       return "list?faces-redirect=true";
     } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se obnovit uživatele", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se obnovit uživatele", FacesMessagesUtils.getRootMessage(exc));
     }
     return null;
   }

@@ -53,7 +53,7 @@ public class ProfileListBean {
 
       return "list?faces-redirect=true";
     } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat profil", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat profil", FacesMessagesUtils.getRootMessage(exc));
     }
     return null;
   }

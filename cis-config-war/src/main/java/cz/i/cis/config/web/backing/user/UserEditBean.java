@@ -39,7 +39,7 @@ public class UserEditBean {
     try {
       user = userDao.getUser(id);
     } catch (IllegalArgumentException exp) {
-      FacesMessagesUtils.addErrorMessage("User id " + id + " is not valid", null);
+      FacesMessagesUtils.addErrorMessage("User id " + id + " is not valid", "");
     }
     if (user != null) {
       name = user.getFirstName();
@@ -47,7 +47,7 @@ public class UserEditBean {
       login = user.getLogin();
       birthDate = user.getBirthDate();
     } else {
-      FacesMessagesUtils.addErrorMessage("Zvolený uživatel nebyl nalezen v databázi - ID = " + id, null);
+      FacesMessagesUtils.addErrorMessage("Zvolený uživatel nebyl nalezen v databázi - ID = " + id, "");
     }
   }
 
@@ -66,15 +66,14 @@ public class UserEditBean {
 
         // FacesUtils.addMessage(FacesMessage.SEVERITY_INFO, "Změny byly uloženy.");
         link = "list.xhtml#user-" + user.getId();
-        FacesUtils.redirect(link);
+        FacesUtils.redirectToURL(link);
       } catch (IOException exc) {
         FacesMessagesUtils.failedRedirectMessage(link, exc);
       } catch (Exception exc) {
-        FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", FacesUtils.getRootMessage(exc));
+        FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", FacesMessagesUtils.getRootMessage(exc));
       }
     } else {
-      FacesMessagesUtils.addErrorMessage("Musíte editovat existujícího uživatele, abyste mohli uložit jeho změny.",
-          null);
+      FacesMessagesUtils.addErrorMessage("Musíte editovat existujícího uživatele, abyste mohli uložit jeho změny.", "");
     }
     return null; // stay on the same page to display the messages
   }

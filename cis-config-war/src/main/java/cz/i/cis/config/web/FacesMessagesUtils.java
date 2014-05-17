@@ -30,6 +30,10 @@ public final class FacesMessagesUtils {
     addMessage(FacesMessage.SEVERITY_ERROR, null, sumary, detail);
   }
 
+  public static void addErrorMessage(final String sumary, final Throwable cause) {
+    addMessage(FacesMessage.SEVERITY_ERROR, null, sumary, getRootMessage(cause));
+  }
+
   public static void addErrorMessage(final String clientId, final String sumary, final String detail) {
     addMessage(FacesMessage.SEVERITY_ERROR, clientId, sumary, detail);
   }
@@ -72,9 +76,18 @@ public final class FacesMessagesUtils {
     return messages;
   }
 
-  public static void failedRedirectMessage(final String link, final IOException exc) {
-    LOG.debug("failedRedirectMessage(link={}, exc={})", link, exc);
+  public static void failedRedirectMessage(final String link, final IOException e) {
+    LOG.debug("failedRedirectMessage(link={}, e={})", link, e);
     final String sumary = "Nepodařilo se provést přesměrování na adresu: " + link;
-    addMessage(FacesMessage.SEVERITY_FATAL, sumary, FacesUtils.getRootMessage(exc));
+    addMessage(FacesMessage.SEVERITY_FATAL, sumary, getRootMessage(e));
+  }
+
+  public static String getRootMessage(Throwable t) {
+    LOG.debug("getRootMessage(t={})", t);
+    while (t.getCause() != null) {
+      t = t.getCause();
+    }
+
+    return t.getMessage();
   }
 }

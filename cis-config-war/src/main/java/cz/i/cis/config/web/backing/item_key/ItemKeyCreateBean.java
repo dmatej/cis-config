@@ -65,10 +65,10 @@ public class ItemKeyCreateBean {
 
       // return "edit?faces-redirect=true&includeViewParams=true&id=" + newUser.getId();
       link = "list.xhtml#itemKey-" + newItemKey.getId();
-      FacesUtils.redirect(link);
+      FacesUtils.redirectToURL(link);
     }
     catch (UniqueKeyException exc) {
-      FacesMessagesUtils.addErrorMessage("form:key", "Nepodařilo se přidat nový klíč", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addErrorMessage("form:key", "Nepodařilo se přidat nový klíč", FacesMessagesUtils.getRootMessage(exc));
     }
     catch (IOException exc) {
       FacesMessagesUtils.failedRedirectMessage(link, exc);
@@ -77,7 +77,7 @@ public class ItemKeyCreateBean {
       FacesMessagesUtils.addErrorMessage("form:category", exc.getMessage(), null);
     }
     catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat nový klíč", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat nový klíč", exc);
     }
     return null;
   }

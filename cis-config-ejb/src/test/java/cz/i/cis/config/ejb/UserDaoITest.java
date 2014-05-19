@@ -3,7 +3,12 @@
  */
 package cz.i.cis.config.ejb;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.List;
@@ -12,6 +17,8 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.PersistenceException;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.time.DateUtils;
@@ -22,10 +29,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.CisUserDao;
-import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
+import cz.i.cis.config.helpers.UserTestHelper;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.test.ArquillianITest;
-import cz.i.cis.config.helpers.UserTestHelper;
 
 /**
  * @author David Matějček
@@ -53,8 +59,8 @@ public class UserDaoITest extends ArquillianITest {
   }
 
 
-  @Test(expected = UserAlreadyExistsException.class)
-  public void createAlreadyExistingUser() throws UserAlreadyExistsException {
+  @Test(expected = PersistenceException.class)
+  public void createAlreadyExistingUser() throws PersistenceException {
     final CisUser user0 = helper.createUser();
     final CisUser user = new CisUser();
     user.setLastName("XTMatějka");
@@ -66,7 +72,7 @@ public class UserDaoITest extends ArquillianITest {
 
 
   @Test
-  public void createNewUser() throws Exception {
+  public void createNewUser() {
     final CisUser user = new CisUser();
     user.setLastName("ZXTMatějka");
     user.setLogin(RandomStringUtils.random(6, true, true));
@@ -89,7 +95,7 @@ public class UserDaoITest extends ArquillianITest {
 
 
   @Test
-  public void testMethodsUserDao() throws Exception {
+  public void testMethodsUserDao() {
     final CisUser user = new CisUser();
     user.setLastName("Jezik");
     user.setLogin("dan");

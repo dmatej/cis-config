@@ -29,23 +29,23 @@ public class ConfigurationProfileDaoITest extends ArquillianITest {
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurationProfileDaoITest.class);
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationProfileDao")
-  private ConfigurationProfileDao dao;
+  private ConfigurationProfileDao profileDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/CisUserDao")
-  private CisUserDao dao_user;
+  private CisUserDao userDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationProfileTestHelper")
-  private ConfigurationProfileTestHelper helper;
+  private ConfigurationProfileTestHelper profileHelper;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/UserTestHelper")
-  private UserTestHelper user_helper;
+  private UserTestHelper userHelper;
 
 
   @After
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void cleanup() {
-    helper.cleanup();
-    user_helper.cleanup();
+    profileHelper.cleanup();
+    userHelper.cleanup();
 
   }
 
@@ -58,41 +58,41 @@ public class ConfigurationProfileDaoITest extends ArquillianITest {
     user.setLogin("log");
     user.setFirstName("Karl");
     user.setBirthDate(new Date());
-    dao_user.addUser(user);
-    user_helper.addToDelete(user);
+    userDao.addUser(user);
+    userHelper.addToDelete(user);
 
     final ConfigurationProfile profile = new ConfigurationProfile();
     profile.setUser(user);
     profile.setDescription("description");
     profile.setName("profile name");
     profile.setUpdate(new Date());
-    dao.addProfile(profile);
-    helper.addToDelete(profile);
+    profileDao.addProfile(profile);
+    profileHelper.addToDelete(profile);
 
     LOG.debug("profile: {}", profile);
     assertNotNull("profile.id", profile.getId());
 
     profile.setName("new profile name");
-    dao.updateProfile(profile);
-    assertTrue(dao.listProfiles().get(0).getName().equals("new profile name"));
+    profileDao.updateProfile(profile);
+    assertTrue(profileDao.listProfiles().get(0).getName().equals("new profile name"));
   }
 
-/*
-  @Test
-  public void creatAlreadyExistingConfigurationProfile() {
-    final ConfigurationProfile profile = helper.createConfigurationProfile();
-    final ConfigurationProfile copy_profile = new ConfigurationProfile();
-    copy_profile.setDescription(profile.getDescription());
-    copy_profile.setUpdate(profile.getUpdate());
-    copy_profile.setUser(profile.getUser());
-    copy_profile.setName(profile.getName());
-    dao.addProfile(copy_profile);
-  }
-*/
+
+//  @Test
+//  public void creatAlreadyExistingConfigurationProfile() {
+//    final ConfigurationProfile profile = helper.createConfigurationProfile();
+//    final ConfigurationProfile profileCopy = new ConfigurationProfile();
+//    profileCopy.setDescription(profile.getDescription());
+//    profileCopy.setUpdate(profile.getUpdate());
+//    profileCopy.setUser(profile.getUser());
+//    profileCopy.setName(profile.getName());
+//    dao.addProfile(profileCopy);
+//  }
+
 
   @Test
   public void listConfigurationProfiles() {
-    final List<ConfigurationProfile> profiles = dao.listProfiles();
+    final List<ConfigurationProfile> profiles = profileDao.listProfiles();
     LOG.debug("list configuration profiles: {}", profiles);
     assertNotNull("configuration profiles", profiles);
     assertTrue("profiles.empty", profiles.isEmpty());

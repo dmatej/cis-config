@@ -31,11 +31,13 @@ public class ConfigurationCategoryDaoITest extends ArquillianITest {
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryTestHelper")
   private ConfigurationCategoryTestHelper helper;
 
+
   @After
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void cleanup() {
     helper.cleanup();
   }
+
 
   @Test
   public void creatNewConfigurationCategory() {
@@ -45,52 +47,55 @@ public class ConfigurationCategoryDaoITest extends ArquillianITest {
     helper.addToDelete(category);
     LOG.debug("category: {}", category);
     assertNotNull("category.id", category.getId());
-    }
-/*
-  @Test
-  public void creatAlreadyExistingConfigurationCategory() {
-    final ConfigurationItemCategory configuration_category = helper.createConfigurationCategory();
-    final ConfigurationItemCategory copy_configuration_category = new ConfigurationItemCategory();
-    copy_configuration_category.setName(configuration_category.getName());
-    dao.addCategory(copy_configuration_category);
-   // helper.addToDelete(copy_configuration_category);
-    }
-*/
-  @Test
-  public void listConfigurationCategories() {
-    final List<ConfigurationItemCategory> configuration_categories = dao.listCategories();
-    LOG.debug("list configuration categories: {}", configuration_categories);
-    assertNotNull("configuration categories", configuration_categories);
-    assertTrue("configuration_categories.empty",configuration_categories.isEmpty());
   }
 
+
+  /*
+   * @Test
+   * public void creatAlreadyExistingConfigurationCategory() {
+   * final ConfigurationItemCategory configuration_category = helper.createConfigurationCategory();
+   * final ConfigurationItemCategory copy_configuration_category = new ConfigurationItemCategory();
+   * copy_configuration_category.setName(configuration_category.getName());
+   * dao.addCategory(copy_configuration_category);
+   * // helper.addToDelete(copy_configuration_category);
+   * }
+   */
   @Test
-  public void testMethodsConfigurationCategoriesDao() throws Exception {
+  public void listConfigurationCategories() {
+    final List<ConfigurationItemCategory> configurationCategories = dao.listCategories();
+    LOG.debug("list configuration categories: {}", configurationCategories);
+    assertNotNull("configuration categories", configurationCategories);
+    assertTrue("configuration_categories.empty", configurationCategories.isEmpty());
+  }
+
+
+  @Test
+  public void testMethodsConfigurationCategoriesDao() {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setName("some category");
     helper.addToDelete(category);
     dao.addCategory(category);
-    LOG.debug("created category: {}",category);
+    LOG.debug("created category: {}", category);
     category.setName("some new category");
     dao.updateCategory(category);
-    LOG.debug("updated category: {}",category);
+    LOG.debug("updated category: {}", category);
     final ConfigurationItemCategory c = dao.getCategory(category.getId());
     assertNotNull("c.id", c.getId());
   }
 
+
   @Test
   public void testComparationCategories() {
-    final ConfigurationItemCategory category0 = new ConfigurationItemCategory();
-    category0.setId(1);
-    category0.setName("category x");
+    final ConfigurationItemCategory categoryFirst = new ConfigurationItemCategory();
+    categoryFirst.setId(1);
+    categoryFirst.setName("category x");
 
-    final ConfigurationItemCategory category1 = new ConfigurationItemCategory();
-    category1.setId(1);
-    category1.setName("category x");
+    final ConfigurationItemCategory categorySecond = new ConfigurationItemCategory();
+    categorySecond.setId(1);
+    categorySecond.setName("category x");
 
-   assertEquals(category0.hashCode(), category1.hashCode());
-   assertEquals(category0, category1);
-   assertTrue(category0.equals(category1));
+    assertEquals(categoryFirst.hashCode(), categorySecond.hashCode());
+    assertEquals(categoryFirst, categorySecond);
+    assertTrue(categoryFirst.equals(categorySecond));
   }
-
 }

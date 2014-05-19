@@ -32,16 +32,16 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurationItemKeyDao.class);
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemKeyDao")
-  private ConfigurationItemKeyDao dao;
+  private ConfigurationItemKeyDao configurationItemKeyDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryDao")
-  private ConfigurationCategoryDao dao_category;
+  private ConfigurationCategoryDao configurationCategoryDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryTestHelper")
-  private ConfigurationCategoryTestHelper category_helper;
+  private ConfigurationCategoryTestHelper categoryHelper;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemKeyTestHelper")
-  private   ConfigurationItemKeyTestHelper helper;
+  private ConfigurationItemKeyTestHelper configurationItemKeyHelper;
 
   @Before
   public void init() {
@@ -50,49 +50,49 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
   @After
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void cleanup() {
-    helper.cleanup();
-    category_helper.cleanup();
+    configurationItemKeyHelper.cleanup();
+    categoryHelper.cleanup();
   }
 
   @Test
   public void creatNewConfigurationItemKey() {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setName("some category name");
-    dao_category.addCategory(category);
-    category_helper.addToDelete(category);
+    configurationCategoryDao.addCategory(category);
+    categoryHelper.addToDelete(category);
 
     final ConfigurationItemKey key = new ConfigurationItemKey();
     key.setCategory(category);
     key.setDescription("base configuration key");
     key.setKey("base");
     key.setType(ConfigurationItemKeyType.Text);
-    dao.addItemKey(key);
-    helper.addToDelete(key);
+    configurationItemKeyDao.addItemKey(key);
+    configurationItemKeyHelper.addToDelete(key);
     LOG.debug("key: {}", key);
     assertNotNull("key.id", key.getId());
 
-    final List<ConfigurationItemKey> listKeys = dao.filterItemKeys(category);
+    final List<ConfigurationItemKey> listKeys = configurationItemKeyDao.filterItemKeys(category);
     assertFalse("listKeys.isEmpty", listKeys.isEmpty());
     assertEquals(listKeys.get(0), key);
     key.setType(ConfigurationItemKeyType.URL);
-    dao.updateItemKey(key);
-    assertTrue(dao.listItemKeys().get(0).getType().equals(ConfigurationItemKeyType.URL));
+    configurationItemKeyDao.updateItemKey(key);
+    assertTrue(configurationItemKeyDao.listItemKeys().get(0).getType().equals(ConfigurationItemKeyType.URL));
     }
 
   @Test(expected = PersistenceException.class)
   public void creatAlreadyExistingConfigurationKey() throws PersistenceException {
-    final ConfigurationItemKey key = helper.createConfigurationKey();
-    final ConfigurationItemKey copy_key = new ConfigurationItemKey();
-    copy_key.setCategory(key.getCategory());
-    copy_key.setDescription(key.getDescription());
-    copy_key.setType(key.getType());
-    copy_key.setKey(key.getKey());
-    dao.addItemKey(copy_key);
+    final ConfigurationItemKey key = configurationItemKeyHelper.createConfigurationKey();
+    final ConfigurationItemKey keyCopy = new ConfigurationItemKey();
+    keyCopy.setCategory(key.getCategory());
+    keyCopy.setDescription(key.getDescription());
+    keyCopy.setType(key.getType());
+    keyCopy.setKey(key.getKey());
+    configurationItemKeyDao.addItemKey(keyCopy);
     }
 
   @Test
   public void listConfigurationKeys() {
-    final List<ConfigurationItemKey> keys = dao.listItemKeys();
+    final List<ConfigurationItemKey> keys = configurationItemKeyDao.listItemKeys();
     LOG.debug("list configuration item keys: {}", keys);
     assertNotNull("configuration item keys", keys);
     assertTrue("keys.empty",keys.isEmpty());
@@ -104,23 +104,23 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
   public void testComparationKeys() {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
 
-    final ConfigurationItemKey key0 = new ConfigurationItemKey();
-    key0.setId(1);
-    key0.setCategory(category);
-    key0.setDescription("base configuration key");
-    key0.setKey("base");
-    key0.setType(ConfigurationItemKeyType.Text);
+    final ConfigurationItemKey keyFirst = new ConfigurationItemKey();
+    keyFirst.setId(1);
+    keyFirst.setCategory(category);
+    keyFirst.setDescription("base configuration key");
+    keyFirst.setKey("base");
+    keyFirst.setType(ConfigurationItemKeyType.Text);
 
-    final ConfigurationItemKey key1 = new ConfigurationItemKey();
-    key1.setId(1);
-    key1.setCategory(category);
-    key1.setDescription("base configuration key");
-    key1.setKey("base");
-    key1.setType(ConfigurationItemKeyType.Text);
+    final ConfigurationItemKey keySecond = new ConfigurationItemKey();
+    keySecond.setId(1);
+    keySecond.setCategory(category);
+    keySecond.setDescription("base configuration key");
+    keySecond.setKey("base");
+    keySecond.setType(ConfigurationItemKeyType.Text);
 
-   assertEquals(key0.hashCode(), key1.hashCode());
-   assertEquals(key0, key1);
-   assertTrue(key0.equals(key1));
+   assertEquals(keyFirst.hashCode(), keySecond.hashCode());
+   assertEquals(keyFirst, keySecond);
+   assertTrue(keyFirst.equals(keySecond));
   }
 
 }

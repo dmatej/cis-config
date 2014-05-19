@@ -51,7 +51,7 @@ public class ConfigurationItemKeyDao {
     LOG.debug("addItemKey(key={})", key);
     try {
       this.em.persist(key);
-      em.flush();
+      this.em.flush();
     } catch (PersistenceException exc) {
       throw new UniqueKeyException("Key" + key.getKey() + " already exists!", exc);
     }
@@ -73,8 +73,7 @@ public class ConfigurationItemKeyDao {
 
   public List<ConfigurationItemKey> filterItemKeys(ConfigurationItemCategory category) {
     LOG.debug("filterItemKeys(category={})", category);
-    // FIXME: coze? hrozi nechteny update! ...
-    category = em.merge(category);
+    category = this.em.getReference(ConfigurationItemCategory.class, category.getId());
 
     final TypedQuery<ConfigurationItemKey> query = this.em.createQuery(
         "SELECT itemKey FROM ConfigurationItemKey itemKey WHERE itemKey.category = :category",
@@ -87,7 +86,6 @@ public class ConfigurationItemKeyDao {
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeItemKey(Integer id) throws ActiveItemKeyException {
-    LOG.debug("removeItemKey(id={})", id);
     ConfigurationItemKey itemKey = getItemKey(id);
 
     final TypedQuery<ConfigurationItem> activeQuery = this.em.createQuery(
@@ -102,18 +100,16 @@ public class ConfigurationItemKeyDao {
     profileDeleteQuery.setParameter("itemKey", itemKey);
     profileDeleteQuery.executeUpdate();
 
-    em.remove(itemKey);
+    this.em.remove(itemKey);
   }
 
 
   public ConfigurationItemKey getItemKey(Integer id) {
-    LOG.debug("getItemKey(id={})", id);
-    return em.find(ConfigurationItemKey.class, id);
+    return this.em.find(ConfigurationItemKey.class, id);
   }
 
 
   public static Map<String, ConfigurationItemKey> getItemKeyMap(List<ConfigurationItemKey> itemKeys) {
-    LOG.debug("getItemKeyMap(itemKeys={})", itemKeys);
     Map<String, ConfigurationItemKey> itemKeyMap = new HashMap<>();
     for (ConfigurationItemKey itemKey : itemKeys) {
       itemKeyMap.put(itemKey.getId() + "", itemKey);

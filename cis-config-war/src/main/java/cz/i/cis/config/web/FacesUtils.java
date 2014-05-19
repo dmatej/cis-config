@@ -21,7 +21,6 @@ public final class FacesUtils {
    * Private to enforce static access.
    */
   private FacesUtils() {
-    // hidden
   }
 
 

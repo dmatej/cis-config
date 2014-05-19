@@ -25,7 +25,6 @@ public final class FacesMessagesUtils {
    * Private to enforce static access.
    */
   private FacesMessagesUtils() {
-    // hidden
   }
 
   /**

@@ -24,8 +24,8 @@ public class CategoryEditBean {
   /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(CategoryEditBean.class);
 
+  /** Data access object for item category manipulation. */
   @EJB
-  /**Data access object for item category manipulation.*/
   private ConfigurationCategoryDao categoryDao;
 
   /** ID of currently edited category. It is set via request parameter. */
@@ -46,14 +46,14 @@ public class CategoryEditBean {
       category = categoryDao.getCategory(id);
     } catch (IllegalArgumentException e) {
       LOG.error("Failed to load category.", e);
-      FacesMessagesUtils.addErrorMessage("ID kategorie není validní: ID = " + id, e);
+      FacesMessagesUtils.addErrorMessage("ID kategorie konfiguračních položek není validní: ID = " + id, e);
       FacesUtils.redirectToOutcome("list");
       return;
     }
 
     if (category == null) {
       LOG.error("Profile not loaded while initializing, redirecting to list: ID = {}", id);
-      FacesMessagesUtils.addErrorMessage("Zvolená kategorie nebyla nalezena v databázi - ID = " + id, "");
+      FacesMessagesUtils.addErrorMessage("Zvolená kategorie konfiguračních položek nebyla nalezena v databázi - ID = " + id, "");
       FacesUtils.redirectToOutcome("list");
       return;
     }
@@ -71,8 +71,7 @@ public class CategoryEditBean {
     LOG.debug("actionUpdateCategory()");
     if (category == null) {
       LOG.error("Cannot edit category which is null");
-      FacesMessagesUtils.addErrorMessage("Musíte editovat existující kategorii, abyste mohli uložit její změny.", "");
-
+      FacesMessagesUtils.addErrorMessage("Musíte editovat existujícíkategorii konfiguračních položek, abyste mohli uložit její změny.", "");
       return;
     }
 
@@ -85,7 +84,7 @@ public class CategoryEditBean {
       link = "list.xhtml#category-" + category.getId();
       FacesUtils.redirectToURL(link);
     } catch (IOException e) {
-      LOG.error("Failed to update category: category = " + category, e);
+      LOG.error("Failed to update category: cannot redirect", e);
       FacesMessagesUtils.failedRedirectMessage(link, e);
     } catch (Exception e) {
       LOG.error("Failed to update category: category = " + category, e);

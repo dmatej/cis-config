@@ -76,10 +76,10 @@ public class ItemKeyCreateBean {
       }
 
       ConfigurationItemKey newItemKey = new ConfigurationItemKey();
-      newItemKey.setKey(key);
-      newItemKey.setType(type);
-      newItemKey.setCategory(allCategories.get(selectedCategory));
-      newItemKey.setDescription(description);
+        newItemKey.setKey(key);
+        newItemKey.setType(type);
+        newItemKey.setCategory(allCategories.get(selectedCategory));
+        newItemKey.setDescription(description);
 
       itemKeyDao.addItemKey(newItemKey);
 
@@ -87,17 +87,17 @@ public class ItemKeyCreateBean {
       link = "list.xhtml#itemKey-" + newItemKey.getId();
       FacesUtils.redirectToURL(link);
     } catch (UniqueKeyException e) {
-      LOG.error("Failed to add item key.", e);
-      FacesMessagesUtils.addErrorMessage("form:key", "Nepodařilo se přidat nový klíč", e);
+      LOG.error("Failed to add item key: unique key", e);
+      FacesMessagesUtils.addErrorMessage("form:key", "Tento klíč již existuje", e);
     } catch (IOException e) {
-      LOG.error("Failed to redirect.", e);
+      LOG.error("Failed to add item key: failed to redirect.", e);
       FacesMessagesUtils.failedRedirectMessage(link, e);
     } catch (NonExistentCategoryException e) {
-      LOG.error("Failed to add item key.", e);
+      LOG.error("Failed to add item key: nonexistent category", e);
       FacesMessagesUtils.addErrorMessage("form:category", e.getMessage(), "");
     } catch (Exception e) {
       LOG.error("Failed to add item key.", e);
-      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se přidat nový klíč", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se přidat nový klíč pro konfigurační položky", e);
     }
 
     return null;

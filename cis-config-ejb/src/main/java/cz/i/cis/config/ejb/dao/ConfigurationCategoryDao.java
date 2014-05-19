@@ -71,9 +71,11 @@ public class ConfigurationCategoryDao {
 
   public static ConfigurationItemCategory getCategory(List<ConfigurationItemCategory> categories, Integer id) {
     for (ConfigurationItemCategory category : categories) {
-      if(category.getId().intValue() == id.intValue())
+      if(category.getId().intValue() == id.intValue()) {
         return category;
+      }
     }
+
     return null;
   }
 }

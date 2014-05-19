@@ -17,14 +17,14 @@ import cz.i.cis.config.jpa.ConfigurationProfile;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
-
 /**
  * Backing bean for profile creation.
  */
 @Named(value = "profileCreate")
 @ViewScoped
 public class ProfileCreateBean {
-  /**Logger object used for logging.*/
+
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(ProfileCreateBean.class);
 
   @EJB
@@ -34,14 +34,15 @@ public class ProfileCreateBean {
   /**Data access object for user manipulation.*/
   private CisUserDao userDao;
 
-  /**New profile name.*/
+  /** New profile name. */
   private String name;
-  /**New profile description.*/
+  /** New profile description. */
   private String description;
 
 
   /**
    * Adds new profile to database.
+   *
    * @return Navigation outcome.
    */
   public String actionAddProfile() {
@@ -72,14 +73,16 @@ public class ProfileCreateBean {
     } catch (NoResultException e) {
       FacesMessagesUtils.addErrorMessage(FacesMessagesUtils.getRootMessage(e), "");
     } catch (Exception e) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat nový profil", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se přidat nový profil", e);
     }
+    
     return null;
   }
 
 
   /**
    * Returns profile name.
+   *
    * @return Profile name.
    */
   public String getName() {
@@ -87,8 +90,10 @@ public class ProfileCreateBean {
     return name;
   }
 
+
   /**
    * Sets profile name.
+   *
    * @param name Profile name.
    */
   public void setName(String name) {
@@ -96,8 +101,10 @@ public class ProfileCreateBean {
     this.name = name;
   }
 
+
   /**
    * Returns profile description.
+   *
    * @return Profile description.
    */
   public String getDescription() {
@@ -105,8 +112,10 @@ public class ProfileCreateBean {
     return description;
   }
 
+
   /**
    * Sets profile description.
+   *
    * @param description Profile description.
    */
   public void setDescription(String description) {

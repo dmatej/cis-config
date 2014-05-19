@@ -24,8 +24,8 @@ public class CategoryCreateBean {
   /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(CategoryCreateBean.class);
 
+  /** Data access object for item category manipulation. */
   @EJB
-  /**Data access object for item category manipulation.*/
   private ConfigurationCategoryDao categoryDao;
 
   /** Name of new category. */
@@ -42,7 +42,7 @@ public class CategoryCreateBean {
     String link = "";
     try {
       ConfigurationItemCategory category = new ConfigurationItemCategory();
-      category.setName(name);
+        category.setName(name);
 
       categoryDao.addCategory(category);
 
@@ -50,10 +50,13 @@ public class CategoryCreateBean {
       link = "list.xhtml#category-" + category.getId();
       FacesUtils.redirectToURL(link);
     } catch (IOException e) {
+      LOG.error("Failed to create category: cannot redirect", e);
       FacesMessagesUtils.failedRedirectMessage(link, e);
     } catch (Exception e) {
-      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se přidat novou kategorii", e);
+      LOG.error("Failed to create category: cannot create category", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se přidat novou kategorii konfiguračních položek", e);
     }
+
     return null;
   }
 

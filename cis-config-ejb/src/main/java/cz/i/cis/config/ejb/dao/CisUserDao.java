@@ -39,7 +39,7 @@ public class CisUserDao {
   public void addUser(CisUser user) throws UserAlreadyExistsException {
     try {
       this.em.persist(user);
-      em.flush();
+      this.em.flush();
     } catch (PersistenceException exc) {
       throw new UserAlreadyExistsException("User " + user.getLogin() + " already exists!", exc);
     }

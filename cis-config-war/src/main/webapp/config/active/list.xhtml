@@ -57,7 +57,7 @@
     </h:column>
     <h:column>
      <f:facet name="header">Smazání</f:facet>
-     <h:commandLink action="#{activeConfigList.actionDeleteItem(item.id)}" value="smazat" onclick="return confirm('Opravdu chcete smazat tuto položku?');">
+     <h:commandLink actionListener="#{activeConfigList.actionDeleteItem(item.id)}" value="smazat" onclick="return confirm('Opravdu chcete smazat tuto položku?');">
       <f:ajax render="form" />
      </h:commandLink>
     </h:column>

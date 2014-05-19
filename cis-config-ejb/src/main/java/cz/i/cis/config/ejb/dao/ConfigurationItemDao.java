@@ -44,7 +44,7 @@ public class ConfigurationItemDao {
   public void addItem(ConfigurationItem item) throws UniqueKeyException {
     try {
       this.em.persist(item);
-      em.flush();
+      this.em.flush();
     } catch (PersistenceException e) {
       throw new UniqueKeyException("ConfigurationItem with unique foreign key " + item.getKey().getKey()
           + " already exists!", e);
@@ -60,9 +60,7 @@ public class ConfigurationItemDao {
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeItem(ConfigurationItem item) {
-    ConfigurationItem i = this.em.merge(item);
-    this.em.remove(i);
-    // this.em.remove(item);
+    this.em.remove(this.em.getReference(ConfigurationItem.class, item.getId()));
   }
 
 
@@ -80,7 +78,7 @@ public class ConfigurationItemDao {
 
 
   public List<ConfigurationItem> listConfigurationItems(ConfigurationItemCategory category) {
-    final TypedQuery<ConfigurationItem> query = this.em.createQuery("SELECT item FROM ConfigurationItem item "
+    final TypedQuery<ConfigurationItem> query = this.em.createQuery("select item FROM ConfigurationItem item "
         + "WHERE item.key.category = :category", ConfigurationItem.class);
     query.setParameter("category", category);
     return query.getResultList();

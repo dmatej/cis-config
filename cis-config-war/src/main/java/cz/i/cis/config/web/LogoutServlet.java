@@ -23,6 +23,14 @@ public class LogoutServlet extends HttpServlet {
   private static final Logger LOG = LoggerFactory.getLogger(LogoutServlet.class);
 
 
+  /**
+   * For any request logs out current user.
+   *
+   * @param req the {@link HttpServletRequest} object that contains the request the client made of
+   *          the servlet
+   * @param resp the {@link HttpServletResponse} object that contains the response the servlet
+   *          returns to the client
+   */
   @Override
   protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     LOG.info("service(request, response)");

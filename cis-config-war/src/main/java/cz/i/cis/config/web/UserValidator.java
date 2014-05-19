@@ -31,11 +31,13 @@ public class UserValidator {
   public boolean loginExist() {
     LOG.debug("loginExist()");
     Principal currentUser = FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal();
-    // FacesUtils.addMessage(FacesMessage.SEVERITY_INFO, currentUser.getName());
+    // FacesMessagesUtils.addInfoMessage(currentUser.getName(), "");
     CisUser temp = userDao.getUser(currentUser.getName());
     if (temp == null) {
       return false;
-    } else if (temp.isDeleted()) {
+    }
+
+    if (temp.isDeleted()) {
       // FIXME toto je doporučení pro přidání uživatele -> duplicitní login v DB -> chyba
       return false;
     }

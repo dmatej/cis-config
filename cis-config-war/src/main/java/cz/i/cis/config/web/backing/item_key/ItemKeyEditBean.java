@@ -30,11 +30,11 @@ public class ItemKeyEditBean {
   /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(ItemKeyEditBean.class);
 
-  @EJB
   /**Data access object for item key manipulation.*/
-  private ConfigurationItemKeyDao itemKeyDao;
   @EJB
+  private ConfigurationItemKeyDao itemKeyDao;
   /**Data access object for item category manipulation.*/
+  @EJB
   private ConfigurationCategoryDao categoryDao;
 
   /** Collection of available item categories. */
@@ -65,7 +65,7 @@ public class ItemKeyEditBean {
       allCategories = categoryDao.getCategoryMap();
     } catch (Exception e) {
       LOG.error("Failed to load categories.", e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se načíst kategorie klíčů", e);
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se načíst kategorie konfiguračních položek", e);
       FacesUtils.redirectToOutcome("list");
       // allCategories = Collections.emptyMap(); Why will you show form for nothing?
       return; // for sure.
@@ -75,14 +75,14 @@ public class ItemKeyEditBean {
       itemKey = itemKeyDao.getItemKey(id);
     } catch (IllegalArgumentException e) {
       LOG.error("Failed to load item key.", e);
-      FacesMessagesUtils.addErrorMessage("ID klíče není validní: ID = " + id, e);
+      FacesMessagesUtils.addErrorMessage("ID klíče pro konfigurační položky není validní: ID = " + id, e);
       FacesUtils.redirectToOutcome("list"); // if you don't do this, you will replace message.
       return; // for sure.
     }
 
     if (itemKey == null) {
       LOG.error("Profile not loaded while initializing, redirecting to list: ID = {}", id);
-      FacesMessagesUtils.addErrorMessage("Zvolený klíč nebyl nalezen v databázi - ID = " + id, "");
+      FacesMessagesUtils.addErrorMessage("Zvolený klíč pro konfigurační položky nebyl nalezen v databázi: ID = " + id, "");
       FacesUtils.redirectToOutcome("list");
       return; // for sure.
     }
@@ -103,7 +103,7 @@ public class ItemKeyEditBean {
     LOG.debug("actionUpdateItemKey()");
     if (itemKey == null) {
       LOG.error("Cannot edit itemKey which is null");
-      FacesMessagesUtils.addErrorMessage("Musíte editovat existující klíč, abyste mohli uložit jeho změny.", "");
+      FacesMessagesUtils.addErrorMessage("Musíte editovat existující klíč pro konfigurační položky, abyste mohli uložit jeho změny.", "");
       return;
     }
 
@@ -123,13 +123,13 @@ public class ItemKeyEditBean {
       link = "list.xhtml#itemKey-" + itemKey.getId();
       FacesUtils.redirectToURL(link);
     } catch (IOException e) {
-      LOG.error("Failed to redirect: link = {}", link);
+      LOG.error("Failed to update item key: failed to redirect", e);
       FacesMessagesUtils.failedRedirectMessage(link, e);
     } catch (NonExistentCategoryException e) {
-      LOG.error("Failed to update item key.");
+      LOG.error("Failed to update item key: nonexistent category", e);
       FacesMessagesUtils.addErrorMessage("form:category", e.getMessage(), "");
     } catch (Exception e) {
-      LOG.error("Failed to update item key.");
+      LOG.error("Failed to update item key", e);
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se uložit změny", e);
     }
 

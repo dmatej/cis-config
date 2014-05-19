@@ -37,11 +37,11 @@ public class ActiveConfigListBean {
   /** Key of session item for category selection. */
   private static final String SESSION_NAME = "active-config-category";
 
+  /** Data access object for item category manipulation. */
   @EJB
-  /**Data access object for item category manipulation.*/
   private ConfigurationCategoryDao categoryDao;
+  /** Data access object for active configuration manipulation. */
   @EJB
-  /**Data access object for active configuration manipulation.*/
   private ConfigurationItemDao configItemDao;
 
   /** Collection of all item categories. */
@@ -114,10 +114,10 @@ public class ActiveConfigListBean {
     try {
       Integer activeItemID = Integer.valueOf(id);
       configItemDao.removeItem(activeItemID);
-      FacesMessagesUtils.addInfoMessage("form", "Položka byla smazána", "");
+      FacesMessagesUtils.addInfoMessage("form", "Aktivní položka byla smazána", "");
     } catch (Exception e) {
       LOG.error("Failed to delete item.", e);
-      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se smazat položku", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se smazat aktivní položku", e);
     }
   }
 

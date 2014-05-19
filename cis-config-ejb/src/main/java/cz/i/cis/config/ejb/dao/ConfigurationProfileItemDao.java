@@ -19,7 +19,6 @@ import javax.persistence.TypedQuery;
 import cz.i.cis.config.ejb.dao.exceptions.UniqueProfileKeyException;
 import cz.i.cis.config.jpa.ConfigurationProfileItem;
 
-
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
@@ -39,10 +38,9 @@ public class ConfigurationProfileItemDao {
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addItem(ConfigurationProfileItem item) throws UniqueProfileKeyException {
-    // this.em.persist(item);
     try {
       this.em.persist(item);
-      em.flush();
+      this.em.flush();
     } catch (PersistenceException exc) {
       throw new UniqueProfileKeyException("Key" + item.getKey().getKey() + " and profile "
           + item.getProfile().getName() + " already exists!", exc);
@@ -84,23 +82,18 @@ public class ConfigurationProfileItemDao {
 
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public List<ConfigurationProfileItem> saveChanges(Map<String, ConfigurationProfileItem> profileItems) throws UniqueProfileKeyException {
+  public List<ConfigurationProfileItem> saveChanges(Map<String, ConfigurationProfileItem> profileItems)
+    throws UniqueProfileKeyException {
     List<ConfigurationProfileItem> updatedItems = new ArrayList<>(profileItems.size());
 
     for (ConfigurationProfileItem item : profileItems.values()) {
       if (item.isDeleted()) {
         removeItem(item);
-      }else{
-//        Integer id = item.getId();
-//        //TODO zkusil jsem a funguje mi to i bez toho, potvrďte a případně smažte
-//        if (id != null && id < 0) {
-//          //new item, should have null id for successful merge
-//          item.setId(null);
-//        }
-
-        ConfigurationProfileItem updatedItem = updateItem(item);
-        updatedItems.add(updatedItem);
+        continue;
       }
+
+      ConfigurationProfileItem updatedItem = updateItem(item);
+      updatedItems.add(updatedItem);
     }
     return updatedItems;
   }

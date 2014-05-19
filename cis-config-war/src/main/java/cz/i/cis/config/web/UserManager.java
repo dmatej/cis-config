@@ -17,8 +17,8 @@ public class UserManager {
   /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(UserManager.class);
 
+  /** Data access object for user manipulation. */
   @EJB
-  /**Data access object for user manipulation.*/
   private CisUserDao userDao;
 
 

@@ -26,7 +26,6 @@ import cz.i.cis.config.jpa.ConfigurationProfileItem;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
-
 /**
  * Backing bean for profile items manipulation.
  */
@@ -34,9 +33,9 @@ import cz.i.cis.config.web.FacesUtils;
 @ViewScoped
 public class ProfileEditBean {
 
-  /**Logger object used for logging.*/
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(ProfileEditBean.class);
-  /**Selection placeholder for "no selection".*/
+  /** Selection placeholder for "no selection". */
   private static final String NONE_SELECTOR = "none";
 
   @EJB
@@ -52,16 +51,16 @@ public class ProfileEditBean {
   /**Data access object for item key manipulation.*/
   private ConfigurationItemKeyDao itemKeyDao;
 
-  /**ID of currently edited profile. It is set via request parameter.*/
+  /** ID of currently edited profile. It is set via request parameter. */
   private Integer id;
-  /**Currently edited profile. It is initialized in init() method with use of id field.*/
+  /** Currently edited profile. It is initialized in init() method with use of id field. */
   private ConfigurationProfile profile;
-  /**Collection of item keys filtered by selected category.*/
+  /** Collection of item keys filtered by selected category. */
   private Map<String, ConfigurationItemKey> filteredItemKeys;
-  /**Collection of available item categories.*/
+  /** Collection of available item categories. */
   private Map<String, ConfigurationItemCategory> allCategories;
 
-  /**Collection of items in current profile.*/
+  /** Collection of items in current profile. */
   private Map<String, ConfigurationProfileItem> profileItems;
   /**
    * ID counter for newly added items. Each item must have an ID so it could be stored in item map.
@@ -69,14 +68,14 @@ public class ProfileEditBean {
    */
   private int newItemID = -1;
 
-  /**Category selected on page.*/
+  /** Category selected on page. */
   private String selectedCategory;
-  /**Item key selected on page for new or edited item.*/
+  /** Item key selected on page for new or edited item. */
   private String selectedItemKey;
-  /**Item value entered on page for new or edited item.*/
+  /** Item value entered on page for new or edited item. */
   private String profileItemValue;
 
-  /**Currently edited item when in editing mode.*/
+  /** Currently edited item when in editing mode. */
   private ConfigurationProfileItem editItem;
 
 
@@ -86,12 +85,14 @@ public class ProfileEditBean {
    */
   public void init() {
     LOG.debug("init()");
-    //load profile
+    // load profile
     try {
       profile = profileDao.getProfile(id);
     } catch (IllegalArgumentException e) {
       LOG.error("Failed to load profile: ID = " + id, e);
       FacesMessagesUtils.addErrorMessage("Profil není validní - ID = " + id, e);
+      FacesUtils.redirectToOutcome("list");
+      return;
     }
 
     if (profile == null) {
@@ -101,7 +102,7 @@ public class ProfileEditBean {
       return;
     }
 
-    //prepare select boxes
+    // prepare select boxes
     try {
       this.selectedCategory = NONE_SELECTOR;
       this.selectedItemKey = NONE_SELECTOR;
@@ -137,9 +138,9 @@ public class ProfileEditBean {
 
       filteredItemKeys = ConfigurationItemKeyDao.getItemKeyMap(itemKeys);
 
-      //don't offer item keys already used in profile
+      // don't offer item keys already used in profile
       for (ConfigurationProfileItem item : profileItems.values()) {
-        if(item == editItem) {
+        if (item == editItem) {
           continue;
         }
 
@@ -147,9 +148,11 @@ public class ProfileEditBean {
       }
     } catch (Exception e) {
       LOG.error("Failed to refresh item keys.", e);
-      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo obnovit klíče položek", FacesMessagesUtils.getRootMessage(e));
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo obnovit klíče položek",
+          FacesMessagesUtils.getRootMessage(e));
     }
   }
+
 
   /**
    * Reloads items of current profile.
@@ -165,8 +168,10 @@ public class ProfileEditBean {
     }
   }
 
+
   /**
    * Validates current item. This is either new item or currently edited item.
+   *
    * @return Validated item values or null if validation fails.
    */
   protected ProfileItemValues validateCurrentItem() {
@@ -191,24 +196,26 @@ public class ProfileEditBean {
     return new ProfileItemValues(key, value);
   }
 
+
   /**
    * Adds new item with currently filled values to current profile.
+   *
    * @param event Description of this event.
    */
   public void actionAddItem(ActionEvent event) {
     LOG.debug("actionAddItem(event={})", event);
 
     ProfileItemValues values = this.validateCurrentItem();
-    if(values == null) {
+    if (values == null) {
       return;
     }
 
     final Integer itemId = newItemID--;
     ConfigurationProfileItem item = new ConfigurationProfileItem();
-      item.setId(itemId);
-      item.setProfile(profile);
-      item.setKey(values.getKey());
-      item.setValue(values.getValue());
+    item.setId(itemId);
+    item.setProfile(profile);
+    item.setKey(values.getKey());
+    item.setValue(values.getValue());
 
     profileItems.put(itemId.toString(), item);
 
@@ -217,19 +224,21 @@ public class ProfileEditBean {
     this.setSelectedItemKey(NONE_SELECTOR);
   }
 
+
   /**
    * Sets entered values to edited item.
+   *
    * @param event Description of this event.
    */
   public void actionEditItem(ActionEvent event) {
     LOG.debug("actionEditItem(event={})", event);
 
-    if(this.editItem == null) {
+    if (this.editItem == null) {
       return;
     }
 
     ProfileItemValues values = this.validateCurrentItem();
-    if(values == null) {
+    if (values == null) {
       return;
     }
 
@@ -242,8 +251,10 @@ public class ProfileEditBean {
     this.setSelectedItemKey(NONE_SELECTOR);
   }
 
+
   /**
    * Cancels item editing.
+   *
    * @param event Description of this event.
    */
   public void actionStornoEditItem(ActionEvent event) {
@@ -253,18 +264,20 @@ public class ProfileEditBean {
     this.setSelectedCategory(NONE_SELECTOR);
   }
 
+
   /**
    * Set selected item for editing. Fills form with item values.
+   *
    * @param itemId Selected item ID.
    */
   public void actionSetEditItem(String itemId) {
     LOG.debug("actionDeleteItem(itemId={})", itemId);
 
     editItem = profileItems.get(itemId);
-    if(editItem == null) {
+    if (editItem == null) {
       LOG.warn("Requested item not found: ID = {}", itemId);
       FacesMessagesUtils.addWarningMessage("form", "Položka nebyla nalezena", null);
-    } else{
+    } else {
       ConfigurationItemKey key = editItem.getKey();
       ConfigurationItemCategory category = key.getCategory();
 
@@ -274,10 +287,12 @@ public class ProfileEditBean {
     }
   }
 
+
   /**
    * Deletes selected item. If item has not been persisted yet, it is removed right away.
    * If item has been persisted before, it is marked as deleted (allowing to cancel deletion)
    * and deleted when changes are saved.
+   *
    * @param itemId Selected item ID.
    */
   public void actionDeleteItem(String itemId) {
@@ -286,8 +301,7 @@ public class ProfileEditBean {
     Integer itemIdInt;
     try {
       itemIdInt = Integer.valueOf(itemId);
-    }
-    catch(NumberFormatException e) {
+    } catch (NumberFormatException e) {
       LOG.warn("Requested ID is not valid: ID = {}", itemId);
       FacesMessagesUtils.addWarningMessage("form", "Položka ke smazání nebyla nalezena", null);
       return;
@@ -295,48 +309,57 @@ public class ProfileEditBean {
 
     if (isDeletedItem(itemIdInt)) {
       LOG.debug("Item already marked for deletion: ID = {}", itemId);
+      FacesMessagesUtils.addWarningMessage("form", "Položka ke smazání byla již smazána", null);
       return;
     }
 
     final ConfigurationProfileItem deleteItem = profileItems.get(itemId);
-    if(deleteItem == null) {
+    if (deleteItem == null) {
       LOG.warn("Requested item not found: ID = {}", itemId);
       FacesMessagesUtils.addWarningMessage("form", "Položka ke smazání nebyla nalezena", null);
-    } else {
-      if (isNewItem(itemIdInt)) {
-        // new items delete from cache right away
-        profileItems.remove(itemId);
-        LOG.debug("New item removed: {}", deleteItem);
-      } else {
-        // existing items mark for deletion
-        deleteItem.setDeleted(true);
-        LOG.debug("Existing item marked for deletion: {}", deleteItem);
-      }
-      FacesMessagesUtils.addInfoMessage("form", "Položka byla smazána", null);
+      return;
     }
+
+    if (isNewItem(itemIdInt)) {
+      // new items delete from cache right away
+      profileItems.remove(itemId);
+      LOG.debug("New item removed: {}", deleteItem);
+      return;
+    }
+
+    // existing items mark for deletion
+    deleteItem.setDeleted(true);
+    LOG.debug("Existing item marked for deletion: {}", deleteItem);
+
+    FacesMessagesUtils.addInfoMessage("form", "Položka byla smazána", null);
   }
+
 
   /**
    * Cancels deletion of item marked for deletion.
+   *
    * @param itemId Selected item.
    */
   public void actionRestoreItem(String itemId) {
     LOG.debug("actionRestoreItem(itemId={})", itemId);
 
     final ConfigurationProfileItem restoreItem = profileItems.get(itemId.toString());
-    if(restoreItem == null) {
+    if (restoreItem == null) {
       LOG.warn("Requested item not found: ID = {}", itemId);
       FacesMessagesUtils.addWarningMessage("form", "Položka k obnovení nebyla nalezena", null);
-    }else{
-      restoreItem.setDeleted(false);
-    }
-
+      return;
+    } 
+    
+    restoreItem.setDeleted(false);
+    
     FacesMessagesUtils.addInfoMessage("form", "Položka byla obnovena", null);
   }
+
 
   /**
    * Persists changes made in profile. Adds new items, deletes persisted items marked for deletion
    * and merges existing items.
+   *
    * @param event Description of this event.
    */
   public void actionSaveChanges(ActionEvent event) {
@@ -356,13 +379,14 @@ public class ProfileEditBean {
 
   /**
    * Tests if item with this ID is marked for deletion.
+   *
    * @param id ID of item to test.
    * @return If item is marked for deletion. False if id is null.
    */
   public boolean isDeletedItem(Integer id) {
     LOG.debug("isDeletedItem(id={})", id);
     ConfigurationProfileItem item = profileItems.get(String.valueOf(id));
-    if(item == null) {
+    if (item == null) {
       LOG.warn("Requested item not found: ID = {}", id);
       return false;
     }
@@ -370,15 +394,17 @@ public class ProfileEditBean {
     return item.isDeleted();
   }
 
+
   /**
    * Tests if item with this ID is a new item.
+   *
    * @param id ID of item to test.
    * @return If item has not been persisted yet. False if id is null.
    */
   public boolean isNewItem(Integer id) {
     LOG.debug("isNewItem(id={})", id);
 
-    if(id == null){
+    if (id == null) {
       LOG.warn("Request to test null ID.");
       return false;
     }
@@ -386,30 +412,36 @@ public class ProfileEditBean {
     return id.intValue() < 0;
   }
 
+
   /**
    * Tests editing state.
+   *
    * @return If some item is being edited.
    */
   public boolean isEditingItem() {
     return (editItem != null);
   }
 
+
   /**
    * Tests editing state of given item.
+   *
    * @param id ID of item to test.
    * @return If item with given ID is being edited.
    */
   public boolean isEditingItem(Integer id) {
     LOG.debug("isEditingItem(id={})", id);
-    if(editItem == null) {
+    if (editItem == null) {
       return false;
     }
 
     return (editItem.getId() == id);
   }
 
+
   /**
    * Returns value of new or edited item.
+   *
    * @return Value of new or edited item.
    */
   public String getProfileItemValue() {
@@ -417,8 +449,10 @@ public class ProfileEditBean {
     return profileItemValue;
   }
 
+
   /**
    * Sets value of new or edited item.
+   *
    * @param event Description of this event.
    */
   public void setProfileItemValue(ValueChangeEvent event) {
@@ -426,8 +460,10 @@ public class ProfileEditBean {
     setProfileItemValue((String) event.getNewValue());
   }
 
+
   /**
    * Sets value of new or edited item.
+   *
    * @param profileItemValue New value for item.
    */
   public void setProfileItemValue(String profileItemValue) {
@@ -435,8 +471,10 @@ public class ProfileEditBean {
     this.profileItemValue = (profileItemValue != null) ? profileItemValue : "";
   }
 
+
   /**
    * Tests if key selection should be disabled.
+   *
    * @return If key selection should be disabled.
    */
   public boolean isKeySelectorDisabled() {
@@ -444,8 +482,10 @@ public class ProfileEditBean {
     return NONE_SELECTOR.equals(selectedCategory);
   }
 
+
   /**
    * Tests if item value input should be disabled.
+   *
    * @return If item value input should be disabled.
    */
   public boolean isItemValueDisabled() {
@@ -453,8 +493,10 @@ public class ProfileEditBean {
     return NONE_SELECTOR.equals(selectedItemKey) || !this.filteredItemKeys.containsKey(selectedItemKey);
   }
 
+
   /**
    * Returns representation for "no selection".
+   *
    * @return Representation for "no selection".
    */
   public String getNoneSelector() {
@@ -462,8 +504,10 @@ public class ProfileEditBean {
     return NONE_SELECTOR;
   }
 
+
   /**
    * Returns selected category.
+   *
    * @return Selected category.
    */
   public String getSelectedCategory() {
@@ -471,8 +515,10 @@ public class ProfileEditBean {
     return selectedCategory;
   }
 
+
   /**
    * Sets new selected category.
+   *
    * @param event Description of this event.
    */
   public void setSelectedCategory(ValueChangeEvent event) {
@@ -480,8 +526,10 @@ public class ProfileEditBean {
     setSelectedCategory((String) event.getNewValue());
   }
 
+
   /**
    * Sets new selected category.
+   *
    * @param selectedCategory ID of category or NONE_SELECTOR.
    */
   public void setSelectedCategory(String selectedCategory) {
@@ -497,8 +545,10 @@ public class ProfileEditBean {
     }
   }
 
+
   /**
    * Returns collection of all item categories.
+   *
    * @return Collection of all item categories.
    */
   public Collection<ConfigurationItemCategory> getAllCategories() {
@@ -506,8 +556,10 @@ public class ProfileEditBean {
     return allCategories.values();
   }
 
+
   /**
    * Returns collection of profile items.
+   *
    * @return Collection of profile items.
    */
   public Collection<ConfigurationProfileItem> getProfileItems() {
@@ -515,8 +567,10 @@ public class ProfileEditBean {
     return profileItems.values();
   }
 
+
   /**
    * Returns collection of available item keys.
+   *
    * @return Collection of available item keys.
    */
   public Collection<ConfigurationItemKey> getFilteredItemKeys() {
@@ -526,8 +580,10 @@ public class ProfileEditBean {
     return filteredItemKeys.values();
   }
 
+
   /**
    * Returns selected item key.
+   *
    * @return Selected item key.
    */
   public String getSelectedItemKey() {
@@ -535,8 +591,10 @@ public class ProfileEditBean {
     return selectedItemKey;
   }
 
+
   /**
    * Sets new selected item key.
+   *
    * @param event Description of this event.
    */
   public void setSelectedItemKey(ValueChangeEvent event) {
@@ -544,8 +602,10 @@ public class ProfileEditBean {
     setSelectedItemKey((String) event.getNewValue());
   }
 
+
   /**
    * Sets new selected item key.
+   *
    * @param selectedItemKey New selected item key or NONE_SELECTOR.
    */
   public void setSelectedItemKey(String selectedItemKey) {
@@ -560,8 +620,10 @@ public class ProfileEditBean {
     }
   }
 
+
   /**
    * Returns current profile ID.
+   *
    * @return Current profile ID.
    */
   public Integer getId() {
@@ -569,8 +631,10 @@ public class ProfileEditBean {
     return id;
   }
 
+
   /**
    * Sets current profile ID.
+   *
    * @param id Current profile ID.
    */
   public void setId(Integer id) {
@@ -578,22 +642,21 @@ public class ProfileEditBean {
     this.id = id;
   }
 
+
   /**
    * Returns current profile name.
+   *
    * @return Current profile name.
    */
   public String getProfileName() {
     LOG.trace("getProfileName()");
-    if(profile == null) {
-      LOG.warn("Profile is null");
-      return "";
-    }
-
     return profile.getName();
   }
 
+
   /**
    * Returns current profile.
+   *
    * @return Current profile.
    */
   public ConfigurationProfile getProfile() {
@@ -601,18 +664,20 @@ public class ProfileEditBean {
     return profile;
   }
 
-
   /**
    * Helper java bean for item values.
    */
   private static class ProfileItemValues {
-    /**Item key.*/
+
+    /** Item key. */
     private ConfigurationItemKey key;
-    /**Item value.*/
+    /** Item value. */
     private String value;
+
 
     /**
      * Prepares new instance.
+     *
      * @param key Item key.
      * @param value Item value.
      */
@@ -621,16 +686,20 @@ public class ProfileEditBean {
       this.value = value;
     }
 
+
     /**
      * Returns item key.
+     *
      * @return Item key.
      */
     public ConfigurationItemKey getKey() {
       return key;
     }
 
+
     /**
      * Returns item value.
+     *
      * @return Item value.
      */
     public String getValue() {

@@ -62,9 +62,10 @@ public class ProfileListBean {
     try {
       Integer profileID = Integer.valueOf(id);
       profileDao.removeProfile(profileID);
+      FacesMessagesUtils.addInfoMessage("form", "Profil byl ", "");
     } catch (Exception e) {
       LOG.error("Failed to delete profile: ID = " + id, e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat profil: ID = " + id, e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se smazat profil", e);
     }
   }
 
@@ -77,8 +78,7 @@ public class ProfileListBean {
     try {
       String login = FacesUtils.getRemoteUser();
       if (login == null || login.isEmpty()) {
-        throw new NullPointerException(
-            "Somehow no user is not logged in and phantoms are not allowed to create configuration profiles.");
+        throw new NullPointerException("Somehow no user is not logged in and phantoms are not allowed to create configuration profiles.");
       }
 
       CisUser editor = userDao.getUser(login);
@@ -91,7 +91,7 @@ public class ProfileListBean {
       itemDao.activateProfile(profileItems, editor);
     } catch (Exception e) {
       LOG.error("Failed to activate profile: ID = " + id, e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se aktivovat profil: ID = " + id, e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se aktivovat profil: ID = " + id, e);
     }
   }
 }

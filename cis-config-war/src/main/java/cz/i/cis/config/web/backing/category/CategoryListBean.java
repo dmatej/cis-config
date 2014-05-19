@@ -23,8 +23,8 @@ public class CategoryListBean {
   /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(CategoryListBean.class);
 
+  /** Data access object for item category manipulation. */
   @EJB
-  /**Data access object for item category manipulation.*/
   private ConfigurationCategoryDao categoryDao;
 
 
@@ -49,10 +49,10 @@ public class CategoryListBean {
     try {
       Integer categoryID = Integer.valueOf(id);
       categoryDao.removeCategory(categoryID);
-      FacesMessagesUtils.addInfoMessage("form", "Kategorie byla smazána", "");
+      FacesMessagesUtils.addInfoMessage("form", "Kategorie konfiguračních položek byla smazána", "");
     } catch (Exception e) {
       LOG.error("Failed to remove category: ID = " + id, e);
-      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se smazat kategorii", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se smazat kategorii konfiguračních položek", e);
     }
   }
 }

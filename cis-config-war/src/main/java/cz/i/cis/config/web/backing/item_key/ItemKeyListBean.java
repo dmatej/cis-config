@@ -75,7 +75,7 @@ public class ItemKeyListBean {
     try {
       Integer itemKeyID = Integer.valueOf(id);
       itemKeyDao.removeItemKey(itemKeyID);
-      FacesMessagesUtils.addInfoMessage("form", "Konfigurační klíč byl smazán");
+      FacesMessagesUtils.addInfoMessage("form", "Konfigurační klíč byl smazán", "");
     } catch (ActiveItemKeyException e) {
       LOG.warn("Try to remove item key used in active configuration: ID = " + id, e);
       FacesMessagesUtils.addErrorMessage("form", "Konfigurační klíč se používá v aktivní konfiguraci a proto nelze smazat", e);

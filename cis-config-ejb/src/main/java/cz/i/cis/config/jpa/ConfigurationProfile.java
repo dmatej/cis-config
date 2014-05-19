@@ -16,9 +16,6 @@ import javax.persistence.TemporalType;
 
 /**
  * Entity implementation class for {@code ConfigurationProfile}.
- *
- * @author David Matějček
- * @author Mr.FrAnTA (Michal Dékány)
  */
 @Entity
 @Table(name = "configuration_profiles")
@@ -279,8 +276,12 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
    */
   @Override
   public String toString() {
-    return new StringBuilder(this.getClass().getCanonicalName()).append("[id=").append(this.getId()).append(", name=")
-        .append(this.getName()).append(", description=").append(this.getDescription()).append(", update=")
-        .append(this.getUpdate().toString()).append(", user_id=").append(this.getUser().getId()).append("]").toString();
+    return new StringBuilder(this.getClass().getCanonicalName())
+      .append("[id=").append(this.getId())
+      .append(", name=").append(this.getName())
+      .append(", description=").append(this.getDescription())
+      .append(", update=").append(this.getUpdate().toString())
+      .append(", user_id=").append(this.getUser().getId())
+      .append("]").toString();
   }
 }

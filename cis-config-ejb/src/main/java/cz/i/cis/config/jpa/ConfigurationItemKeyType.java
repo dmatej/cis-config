@@ -2,9 +2,6 @@ package cz.i.cis.config.jpa;
 
 /**
  * Enumeration which determines type of configuration item key.
- *
- * @author David Matějček
- * @author Mr.FrAnTA (Michal Dékány)
  */
 public enum ConfigurationItemKeyType {
   /** Enumeration constant for text type of configuration item key. */

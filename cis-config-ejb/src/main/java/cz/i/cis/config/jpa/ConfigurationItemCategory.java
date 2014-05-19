@@ -13,9 +13,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Entity implementation class for {@code ConfigurationItemCategory}.
- *
- * @author David Matějček
- * @author Mr.FrAnTA (Michal Dékány)
  */
 @Entity
 @Table(name = "configuration_item_categories")

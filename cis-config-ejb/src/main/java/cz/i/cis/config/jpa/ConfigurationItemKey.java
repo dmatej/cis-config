@@ -15,9 +15,6 @@ import javax.persistence.Table;
 
 /**
  * Entity implementation class for {@code ConfigurationItemKey}.
- *
- * @author David Matějček
- * @author Mr.FrAnTA (Michal Dékány)
  */
 @Entity
 @Table(name = "configuration_item_keys")
@@ -274,8 +271,12 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
    */
   @Override
   public String toString() {
-    return new StringBuilder(getClass().getCanonicalName()).append("[id=").append(getId()).append(", category_id=")
-        .append(getCategory().getId()).append(", type=").append(getType()).append(", key=").append(getKey())
-        .append(", description=").append(getDescription()).append("]").toString();
+    return new StringBuilder(getClass().getCanonicalName())
+      .append("[id=").append(getId())
+      .append(", category_id=").append(getCategory().getId())
+      .append(", type=").append(getType())
+      .append(", key=").append(getKey())
+      .append(", description=").append(getDescription())
+      .append("]").toString();
   }
 }

@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.PersistenceException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,9 +23,6 @@ import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileItemDao;
-import cz.i.cis.config.ejb.dao.exceptions.UniqueKeyException;
-import cz.i.cis.config.ejb.dao.exceptions.UniqueProfileKeyException;
-import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
 import cz.i.cis.config.helpers.ConfigurationCategoryTestHelper;
 import cz.i.cis.config.helpers.ConfigurationItemKeyTestHelper;
 import cz.i.cis.config.helpers.ConfigurationProfileItemTestHelper;
@@ -33,9 +31,9 @@ import cz.i.cis.config.helpers.UserTestHelper;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
+import cz.i.cis.config.jpa.ConfigurationItemKeyType;
 import cz.i.cis.config.jpa.ConfigurationProfile;
 import cz.i.cis.config.jpa.ConfigurationProfileItem;
-import cz.i.cis.config.jpa.ConfigurationItemKeyType;
 import cz.i.cis.config.test.ArquillianITest;
 
 public class ConfigurationProfileItemDaoITest extends ArquillianITest {
@@ -90,7 +88,7 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
 
 
   @Test
-  public void creatNewConfigurationProfileItem() throws UniqueKeyException, UserAlreadyExistsException, UniqueProfileKeyException {
+  public void creatNewConfigurationProfileItem() {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setName("some category name");
     dao_category.addCategory(category);
@@ -135,8 +133,8 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
   }
 
 
-  @Test(expected = UniqueProfileKeyException.class)
-  public void creatAlreadyExistingConfigurationProfileItem() throws UniqueProfileKeyException {
+  @Test(expected = PersistenceException.class)
+  public void creatAlreadyExistingConfigurationProfileItem() throws PersistenceException {
     final ConfigurationProfileItem profile_item = helper.createConfigurationProfileItem();
     final ConfigurationProfileItem copy_profile_item = new ConfigurationProfileItem();
     copy_profile_item.setProfile(profile_item.getProfile());

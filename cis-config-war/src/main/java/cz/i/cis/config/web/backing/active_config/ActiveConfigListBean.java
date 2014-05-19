@@ -130,6 +130,7 @@ public class ActiveConfigListBean {
     return ALL_SELECTOR;
   }
 
+
   /**
    * Returns representation for "no selection".
    *
@@ -139,6 +140,7 @@ public class ActiveConfigListBean {
     LOG.debug("getNoneSelector()");
     return NONE_SELECTOR;
   }
+
 
   /**
    * Returns collection of available categories.
@@ -150,6 +152,7 @@ public class ActiveConfigListBean {
     return allCategories.values();
   }
 
+
   /**
    * Returns selected category.
    *
@@ -159,6 +162,7 @@ public class ActiveConfigListBean {
     LOG.debug("getSelectedCategory()");
     return selectedCategory;
   }
+
 
   /**
    * Sets selected category.
@@ -170,6 +174,7 @@ public class ActiveConfigListBean {
     FacesUtils.setSession(SESSION_NAME, selectedCategory);
     this.selectedCategory = selectedCategory;
   }
+
 
   /**
    * Returns collection of active items filtered by selected category.

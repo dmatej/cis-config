@@ -78,10 +78,10 @@ public class ProfileEditBean {
     }
 
     try {
-    this.name = profile.getName();
-    this.selectedCategory = NONE_SELECTOR;
-    this.selectedItemKey = NONE_SELECTOR;
-    this.allCategories = categoryDao.getCategoryMap();
+      this.name = profile.getName();
+      this.selectedCategory = NONE_SELECTOR;
+      this.selectedItemKey = NONE_SELECTOR;
+      this.allCategories = categoryDao.getCategoryMap();
     } catch (IllegalArgumentException exc) {
       FacesMessagesUtils.addErrorMessage("Cannot select categories from database", null);
     }
@@ -179,7 +179,8 @@ public class ProfileEditBean {
 
   public void actionDeleteItem() {
     LOG.debug("actionDeleteItem()");
-    final String itemIdStr = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("itemId");
+    final String itemIdStr = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+        .get("itemId");
     LOG.debug("itemIdStr={}, class={}", itemIdStr, itemIdStr.getClass());
     final Integer itemId = Integer.valueOf(itemIdStr);
     if (isDeletedItem(itemId)) {
@@ -202,7 +203,7 @@ public class ProfileEditBean {
         .get("itemId");
     LOG.debug("itemIdStr={}, class={}", itemIdStr, itemIdStr.getClass());
     deletedProfileItems.remove(itemIdStr);
-    }
+  }
 
 
   public void actionSaveChanges() {

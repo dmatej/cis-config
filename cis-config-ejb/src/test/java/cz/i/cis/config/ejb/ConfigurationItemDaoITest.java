@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.PersistenceException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -21,8 +22,6 @@ import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
-import cz.i.cis.config.ejb.dao.exceptions.UniqueKeyException;
-import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
 import cz.i.cis.config.helpers.ConfigurationCategoryTestHelper;
 import cz.i.cis.config.helpers.ConfigurationItemKeyTestHelper;
 import cz.i.cis.config.helpers.ConfigurationItemTestHelper;
@@ -39,28 +38,28 @@ public class ConfigurationItemDaoITest extends ArquillianITest {
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurationItemDao.class);
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemDao")
-  private ConfigurationItemDao dao;
+  private ConfigurationItemDao configurationItemDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/CisUserDao")
-  private CisUserDao dao_user;
+  private CisUserDao cisUserDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryDao")
-  private ConfigurationCategoryDao dao_category;
+  private ConfigurationCategoryDao categoryDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemKeyDao")
-  private ConfigurationItemKeyDao dao_key;
+  private ConfigurationItemKeyDao configurationItemKeyDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemTestHelper")
-  private ConfigurationItemTestHelper helper;
+  private ConfigurationItemTestHelper configurationItemHelper;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/UserTestHelper")
-  private UserTestHelper user_helper;
+  private UserTestHelper userHelper;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryTestHelper")
-  private ConfigurationCategoryTestHelper category_helper;
+  private ConfigurationCategoryTestHelper categoryHelper;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemKeyTestHelper")
-  private ConfigurationItemKeyTestHelper key_helper;
+  private ConfigurationItemKeyTestHelper keyHelper;
 
 
   @Before
@@ -71,68 +70,68 @@ public class ConfigurationItemDaoITest extends ArquillianITest {
   @After
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void cleanup() {
-    helper.cleanup();
-    user_helper.cleanup();
-    category_helper.cleanup();
-    key_helper.cleanup();
+    configurationItemHelper.cleanup();
+    userHelper.cleanup();
+    categoryHelper.cleanup();
+    keyHelper.cleanup();
   }
 
 
   @Test
-  public void creatNewConfigurationItem() throws UniqueKeyException, UserAlreadyExistsException {
+  public void creatNewConfigurationItem() {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setName("some category name");
-    dao_category.addCategory(category);
-    category_helper.addToDelete(category);
+    categoryDao.addCategory(category);
+    categoryHelper.addToDelete(category);
 
     final ConfigurationItemKey key = new ConfigurationItemKey();
     key.setCategory(category);
     key.setDescription("base configuration key");
     key.setKey("base");
     key.setType(ConfigurationItemKeyType.Text);
-    dao_key.addItemKey(key);
-    key_helper.addToDelete(key);
+    configurationItemKeyDao.addItemKey(key);
+    keyHelper.addToDelete(key);
 
     final CisUser user = new CisUser();
     user.setLastName("Jezek");
     user.setLogin("log");
     user.setFirstName("Karl");
     user.setBirthDate(new Date());
-    dao_user.addUser(user);
-    user_helper.addToDelete(user);
+    cisUserDao.addUser(user);
+    userHelper.addToDelete(user);
 
     final ConfigurationItem configuration = new ConfigurationItem();
     configuration.setUser(user);
     configuration.setKey(key);
     configuration.setValue("key-user value");
     configuration.setUpdate(new Date());
-    dao.addItem(configuration);
-    helper.addToDelete(configuration);
+    configurationItemDao.addItem(configuration);
+    configurationItemHelper.addToDelete(configuration);
 
     LOG.debug("configuration: {}", configuration);
     assertNotNull("configuration.id", configuration.getId());
 
     configuration.setValue("user-key value");
-    dao.updateItem(configuration);
-    assertTrue(dao.listItems().get(0).getValue().equals("user-key value"));
+    configurationItemDao.updateItem(configuration);
+    assertTrue(configurationItemDao.listItems().get(0).getValue().equals("user-key value"));
   }
 
 
-  @Test(expected = UniqueKeyException.class)
-  public void creatAlreadyExistingConfigurationItem() throws UniqueKeyException {
-    final ConfigurationItem configuration = helper.createConfigurationItem();
-    final ConfigurationItem copy_configuration = new ConfigurationItem();
-    copy_configuration.setKey(configuration.getKey());
-    copy_configuration.setUpdate(configuration.getUpdate());
-    copy_configuration.setUser(configuration.getUser());
-    copy_configuration.setValue(configuration.getValue());
-    dao.addItem(copy_configuration);
+  @Test(expected = PersistenceException.class)
+  public void creatAlreadyExistingConfigurationItem() throws PersistenceException {
+    final ConfigurationItem configuration = configurationItemHelper.createConfigurationItem();
+    final ConfigurationItem configurationCopy = new ConfigurationItem();
+    configurationCopy.setKey(configuration.getKey());
+    configurationCopy.setUpdate(configuration.getUpdate());
+    configurationCopy.setUser(configuration.getUser());
+    configurationCopy.setValue(configuration.getValue());
+    configurationItemDao.addItem(configurationCopy);
   }
 
 
   @Test
   public void listConfigurationItems() {
-    final List<ConfigurationItem> items = dao.listItems();
+    final List<ConfigurationItem> items = configurationItemDao.listItems();
     LOG.debug("list configuration items: {}", items);
     assertNotNull("configuration items", items);
     assertTrue("items.empty", items.isEmpty());
@@ -144,23 +143,23 @@ public class ConfigurationItemDaoITest extends ArquillianITest {
     final ConfigurationItemKey key = new ConfigurationItemKey();
     final CisUser user = new CisUser();
 
-    final ConfigurationItem item0 = new ConfigurationItem();
-    item0.setId(1);
-    item0.setUser(user);
-    item0.setKey(key);
-    item0.setValue("key-user value");
-    item0.setUpdate(new Date());
+    final ConfigurationItem itemFirst = new ConfigurationItem();
+    itemFirst.setId(1);
+    itemFirst.setUser(user);
+    itemFirst.setKey(key);
+    itemFirst.setValue("key-user value");
+    itemFirst.setUpdate(new Date());
 
-    final ConfigurationItem item1 = new ConfigurationItem();
-    item1.setId(1);
-    item1.setUser(user);
-    item1.setKey(key);
-    item1.setValue("key-user value");
-    item1.setUpdate(new Date());
+    final ConfigurationItem itemSecond = new ConfigurationItem();
+    itemSecond.setId(1);
+    itemSecond.setUser(user);
+    itemSecond.setKey(key);
+    itemSecond.setValue("key-user value");
+    itemSecond.setUpdate(new Date());
 
-    assertEquals(item0.hashCode(), item1.hashCode());
-    assertEquals(item0, item1);
-    assertTrue(item0.equals(item1));
+    assertEquals(itemFirst.hashCode(), itemSecond.hashCode());
+    assertEquals(itemFirst, itemSecond);
+    assertTrue(itemFirst.equals(itemSecond));
   }
 
 }

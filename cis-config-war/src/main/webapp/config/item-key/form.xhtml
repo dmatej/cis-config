@@ -7,6 +7,8 @@
  <c:choose>
   <c:when test="${not empty itemKeyList.allCategories}">
    <h:form id="form">
+    <h:messages for="form" infoClass="form-info-message" warnClass="form-warning-message" errorClass="form-error-message" />
+
     <h:panelGrid columns="3" id="table">
      <h:panelGroup>
       <h:outputLabel for="key" value="Klíč" />

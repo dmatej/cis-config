@@ -20,7 +20,7 @@ import cz.i.cis.config.jpa.ConfigurationItemKey;
 import cz.i.cis.config.jpa.ConfigurationItemKeyType;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
-
+import cz.i.cis.config.web.exceptions.NonExistentCategoryException;
 
 /**
  * Backing bean for item key creation.
@@ -29,7 +29,7 @@ import cz.i.cis.config.web.FacesUtils;
 @ViewScoped
 public class ItemKeyCreateBean {
 
-  /**Logger object used for logging.*/
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(ItemKeyCreateBean.class);
 
   @EJB
@@ -39,17 +39,16 @@ public class ItemKeyCreateBean {
   /**Data access object for item category manipulation.*/
   private ConfigurationCategoryDao categoryDao;
 
-
-  /**Collection of all item categories.*/
+  /** Collection of all item categories. */
   private Map<String, ConfigurationItemCategory> allCategories;
 
-  /**New item key name.*/
+  /** New item key name. */
   private String key;
-  /**New item key type.*/
+  /** New item key type. */
   private ConfigurationItemKeyType type;
-  /**New item key category.*/
+  /** New item key category. */
   private String selectedCategory;
-  /**New item key description.*/
+  /** New item key description. */
   private String description;
 
 
@@ -65,21 +64,22 @@ public class ItemKeyCreateBean {
 
   /**
    * Adds new item key to database.
+   *
    * @return Navigation outcome.
    */
-  public String actionAddItemKey(){
+  public String actionAddItemKey() {
     LOG.debug("actionAddItemKey()");
     String link = "";
     try {
       if (!allCategories.containsKey(selectedCategory)) {
-        throw new IllegalArgumentException("Selected category is not valid.");
+        throw new NonExistentCategoryException();
       }
 
       ConfigurationItemKey newItemKey = new ConfigurationItemKey();
-        newItemKey.setKey(key);
-        newItemKey.setType(type);
-        newItemKey.setCategory(allCategories.get(selectedCategory));
-        newItemKey.setDescription(description);
+      newItemKey.setKey(key);
+      newItemKey.setType(type);
+      newItemKey.setCategory(allCategories.get(selectedCategory));
+      newItemKey.setDescription(description);
 
       itemKeyDao.addItemKey(newItemKey);
 
@@ -88,24 +88,25 @@ public class ItemKeyCreateBean {
       FacesUtils.redirectToURL(link);
     } catch (UniqueKeyException e) {
       LOG.error("Failed to add item key.", e);
-      FacesMessagesUtils.addErrorMessage("form:key", "Nepodařilo se přidat nový klíč",
-          FacesMessagesUtils.getRootMessage(e));
+      FacesMessagesUtils.addErrorMessage("form:key", "Nepodařilo se přidat nový klíč", e);
     } catch (IOException e) {
       LOG.error("Failed to redirect.", e);
       FacesMessagesUtils.failedRedirectMessage(link, e);
-    } catch (IllegalArgumentException e) {
+    } catch (NonExistentCategoryException e) {
       LOG.error("Failed to add item key.", e);
-      FacesMessagesUtils.addErrorMessage("form:category", e.getMessage(), (String) null);
+      FacesMessagesUtils.addErrorMessage("form:category", e.getMessage(), "");
     } catch (Exception e) {
       LOG.error("Failed to add item key.", e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat nový klíč", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se přidat nový klíč", e);
     }
+
     return null;
   }
 
 
   /**
    * Returns collection of available item key types.
+   *
    * @return Collection of available item key types.
    */
   public ConfigurationItemKeyType[] getAllTypes() {
@@ -113,8 +114,10 @@ public class ItemKeyCreateBean {
     return ConfigurationItemKeyType.values();
   }
 
+
   /**
    * Returns collection of available categories.
+   *
    * @return Collection of available categories.
    */
   public Collection<ConfigurationItemCategory> getAllCategories() {
@@ -122,8 +125,10 @@ public class ItemKeyCreateBean {
     return allCategories.values();
   }
 
+
   /**
    * Returns item key name.
+   *
    * @return Item key name.
    */
   public String getKey() {
@@ -131,8 +136,10 @@ public class ItemKeyCreateBean {
     return key;
   }
 
+
   /**
    * Sets item key name.
+   *
    * @param key Sets item key name.
    */
   public void setKey(String key) {
@@ -140,8 +147,10 @@ public class ItemKeyCreateBean {
     this.key = key;
   }
 
+
   /**
    * Returns item key type.
+   *
    * @return Item key type.
    */
   public ConfigurationItemKeyType getType() {
@@ -149,8 +158,10 @@ public class ItemKeyCreateBean {
     return type;
   }
 
+
   /**
    * Sets item key type.
+   *
    * @param type Item key type.
    */
   public void setType(ConfigurationItemKeyType type) {
@@ -158,8 +169,10 @@ public class ItemKeyCreateBean {
     this.type = type;
   }
 
+
   /**
    * Returns selected category.
+   *
    * @return Selected category.
    */
   public String getSelectedCategory() {
@@ -167,8 +180,10 @@ public class ItemKeyCreateBean {
     return selectedCategory;
   }
 
+
   /**
    * Sets selected category.
+   *
    * @param category Selected category.
    */
   public void setSelectedCategory(String category) {
@@ -176,8 +191,10 @@ public class ItemKeyCreateBean {
     this.selectedCategory = category;
   }
 
+
   /**
    * Returns item key description.
+   *
    * @return Item key description.
    */
   public String getDescription() {
@@ -185,8 +202,10 @@ public class ItemKeyCreateBean {
     return description;
   }
 
+
   /**
    * Sets item key description.
+   *
    * @param description Item key description.
    */
   public void setDescription(String description) {

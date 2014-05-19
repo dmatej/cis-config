@@ -20,7 +20,7 @@ import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
-
+import cz.i.cis.config.web.exceptions.NonExistentCategoryException;
 
 /**
  * Backing bean for item key listing.
@@ -29,14 +29,14 @@ import cz.i.cis.config.web.FacesUtils;
 @ViewScoped
 public class ItemKeyListBean {
 
-  /**Logger object used for logging.*/
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(ItemKeyListBean.class);
 
-  /**Selection placeholder for "no selection".*/
+  /** Selection placeholder for "no selection". */
   private static final String NONE_SELECTOR = "none";
-  /**Selection placeholder for "all" selection.*/
+  /** Selection placeholder for "all" selection. */
   private static final String ALL_SELECTOR = "all";
-  /**Session key for selected category.*/
+  /** Session key for selected category. */
   private static final String SESSION_NAME = "item-key-category";
 
   @EJB
@@ -46,9 +46,9 @@ public class ItemKeyListBean {
   /**Data access object for item category manipulation.*/
   private ConfigurationCategoryDao categoryDao;
 
-  /**Currently selected item key category.*/
+  /** Currently selected item key category. */
   private String selectedCategory;
-  /**Collection of available categories.*/
+  /** Collection of available categories. */
   private Map<String, ConfigurationItemCategory> allCategories;
 
 
@@ -60,13 +60,14 @@ public class ItemKeyListBean {
     LOG.debug("init()");
     allCategories = categoryDao.getCategoryMap();
 
-    String category =  (String) FacesUtils.getSession(SESSION_NAME);
+    String category = (String) FacesUtils.getSession(SESSION_NAME);
     selectedCategory = (category == null) ? NONE_SELECTOR : category;
   }
 
 
   /**
    * Deletes selected item key.
+   *
    * @param id ID of item key to delete.
    */
   public void actionDeleteItemKey(String id) {
@@ -87,6 +88,7 @@ public class ItemKeyListBean {
 
   /**
    * Returns collection of item keys filtered by selected category.
+   *
    * @return Collection of item keys filtered by selected category.
    */
   public List<ConfigurationItemKey> getFilteredItemKeys() {
@@ -101,23 +103,25 @@ public class ItemKeyListBean {
       }
 
       if (!allCategories.containsKey(selectedCategory)) {
-        throw new IllegalArgumentException("Vybraná kategorie není správná (nejspíš neexistuje)");
+        throw new NonExistentCategoryException();
       }
 
       ConfigurationItemCategory filter = allCategories.get(selectedCategory);
       return itemKeyDao.filterItemKeys(filter);
-    } catch (IllegalArgumentException e) {
+    } catch (NonExistentCategoryException e) {
       LOG.error("Failed to filter item keys.", e);
-      FacesMessagesUtils.addErrorMessage("form:category", e.getMessage(), (String) null);
-    } catch(Exception e){
+      FacesMessagesUtils.addErrorMessage("form:category", e.getMessage(), "");
+    } catch (Exception e) {
       LOG.error("Failed to filter item keys.", e);
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se načíst klíče položek", e);
     }
     return Collections.emptyList();
   }
 
+
   /**
    * Returns representation for "all" selection.
+   *
    * @return Representation for "all" selection.
    */
   public String getAllSelector() {
@@ -125,8 +129,10 @@ public class ItemKeyListBean {
     return ALL_SELECTOR;
   }
 
+
   /**
    * Returns representation for "no selection".
+   *
    * @return Representation for "no selection".
    */
   public String getNoneSelector() {
@@ -134,8 +140,10 @@ public class ItemKeyListBean {
     return NONE_SELECTOR;
   }
 
+
   /**
    * Returns currently selected category.
+   *
    * @return Currently selected category.
    */
   public String getSelectedCategory() {
@@ -143,8 +151,10 @@ public class ItemKeyListBean {
     return selectedCategory;
   }
 
+
   /**
    * Sets currently selected category.
+   *
    * @param selectedCategory Currently selected category.
    */
   public void setSelectedCategory(String selectedCategory) {
@@ -153,8 +163,10 @@ public class ItemKeyListBean {
     this.selectedCategory = selectedCategory;
   }
 
+
   /**
    * Returns collection of available categories.
+   *
    * @return Collection of available categories.
    */
   public Collection<ConfigurationItemCategory> getAllCategories() {

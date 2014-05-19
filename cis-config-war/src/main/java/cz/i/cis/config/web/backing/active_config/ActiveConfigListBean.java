@@ -92,7 +92,7 @@ public class ActiveConfigListBean {
         }
 
         ConfigurationItemCategory filter = allCategories.get(selectedCategory);
-        filteredActiveItems = configItemDao.listConfigurationItems(filter);
+        filteredActiveItems = configItemDao.listItems(filter);
       }
     } catch (NonExistentCategoryException e) {
       LOG.error("Failed to refresh active items.", e);

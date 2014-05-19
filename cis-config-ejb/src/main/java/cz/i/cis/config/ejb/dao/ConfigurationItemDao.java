@@ -13,10 +13,8 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
-import cz.i.cis.config.ejb.dao.exceptions.UniqueKeyException;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.jpa.ConfigurationItem;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
@@ -32,56 +30,43 @@ public class ConfigurationItemDao {
   private EntityManager em;
 
 
-  public List<ConfigurationItem> listItems() {
-    final TypedQuery<ConfigurationItem> query = this.em.createQuery("select item from ConfigurationItem item",
-        ConfigurationItem.class);
-
-    return query.getResultList();
-  }
-
-
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void addItem(ConfigurationItem item) throws UniqueKeyException {
-    try {
-      this.em.persist(item);
-      this.em.flush();
-    } catch (PersistenceException e) {
-      throw new UniqueKeyException("ConfigurationItem with unique foreign key " + item.getKey().getKey()
-          + " already exists!", e);
-    }
-  }
-
-
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public ConfigurationItem getItem(Integer id) {
     return em.find(ConfigurationItem.class, id);
   }
 
 
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void removeItem(ConfigurationItem item) {
-    this.em.remove(this.em.getReference(ConfigurationItem.class, item.getId()));
+  public List<ConfigurationItem> listItems() {
+    final TypedQuery<ConfigurationItem> query = em.createQuery("SELECT item FROM ConfigurationItem item",
+        ConfigurationItem.class);
+
+    return query.getResultList();
+  }
+
+
+  public List<ConfigurationItem> listItems(ConfigurationItemCategory category) {
+    final TypedQuery<ConfigurationItem> query = em.createQuery(
+        "SELECT item FROM ConfigurationItem item WHERE item.key.category = :category", ConfigurationItem.class);
+    query.setParameter("category", category);
+    return query.getResultList();
   }
 
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void removeItem(Integer id) {
-    ConfigurationItem item = getItem(id);
-    this.em.remove(item);
+  public void addItem(ConfigurationItem item) {
+    em.persist(item);
   }
 
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public ConfigurationItem updateItem(ConfigurationItem item) {
-    return this.em.merge(item);
+    return em.merge(item);
   }
 
 
-  public List<ConfigurationItem> listConfigurationItems(ConfigurationItemCategory category) {
-    final TypedQuery<ConfigurationItem> query = this.em.createQuery("select item FROM ConfigurationItem item "
-        + "WHERE item.key.category = :category", ConfigurationItem.class);
-    query.setParameter("category", category);
-    return query.getResultList();
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void removeItem(Integer id) {
+    em.remove(em.getReference(ConfigurationItem.class, id));
   }
 
 

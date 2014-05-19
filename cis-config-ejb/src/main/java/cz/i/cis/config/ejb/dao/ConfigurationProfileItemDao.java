@@ -13,10 +13,8 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
-import cz.i.cis.config.ejb.dao.exceptions.UniqueProfileKeyException;
 import cz.i.cis.config.jpa.ConfigurationProfileItem;
 
 @Local
@@ -29,49 +27,15 @@ public class ConfigurationProfileItemDao {
 
 
   public List<ConfigurationProfileItem> listItems() {
-    final TypedQuery<ConfigurationProfileItem> query = this.em.createQuery(
-        "select item from ConfigurationProfileItem item", ConfigurationProfileItem.class);
+    final TypedQuery<ConfigurationProfileItem> query = em.createQuery("SELECT item FROM ConfigurationProfileItem item",
+        ConfigurationProfileItem.class);
 
     return query.getResultList();
   }
 
 
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void addItem(ConfigurationProfileItem item) throws UniqueProfileKeyException {
-    try {
-      this.em.persist(item);
-      this.em.flush();
-    } catch (PersistenceException exc) {
-      throw new UniqueProfileKeyException("Key" + item.getKey().getKey() + " and profile "
-          + item.getProfile().getName() + " already exists!", exc);
-    }
-  }
-
-
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void removeItem(ConfigurationProfileItem item) {
-    this.em.remove(this.em.getReference(ConfigurationProfileItem.class, item.getId()));
-  }
-
-
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public ConfigurationProfileItem updateItem(ConfigurationProfileItem item) {
-    return this.em.merge(item);
-  }
-
-
-  public static Map<String, ConfigurationProfileItem> getItemMap(List<ConfigurationProfileItem> items) {
-    Map<String, ConfigurationProfileItem> itemMap = new HashMap<>();
-    for (ConfigurationProfileItem item : items) {
-      itemMap.put(item.getId().toString(), item);
-    }
-
-    return itemMap;
-  }
-
-
   public List<ConfigurationProfileItem> listItems(Integer profileID) {
-    final TypedQuery<ConfigurationProfileItem> query = this.em.createQuery(
+    final TypedQuery<ConfigurationProfileItem> query = em.createQuery(
         "SELECT item FROM ConfigurationProfileItem item WHERE item.profile.id = :profileID",
         ConfigurationProfileItem.class);
 
@@ -82,8 +46,25 @@ public class ConfigurationProfileItemDao {
 
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public List<ConfigurationProfileItem> saveChanges(Map<String, ConfigurationProfileItem> profileItems)
-    throws UniqueProfileKeyException {
+  public void addItem(ConfigurationProfileItem item) {
+    em.persist(item);
+  }
+
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public ConfigurationProfileItem updateItem(ConfigurationProfileItem item) {
+    return em.merge(item);
+  }
+
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void removeItem(ConfigurationProfileItem item) {
+    em.remove(em.getReference(ConfigurationProfileItem.class, item.getId()));
+  }
+
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public List<ConfigurationProfileItem> saveChanges(Map<String, ConfigurationProfileItem> profileItems) {
     List<ConfigurationProfileItem> updatedItems = new ArrayList<>(profileItems.size());
 
     for (ConfigurationProfileItem item : profileItems.values()) {
@@ -96,5 +77,15 @@ public class ConfigurationProfileItemDao {
       updatedItems.add(updatedItem);
     }
     return updatedItems;
+  }
+
+
+  public static Map<String, ConfigurationProfileItem> getItemMap(List<ConfigurationProfileItem> items) {
+    Map<String, ConfigurationProfileItem> itemMap = new HashMap<>();
+    for (ConfigurationProfileItem item : items) {
+      itemMap.put(item.getId().toString(), item);
+    }
+
+    return itemMap;
   }
 }

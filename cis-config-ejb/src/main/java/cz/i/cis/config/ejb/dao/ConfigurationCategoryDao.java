@@ -25,39 +25,18 @@ public class ConfigurationCategoryDao {
   private EntityManager em;
 
 
-  public List<ConfigurationItemCategory> listCategories() {
-    final TypedQuery<ConfigurationItemCategory> query = this.em.createQuery(
-        "select category from ConfigurationItemCategory category",
-        ConfigurationItemCategory.class);
-
-    return query.getResultList();
-  }
-
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void addCategory(ConfigurationItemCategory category) {
-    this.em.persist(category);
-  }
-
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void removeCategory(ConfigurationItemCategory category) {
-    ConfigurationItemCategory managed = em.merge(category);
-    this.em.remove(managed);
-  }
-
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void removeCategory(Integer id) {
-    ConfigurationItemCategory category = getCategory(id);
-    removeCategory(category);
-  }
-
   public ConfigurationItemCategory getCategory(Integer id) {
     return em.find(ConfigurationItemCategory.class, id);
   }
 
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public ConfigurationItemCategory updateCategory(ConfigurationItemCategory category) {
-    return this.em.merge(category);
+
+  public List<ConfigurationItemCategory> listCategories() {
+    final TypedQuery<ConfigurationItemCategory> query = em.createQuery(
+        "SELECT category FROM ConfigurationItemCategory category", ConfigurationItemCategory.class);
+
+    return query.getResultList();
   }
+
 
   public Map<String, ConfigurationItemCategory> getCategoryMap() {
     Map<String, ConfigurationItemCategory> categoryMap = new HashMap<>();
@@ -69,13 +48,22 @@ public class ConfigurationCategoryDao {
   }
 
 
-  public static ConfigurationItemCategory getCategory(List<ConfigurationItemCategory> categories, Integer id) {
-    for (ConfigurationItemCategory category : categories) {
-      if(category.getId().intValue() == id.intValue()) {
-        return category;
-      }
-    }
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void addCategory(ConfigurationItemCategory category) {
+    em.persist(category);
+  }
 
-    return null;
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public ConfigurationItemCategory updateCategory(ConfigurationItemCategory category) {
+    return em.merge(category);
+  }
+
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public void removeCategory(Integer id) {
+    ConfigurationItemCategory category = getCategory(id);
+    ConfigurationItemCategory managed = em.merge(category);
+    em.remove(managed);
   }
 }

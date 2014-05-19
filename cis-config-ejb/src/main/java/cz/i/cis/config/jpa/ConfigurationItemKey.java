@@ -13,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
 /**
  * Entity implementation class for {@code ConfigurationItemKey}.
  *
@@ -23,6 +22,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "configuration_item_keys")
 public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, Serializable {
+
   /**
    * Determines if a de-serialized file is compatible with this class.
    * Maintainers must change this value if and only if the new version of this
@@ -68,6 +68,7 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
     return this.id;
   }
 
+
   /**
    * Sets identifier number of this configuration item key.
    *
@@ -76,6 +77,7 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
   public void setId(Integer id) {
     this.id = id;
   }
+
 
   /**
    * Returns configuration item category of this key.
@@ -86,6 +88,7 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
     return this.category;
   }
 
+
   /**
    * Sets configuration item category of this key.
    *
@@ -94,6 +97,7 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
   public void setCategory(ConfigurationItemCategory category) {
     this.category = category;
   }
+
 
   /**
    * Returns type of this configuration item key.
@@ -104,6 +108,7 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
     return this.type;
   }
 
+
   /**
    * Returns type of this configuration item key.
    *
@@ -112,6 +117,7 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
   public void setType(ConfigurationItemKeyType type) {
     this.type = type;
   }
+
 
   /**
    * Returns name of configuration item key.
@@ -122,6 +128,7 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
     return this.key;
   }
 
+
   /**
    * Sets name of this configuration item key.
    *
@@ -130,6 +137,7 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
   public void setKey(String key) {
     this.key = key;
   }
+
 
   /**
    * Returns description for this configuration item key.
@@ -140,6 +148,7 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
     return this.description;
   }
 
+
   /**
    * Sets description for this configuration item key.
    *
@@ -149,6 +158,7 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
     this.description = description;
   }
 
+
   /**
    * Compares this object with the entered object for order. Returns a
    * negative integer, zero, or a positive integer as this object is less
@@ -156,11 +166,11 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
    *
    * @param key the configuration item key to be compared.
    * @return a negative integer, zero, or a positive integer as this object
-   * is less than, equal to, or greater than the entered object.
+   *         is less than, equal to, or greater than the entered object.
    */
   @Override
   public int compareTo(ConfigurationItemKey key) {
-    if(key == null) {
+    if (key == null) {
       return 1;
     }
 
@@ -169,6 +179,7 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
 
     return Integer.compare(id1, id2);
   }
+
 
   /**
    * Returns a hash code value for the object. This method is supported for the benefit
@@ -189,6 +200,7 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
 
     return result;
   }
+
 
   /**
    * Indicates whether some object is "equal to" this one.
@@ -250,6 +262,7 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
     return true;
   }
 
+
   /**
    * Returns string value of configuration item key in format:
    *
@@ -261,12 +274,8 @@ public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, S
    */
   @Override
   public String toString() {
-    return new StringBuilder(getClass().getCanonicalName())
-      .append("[id=").append(getId())
-      .append(", category_id=").append(getCategory().getId())
-      .append(", type=").append(getType())
-      .append(", key=").append(getKey())
-      .append(", description=").append(getDescription())
-      .append("]").toString();
+    return new StringBuilder(getClass().getCanonicalName()).append("[id=").append(getId()).append(", category_id=")
+        .append(getCategory().getId()).append(", type=").append(getType()).append(", key=").append(getKey())
+        .append(", description=").append(getDescription()).append("]").toString();
   }
 }

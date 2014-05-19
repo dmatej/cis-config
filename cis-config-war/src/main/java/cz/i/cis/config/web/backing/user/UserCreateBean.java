@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.CisUserDao;
-import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
@@ -65,7 +64,7 @@ public class UserCreateBean {
     } catch (IOException e) {
       LOG.error("Failed to redirect to: " + link, e);
       FacesMessagesUtils.failedRedirectMessage(link, e);
-    } catch (UserAlreadyExistsException e) {
+    } catch (Exception e) {
       LOG.error("Failed to add user.", e);
       FacesMessagesUtils.addErrorMessage("Uživatel již existuje", e);
     }

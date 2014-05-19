@@ -21,19 +21,19 @@ import cz.i.cis.config.web.FacesUtils;
 @ViewScoped
 public class CategoryEditBean {
 
-  /**Logger object used for logging.*/
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(CategoryEditBean.class);
 
   @EJB
   /**Data access object for item category manipulation.*/
   private ConfigurationCategoryDao categoryDao;
 
-  /**ID of currently edited category. It is set via request parameter.*/
+  /** ID of currently edited category. It is set via request parameter. */
   private Integer id;
-  /**Currently edited profile. It is initialized in init() method with use of id field.*/
+  /** Currently edited profile. It is initialized in init() method with use of id field. */
   private ConfigurationItemCategory category;
 
-  /**Name of edited category.*/
+  /** Name of edited category. */
   private String name;
 
 
@@ -44,8 +44,11 @@ public class CategoryEditBean {
     LOG.debug("init()");
     try {
       category = categoryDao.getCategory(id);
-    } catch (IllegalArgumentException exc) {
-      FacesMessagesUtils.addErrorMessage("ID kategorie není validní: ID = " + id, "");
+    } catch (IllegalArgumentException e) {
+      LOG.error("Failed to load category.", e);
+      FacesMessagesUtils.addErrorMessage("ID kategorie není validní: ID = " + id, e);
+      FacesUtils.redirectToOutcome("list");
+      return;
     }
 
     if (category == null) {
@@ -53,42 +56,47 @@ public class CategoryEditBean {
       FacesMessagesUtils.addErrorMessage("Zvolená kategorie nebyla nalezena v databázi - ID = " + id, "");
       FacesUtils.redirectToOutcome("list");
       return;
-    } else {
-      name = category.getName();
     }
+
+    name = category.getName();
   }
 
 
   /**
    * Persists changes of edited category.
+   *
    * @return Navigation outcome.
    */
   public void actionUpdateCategory() {
     LOG.debug("actionUpdateCategory()");
-    if (category != null) {
-      String link = "";
-      try {
-        category.setName(name);
-
-        category = categoryDao.updateCategory(category);
-
-        link = "list.xhtml#category-" + category.getId();
-        FacesUtils.redirectToURL(link);
-      } catch (IOException e) {
-        LOG.error("Failed to update category: category = " + category, e);
-        FacesMessagesUtils.failedRedirectMessage(link, e);
-      } catch (Exception e) {
-        LOG.error("Failed to update category: category = " + category, e);
-        FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", e);
-      }
-    } else {
+    if (category == null) {
+      LOG.error("Cannot edit category which is null");
       FacesMessagesUtils.addErrorMessage("Musíte editovat existující kategorii, abyste mohli uložit její změny.", "");
+
+      return;
+    }
+
+    String link = "";
+    try {
+      category.setName(name);
+
+      category = categoryDao.updateCategory(category);
+
+      link = "list.xhtml#category-" + category.getId();
+      FacesUtils.redirectToURL(link);
+    } catch (IOException e) {
+      LOG.error("Failed to update category: category = " + category, e);
+      FacesMessagesUtils.failedRedirectMessage(link, e);
+    } catch (Exception e) {
+      LOG.error("Failed to update category: category = " + category, e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se uložit změny", e);
     }
   }
 
 
   /**
    * Returns edited category ID.
+   *
    * @return Edited category ID.
    */
   public Integer getId() {
@@ -96,8 +104,10 @@ public class CategoryEditBean {
     return id;
   }
 
+
   /**
    * Sets edited category ID.
+   *
    * @param id Edited category ID.
    */
   public void setId(Integer id) {
@@ -105,8 +115,10 @@ public class CategoryEditBean {
     this.id = id;
   }
 
+
   /**
    * Returns edited category name.
+   *
    * @return Edited category name.
    */
   public String getName() {
@@ -114,8 +126,10 @@ public class CategoryEditBean {
     return name;
   }
 
+
   /**
    * Sets edited category name.
+   *
    * @param name Edited category name.
    */
   public void setName(String name) {

@@ -99,12 +99,12 @@ public class ItemKeyEditBean {
    *
    * @return Navigation outcome.
    */
-  public String actionUpdateItemKey() {
+  public void actionUpdateItemKey() {
     LOG.debug("actionUpdateItemKey()");
     if (itemKey == null) {
       LOG.error("Cannot edit itemKey which is null");
       FacesMessagesUtils.addErrorMessage("Musíte editovat existující klíč, abyste mohli uložit jeho změny.", "");
-      return null;
+      return;
     }
 
     String link = "";
@@ -133,7 +133,7 @@ public class ItemKeyEditBean {
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se uložit změny", e);
     }
 
-    return null;
+    return;
   }
 
 

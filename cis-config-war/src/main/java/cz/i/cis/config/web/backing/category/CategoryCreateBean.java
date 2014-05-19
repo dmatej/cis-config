@@ -34,6 +34,7 @@ public class CategoryCreateBean {
 
   /**
    * Adds new item category to database.
+   *
    * @return Navigation outcome.
    */
   public String actionAddCategory() {
@@ -41,7 +42,7 @@ public class CategoryCreateBean {
     String link = "";
     try {
       ConfigurationItemCategory category = new ConfigurationItemCategory();
-        category.setName(name);
+      category.setName(name);
 
       categoryDao.addCategory(category);
 
@@ -51,7 +52,7 @@ public class CategoryCreateBean {
     } catch (IOException e) {
       FacesMessagesUtils.failedRedirectMessage(link, e);
     } catch (Exception e) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat novou kategorii", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se přidat novou kategorii", e);
     }
     return null;
   }
@@ -59,6 +60,7 @@ public class CategoryCreateBean {
 
   /**
    * Returns category name.
+   *
    * @return Category name.
    */
   public String getName() {
@@ -66,8 +68,10 @@ public class CategoryCreateBean {
     return name;
   }
 
+
   /**
    * Sets category name.
+   *
    * @param name Category name.
    */
   public void setName(String name) {

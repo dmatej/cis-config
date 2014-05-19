@@ -27,7 +27,7 @@
         <f:selectItem itemLabel="všechny" itemValue="#{itemKeyList.allSelector}" />
         <f:selectItems value="#{itemKeyList.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
 
-        <f:ajax execute="category" render="@form" />
+        <f:ajax execute="category" render="form" />
        </h:selectOneMenu>
       </h:panelGroup>
      </h:panelGrid>

@@ -13,7 +13,6 @@ import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.web.FacesMessagesUtils;
 
-
 /**
  * Backing bean for profile items manipulation.
  */
@@ -21,7 +20,7 @@ import cz.i.cis.config.web.FacesMessagesUtils;
 @ViewScoped
 public class CategoryListBean {
 
-  /**Logger object used for logging.*/
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(CategoryListBean.class);
 
   @EJB
@@ -31,6 +30,7 @@ public class CategoryListBean {
 
   /**
    * Returns collection of available categories.
+   *
    * @return Collection of available categories.
    */
   public List<ConfigurationItemCategory> getAllCategories() {
@@ -38,8 +38,10 @@ public class CategoryListBean {
     return categoryDao.listCategories();
   }
 
+
   /**
    * Deletes selected category.
+   *
    * @param id ID of category to delete.
    */
   public void actionDeleteCategory(String id) {
@@ -47,9 +49,10 @@ public class CategoryListBean {
     try {
       Integer categoryID = Integer.valueOf(id);
       categoryDao.removeCategory(categoryID);
+      FacesMessagesUtils.addInfoMessage("form", "Kategorie byla smazána", "");
     } catch (Exception e) {
       LOG.error("Failed to remove category: ID = " + id, e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat kategorii", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se smazat kategorii", e);
     }
   }
 }

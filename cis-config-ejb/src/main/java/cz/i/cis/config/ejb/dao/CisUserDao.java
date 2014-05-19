@@ -20,6 +20,7 @@ import javax.persistence.TypedQuery;
 import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
 import cz.i.cis.config.jpa.CisUser;
 
+
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
@@ -29,13 +30,8 @@ public class CisUserDao {
   private EntityManager em;
 
 
-  public CisUserDao() {
-  }
-
-
   public List<CisUser> listUsers() {
     final TypedQuery<CisUser> query = this.em.createQuery("select user from CisUser user", CisUser.class);
-
     return query.getResultList();
   }
 
@@ -43,7 +39,7 @@ public class CisUserDao {
   public void addUser(CisUser user) throws UserAlreadyExistsException {
     try {
       this.em.persist(user);
-      em.flush();
+      this.em.flush();
     } catch (PersistenceException exc) {
       throw new UserAlreadyExistsException("User " + user.getLogin() + " already exists!", exc);
     }

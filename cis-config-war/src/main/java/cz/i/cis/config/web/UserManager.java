@@ -1,7 +1,6 @@
 package cz.i.cis.config.web;
 
 import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -14,20 +13,23 @@ import cz.i.cis.config.jpa.CisUser;
 @Named(value = "userManager")
 @ViewScoped
 public class UserManager {
+
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(UserManager.class);
 
+  /** Data access object for user manipulation. */
   @EJB
   private CisUserDao userDao;
 
 
-  private String getRemoteUser() {
-    LOG.trace("getRemoteUser()");
-    return FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
-  }
-
+  /**
+   * Tests logged in user validity.
+   *
+   * @return True if user is logged in, has DB record and is not marked as deleted. False otherwise.
+   */
   public boolean isValid() {
     LOG.debug("isValid()");
-    String login = this.getRemoteUser();
+    String login = FacesUtils.getRemoteUser();
 
     if (login == null || login.isEmpty()) {
       return false;
@@ -41,9 +43,15 @@ public class UserManager {
     return (user.isValid());
   }
 
+
+  /**
+   * Tests if user has DB record.
+   *
+   * @return True if user is logged in and has record in DB.
+   */
   public boolean isRegistered() {
     LOG.debug("isRegistered()");
-    String login = this.getRemoteUser();
+    String login = FacesUtils.getRemoteUser();
 
     if (login == null || login.isEmpty()) {
       return false;

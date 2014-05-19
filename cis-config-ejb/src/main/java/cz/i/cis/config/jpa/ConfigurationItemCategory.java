@@ -11,54 +11,113 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-
 /**
- * Entity implementation class for Entity: ConfigurationItemCategory
+ * Entity implementation class for {@code ConfigurationItemCategory}.
+ *
+ * @author David Matějček
+ * @author Mr.FrAnTA (Michal Dékány)
  */
 @Entity
-@Table(name = "configuration_item_category")
-public class ConfigurationItemCategory implements Serializable {
+@Table(name = "configuration_item_categories")
+public class ConfigurationItemCategory implements Comparable<ConfigurationItemCategory>, Serializable {
 
-  private static final long serialVersionUID = 1L;
+  /**
+   * Determines if a de-serialized file is compatible with this class.
+   * Maintainers must change this value if and only if the new version of this
+   * class is not compatible with old versions. See Oracle docs for <a
+   * href="http://docs.oracle.com/javase/1.4.2/docs/guide/
+   * serialization/">details</a>.
+   * Not necessary to include in first version of the class, but included here
+   * as a reminder of its importance.
+   */
+  private static final long serialVersionUID = -8775121697236124630L;
 
-
+  /** Identifier number of configuration item category. */
   @Id
   @Column(nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
+  /** Name of configuration item category. */
   @Column(nullable = false)
   private String name;
 
 
-  public ConfigurationItemCategory(){}
-
-  public ConfigurationItemCategory(Integer id){
-    this.id = id;
+  /**
+   * Constructs configuration item category.
+   */
+  public ConfigurationItemCategory() {
   }
 
 
+  /**
+   * Returns identifier number of this configuration item category.
+   *
+   * @return Identifier number of this configuration item category.
+   */
   public Integer getId() {
     return this.id;
   }
 
-  public int getIdInt(){
-    return id.intValue();
-  }
 
+  /**
+   * Sets identifier number of this configuration item category.
+   *
+   * @param id identifier number of this configuration item category to set.
+   */
   public void setId(Integer id) {
     this.id = id;
   }
 
+
+  /**
+   * Returns name of this configuration item category.
+   *
+   * @return Name of this configuration item category.
+   */
   public String getName() {
     return this.name;
   }
 
+
+  /**
+   * Returns name of this configuration item category.
+   *
+   * @param name name of this configuration item category to set.
+   */
   public void setName(String name) {
     this.name = name;
   }
 
 
+  /**
+   * Compares this object with the entered object for order. Returns a
+   * negative integer, zero, or a positive integer as this object is less
+   * than, equal to, or greater than the entered object.
+   *
+   * @param category the configuration item category to be compared.
+   * @return a negative integer, zero, or a positive integer as this object
+   *         is less than, equal to, or greater than the entered object.
+   */
+  @Override
+  public int compareTo(ConfigurationItemCategory category) {
+    if (category == null) {
+      return 1;
+    }
+
+    int id1 = this.getId() == null ? Integer.MIN_VALUE : this.getId();
+    int id2 = category.getId() == null ? Integer.MIN_VALUE : category.getId();
+
+    return Integer.compare(id1, id2);
+  }
+
+
+  /**
+   * Returns a hash code value for the object. This method is
+   * supported for the benefit of hash tables such as those provided by {@link java.util.HashMap}.
+   *
+   * @return A hash code value for this object.
+   */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -70,6 +129,13 @@ public class ConfigurationItemCategory implements Serializable {
     return result;
   }
 
+
+  /**
+   * Indicates whether some object is "equal to" this one.
+   *
+   * @param obj the reference object with which to compare.
+   * @return {@code true} if this object is the same as the obj argument; {@code false} otherwise.
+   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
@@ -105,6 +171,13 @@ public class ConfigurationItemCategory implements Serializable {
   }
 
 
+  /**
+   * Returns string value of configuration item category. This method uses
+   * {@link org.apache.commons.lang3.builder.ToStringBuilder#reflectionToString
+   * ToStringBuilder.reflectionToString} to generate a string value.
+   *
+   * @return Generated string value of configuration item category.
+   */
   @Override
   public String toString() {
     return ToStringBuilder.reflectionToString(this);

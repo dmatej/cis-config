@@ -10,11 +10,11 @@
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputText id="first-name" class="important short" required="true" requiredMessage="Nebylo vyplněno jméno" value="#{user.name}" size="40" />
+    <h:inputText id="first-name" styleClass="important short" required="true" requiredMessage="Nebylo vyplněno jméno" value="#{user.name}" size="40" />
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:message for="first-name" styleClass="form:table:error" />
+    <h:messages for="first-name" styleClass="form:table:error" />
    </h:panelGroup>
 
    <h:panelGroup>
@@ -22,11 +22,11 @@
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputText id="last-name" class="important short" required="true" requiredMessage="Nebylo vyplněno příjmení" value="#{user.surname}" size="40" />
+    <h:inputText id="last-name" styleClass="important short" required="true" requiredMessage="Nebylo vyplněno příjmení" value="#{user.surname}" size="40" />
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:message for="last-name" styleClass="form:table:error" />
+    <h:messages for="last-name" styleClass="form:table:error" />
    </h:panelGroup>
 
    <h:panelGroup>
@@ -34,11 +34,11 @@
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputText id="nickname" class="important short" required="true" requiredMessage="Nebyl vyplněn login" value="#{user.login}" size="40" />
+    <h:inputText id="nickname" styleClass="important short" required="true" requiredMessage="Nebyl vyplněn login" value="#{user.login}" size="40" />
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:message for="nickname" styleClass="form:table:error" />
+    <h:messages for="nickname" styleClass="form:table:error" />
    </h:panelGroup>
 
    <h:panelGroup>
@@ -46,19 +46,19 @@
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputText id="birthdate" class="important short" required="true" requiredMessage="Nebylo vyplněno datum narození" value="#{user.birthDate}" label="d.M.yyyy"
+    <h:inputText id="birthdate" styleClass="important short" required="true" requiredMessage="Nebylo vyplněno datum narození" value="#{user.birthDate}" label="d.M.yyyy"
      converterMessage="Datum zadejte ve formátu d.M.yyyy" size="40">
      <f:convertDateTime pattern="d.M.yyyy" />
     </h:inputText>
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:message for="birthdate" styleClass="form:table:error" />
+    <h:messages for="birthdate" styleClass="form:table:error" />
    </h:panelGroup>
 
    <h:panelGroup />
 
-   <h:panelGroup class="form:table:buttonline">
+   <h:panelGroup styleClass="form:table:buttonline">
     <h:commandButton action="#{user[userAction]}" type="submit" value="#{userButtonName}" />
     <h:button outcome="list" value="Storno" />
    </h:panelGroup>

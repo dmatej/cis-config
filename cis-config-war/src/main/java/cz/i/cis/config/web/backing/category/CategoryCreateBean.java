@@ -14,46 +14,69 @@ import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
-
+/**
+ * Backing bean for category creation.
+ */
 @Named(value = "categoryCreate")
 @ViewScoped
 public class CategoryCreateBean {
+
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(CategoryCreateBean.class);
 
+  /** Data access object for item category manipulation. */
   @EJB
   private ConfigurationCategoryDao categoryDao;
 
+  /** Name of new category. */
   private String name;
 
 
-  public String actionAddCategory() throws IOException {
+  /**
+   * Adds new item category to database.
+   *
+   * @return Navigation outcome.
+   */
+  public String actionAddCategory() {
     LOG.debug("actionAddCategory()");
     String link = "";
     try {
       ConfigurationItemCategory category = new ConfigurationItemCategory();
-      category.setName(name);
+        category.setName(name);
+
       categoryDao.addCategory(category);
 
       // return "edit?faces-redirect=true&includeViewParams=true&id=" + category.getId();
       link = "list.xhtml#category-" + category.getId();
-      FacesUtils.redirect(link);
-    }
-    catch (IOException exc) {
-      FacesMessagesUtils.failedRedirectMessage(link, exc);
-    }
-    catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat novou kategorii", FacesUtils.getRootMessage(exc));
+      FacesUtils.redirectToURL(link);
+    } catch (IOException e) {
+      LOG.error("Failed to create category: cannot redirect", e);
+      FacesMessagesUtils.failedRedirectMessage(link, e);
+    } catch (Exception e) {
+      LOG.error("Failed to create category: cannot create category", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se přidat novou kategorii konfiguračních položek", e);
     }
 
     return null;
   }
 
 
+  /**
+   * Returns category name.
+   *
+   * @return Category name.
+   */
   public String getName() {
     LOG.trace("getName()");
     return name;
   }
 
+
+  /**
+   * Sets category name.
+   *
+   * @param name Category name.
+   */
   public void setName(String name) {
     LOG.debug("setName(name={})", name);
     this.name = name;

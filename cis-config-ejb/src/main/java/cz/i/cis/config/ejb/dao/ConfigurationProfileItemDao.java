@@ -1,5 +1,6 @@
 package cz.i.cis.config.ejb.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,6 @@ import javax.persistence.TypedQuery;
 
 import cz.i.cis.config.ejb.dao.exceptions.UniqueProfileKeyException;
 import cz.i.cis.config.jpa.ConfigurationProfileItem;
-
 
 @Local
 @Stateless
@@ -38,21 +38,19 @@ public class ConfigurationProfileItemDao {
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addItem(ConfigurationProfileItem item) throws UniqueProfileKeyException {
-//    this.em.persist(item);
     try {
       this.em.persist(item);
-      em.flush();
-    }
-    catch (PersistenceException exc) {
-      throw new UniqueProfileKeyException("Key" + item.getKey().getKey() +" and profile " + item.getProfile().getName() + " already exists!", exc);
+      this.em.flush();
+    } catch (PersistenceException exc) {
+      throw new UniqueProfileKeyException("Key" + item.getKey().getKey() + " and profile "
+          + item.getProfile().getName() + " already exists!", exc);
     }
   }
 
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeItem(ConfigurationProfileItem item) {
-    ConfigurationProfileItem i = this.em.merge(item);
-    this.em.remove(i);
+    this.em.remove(this.em.getReference(ConfigurationProfileItem.class, item.getId()));
   }
 
 
@@ -69,5 +67,34 @@ public class ConfigurationProfileItemDao {
     }
 
     return itemMap;
+  }
+
+
+  public List<ConfigurationProfileItem> listItems(Integer profileID) {
+    final TypedQuery<ConfigurationProfileItem> query = this.em.createQuery(
+        "SELECT item FROM ConfigurationProfileItem item WHERE item.profile.id = :profileID",
+        ConfigurationProfileItem.class);
+
+    query.setParameter("profileID", profileID);
+
+    return query.getResultList();
+  }
+
+
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
+  public List<ConfigurationProfileItem> saveChanges(Map<String, ConfigurationProfileItem> profileItems)
+    throws UniqueProfileKeyException {
+    List<ConfigurationProfileItem> updatedItems = new ArrayList<>(profileItems.size());
+
+    for (ConfigurationProfileItem item : profileItems.values()) {
+      if (item.isDeleted()) {
+        removeItem(item);
+        continue;
+      }
+
+      ConfigurationProfileItem updatedItem = updateItem(item);
+      updatedItems.add(updatedItem);
+    }
+    return updatedItems;
   }
 }

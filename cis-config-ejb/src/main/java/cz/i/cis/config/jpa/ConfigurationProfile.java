@@ -16,76 +16,172 @@ import javax.persistence.TemporalType;
 
 
 /**
- * Entity implementation class for Entity: ConfigurationProfile
+ * Entity implementation class for {@code ConfigurationProfile}.
+ *
+ * @author David Matějček
+ * @author Mr.FrAnTA (Michal Dékány)
  */
 @Entity
-@Table(name = "configuration_profile")
-public class ConfigurationProfile implements Serializable {
+@Table(name = "configuration_profiles")
+public class ConfigurationProfile implements Comparable<ConfigurationProfile>, Serializable {
 
-  private static final long serialVersionUID = 1L;
+  /**
+   * Determines if a de-serialized file is compatible with this class.
+   * Maintainers must change this value if and only if the new version of this
+   * class is not compatible with old versions. See Oracle docs for <a
+   * href="http://docs.oracle.com/javase/1.4.2/docs/guide/
+   * serialization/">details</a>.
+   * Not necessary to include in first version of the class, but included here
+   * as a reminder of its importance.
+   */
+  private static final long serialVersionUID = -5456001107822637583L;
 
-
+  /** Identifier number of configuration profile. */
   @Id
   @Column(nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
+  /** Configuration profile name. */
   @Column(nullable = false)
   private String name;
 
+  /** Description of configuration profile. */
   @Column(nullable = false)
   private String description = "";
 
+  /** Timestamp of last update of configuration profile. */
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false)
   private Date update;
 
+  /** CIS user which last changed configuration profile. */
   @ManyToOne(optional = false)
   @JoinColumn(name = "user_id", nullable = false)
   private CisUser user;
 
+  /**
+   * Constructs configuration profile.
+   */
+  public ConfigurationProfile() {
+  }
 
+  /**
+   * Returns identifier number of this configuration profile.
+   *
+   * @return Identifier number of this configuration profile.
+   */
   public Integer getId() {
     return this.id;
   }
 
+  /**
+   * Sets identifier number of this configuration profile.
+   *
+   * @param id identifier number of this configuration profile to set.
+   */
   public void setId(Integer id) {
     this.id = id;
   }
 
+  /**
+   * Returns name of this configuration profile.
+   *
+   * @return Name of this configuration profile.
+   */
   public String getName() {
     return this.name;
   }
 
+  /**
+   * Sets name of this configuration profile.
+   *
+   * @param name name of this configuration profile to set.
+   */
   public void setName(String name) {
     this.name = name;
   }
 
+  /**
+   * Returns description of this configuration profile.
+   *
+   * @return Description of configuration profile.
+   */
   public String getDescription() {
     return this.description;
   }
 
+  /**
+   * Sets description of this configuration profile.
+   *
+   * @param description description of this configuration profile to set.
+   */
   public void setDescription(String description) {
     this.description = description;
   }
 
+  /**
+   * Returns timestamp of last update of this configuration profile.
+   *
+   * @return Timestamp of last update of this configuration profile.
+   */
   public Date getUpdate() {
     return this.update;
   }
 
+  /**
+   * Sets timestamp of last update of this configuration profile.
+   *
+   * @param update timestamp of last update of this configuration profile to set.
+   */
   public void setUpdate(Date update) {
     this.update = update;
   }
 
+  /**
+   * Returns CIS user which last changed this configuration profile.
+   *
+   * @return CIS user which last changed this configuration profile to set.
+   */
   public CisUser getUser() {
     return this.user;
   }
 
+  /**
+   * Sets CIS user which last changed this configuration profile.
+   *
+   * @param user CIS user which last changed this configuration profile.
+   */
   public void setUser(CisUser user) {
     this.user = user;
   }
 
+  /**
+   * Compares this object with the entered object for order. Returns a
+   * negative integer, zero, or a positive integer as this object is less
+   * than, equal to, or greater than the entered object.
+   *
+   * @param profile the configuration profile to be compared.
+   * @return a negative integer, zero, or a positive integer as this object
+   * is less than, equal to, or greater than the entered object.
+   */
+  @Override
+  public int compareTo(ConfigurationProfile profile) {
+    if(profile == null) {
+      return 1;
+    }
 
+    int id1 = this.getId() == null ? Integer.MIN_VALUE : this.getId();
+    int id2 = profile.getId() == null ? Integer.MIN_VALUE : profile.getId();
+
+    return Integer.compare(id1, id2);
+  }
+
+  /**
+   * Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by {@link java.util.HashMap}.
+   *
+   * @return A hash code value for this object.
+   */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -100,6 +196,12 @@ public class ConfigurationProfile implements Serializable {
     return result;
   }
 
+  /**
+   * Indicates whether some object is "equal to" this one.
+   *
+   * @param obj the reference object with which to compare.
+   * @return {@code true} if this object is the same as the obj argument; {@code false} otherwise.
+   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
@@ -159,6 +261,15 @@ public class ConfigurationProfile implements Serializable {
   }
 
 
+  /**
+   * Returns string value of configuration profile in format:
+   *
+   * <pre>
+   * ConfigurationProfile[id=%id, name=%name, description=%description, update=%update, user_id=%user.id]
+   * </pre>
+   *
+   * @return String value of configuration profile.
+   */
   @Override
   public String toString() {
     return new StringBuilder(this.getClass().getCanonicalName())

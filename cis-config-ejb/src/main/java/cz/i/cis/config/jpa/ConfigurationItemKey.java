@@ -15,76 +15,167 @@ import javax.persistence.Table;
 
 
 /**
- * Entity implementation class for Entity: ConfigurationItemKey
+ * Entity implementation class for {@code ConfigurationItemKey}.
+ *
+ * @author David Matějček
+ * @author Mr.FrAnTA (Michal Dékány)
  */
 @Entity
-@Table(name = "configuration_item_key")
-public class ConfigurationItemKey implements Serializable {
+@Table(name = "configuration_item_keys")
+public class ConfigurationItemKey implements Comparable<ConfigurationItemKey>, Serializable {
+  /**
+   * Determines if a de-serialized file is compatible with this class.
+   * Maintainers must change this value if and only if the new version of this
+   * class is not compatible with old versions. See Oracle docs for <a
+   * href="http://docs.oracle.com/javase/1.4.2/docs/guide/
+   * serialization/">details</a>.
+   * Not necessary to include in first version of the class, but included here
+   * as a reminder of its importance.
+   */
+  private static final long serialVersionUID = -5212516150429420381L;
 
-  private static final long serialVersionUID = 1L;
-
-
+  /** Identifier number of configuration item key. */
   @Id
   @Column(nullable = false, updatable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
+  /** Configuration item category of this key. */
   @ManyToOne
   @JoinColumn(name = "category_id", nullable = false)
   private ConfigurationItemCategory category;
 
+  /** Type of configuration item key. */
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private Type type;
+  private ConfigurationItemKeyType type;
 
+  /** Name of configuration item key. */
   @Column(nullable = false, unique = true)
   private String key;
 
+  /** Description for configuration item key. */
   @Column(nullable = false)
   private String description = "";
 
 
+  /**
+   * Returns identifier number of this configuration item key.
+   *
+   * @return Identifier number of this configuration item key.
+   */
   public Integer getId() {
     return this.id;
   }
 
+  /**
+   * Sets identifier number of this configuration item key.
+   *
+   * @param id identifier number of this configuration item key to set.
+   */
   public void setId(Integer id) {
     this.id = id;
   }
 
+  /**
+   * Returns configuration item category of this key.
+   *
+   * @return Configuration item category of this key.
+   */
   public ConfigurationItemCategory getCategory() {
     return this.category;
   }
 
-  public void setCategory(ConfigurationItemCategory idCategory) {
-    this.category = idCategory;
+  /**
+   * Sets configuration item category of this key.
+   *
+   * @param category configuration item category of this key to set.
+   */
+  public void setCategory(ConfigurationItemCategory category) {
+    this.category = category;
   }
 
-  public Type getType() {
+  /**
+   * Returns type of this configuration item key.
+   *
+   * @return Type of this configuration item key.
+   */
+  public ConfigurationItemKeyType getType() {
     return this.type;
   }
 
-  public void setType(Type type) {
+  /**
+   * Returns type of this configuration item key.
+   *
+   * @param type type of this configuration item key to set.
+   */
+  public void setType(ConfigurationItemKeyType type) {
     this.type = type;
   }
 
+  /**
+   * Returns name of configuration item key.
+   *
+   * @param key name of configuration item key
+   */
   public String getKey() {
     return this.key;
   }
 
+  /**
+   * Sets name of this configuration item key.
+   *
+   * @param key name of this configuration item key to set.
+   */
   public void setKey(String key) {
     this.key = key;
   }
 
+  /**
+   * Returns description for this configuration item key.
+   *
+   * @return Description for this configuration item key.
+   */
   public String getDescription() {
     return this.description;
   }
 
+  /**
+   * Sets description for this configuration item key.
+   *
+   * @param description description for this configuration item key to set.
+   */
   public void setDescription(String description) {
     this.description = description;
   }
 
+  /**
+   * Compares this object with the entered object for order. Returns a
+   * negative integer, zero, or a positive integer as this object is less
+   * than, equal to, or greater than the entered object.
+   *
+   * @param key the configuration item key to be compared.
+   * @return a negative integer, zero, or a positive integer as this object
+   * is less than, equal to, or greater than the entered object.
+   */
+  @Override
+  public int compareTo(ConfigurationItemKey key) {
+    if(key == null) {
+      return 1;
+    }
 
+    int id1 = this.getId() == null ? Integer.MIN_VALUE : this.getId();
+    int id2 = key.getId() == null ? Integer.MIN_VALUE : key.getId();
+
+    return Integer.compare(id1, id2);
+  }
+
+  /**
+   * Returns a hash code value for the object. This method is supported for the benefit
+   * of hash tables such as those provided by {@link java.util.HashMap}.
+   *
+   * @return A hash code value for this object.
+   */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -99,6 +190,12 @@ public class ConfigurationItemKey implements Serializable {
     return result;
   }
 
+  /**
+   * Indicates whether some object is "equal to" this one.
+   *
+   * @param obj the reference object with which to compare.
+   * @return {@code true} if this object is the same as the obj argument; {@code false} otherwise.
+   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
@@ -153,7 +250,15 @@ public class ConfigurationItemKey implements Serializable {
     return true;
   }
 
-
+  /**
+   * Returns string value of configuration item key in format:
+   *
+   * <pre>
+   * ConfigurationItemKey[id=%id, category_id=%category.id, type=%type, key=%key, description=%user.id]
+   * </pre>
+   *
+   * @return String value of configuration item key.
+   */
   @Override
   public String toString() {
     return new StringBuilder(getClass().getCanonicalName())

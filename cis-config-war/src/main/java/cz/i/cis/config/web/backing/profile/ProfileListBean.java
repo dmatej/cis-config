@@ -5,61 +5,93 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import javax.persistence.NoResultException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.i.cis.config.ejb.dao.CisUserDao;
+import cz.i.cis.config.ejb.dao.ConfigurationItemDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileDao;
+import cz.i.cis.config.ejb.dao.ConfigurationProfileItemDao;
+import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.jpa.ConfigurationProfile;
+import cz.i.cis.config.jpa.ConfigurationProfileItem;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
+
+/**
+ * Backing bean for profile listing.
+ */
 @Named(value = "profileList")
 @ViewScoped
 public class ProfileListBean {
-
+  /**Logger object used for logging.*/
   private static final Logger LOG = LoggerFactory.getLogger(ProfileListBean.class);
 
   @EJB
+  /**Data access object for profile manipulation.*/
   private ConfigurationProfileDao profileDao;
+  @EJB
+  /**Data access object for profile items manipulation.*/
+  private ConfigurationProfileItemDao profileItemDao;
+  @EJB
+  /**Data access object for active configuration manipulation.*/
+  private ConfigurationItemDao itemDao;
+  @EJB
+  /**Data access object for user manipulation.*/
+  private CisUserDao userDao;
 
-  private Integer profileID;
 
-
+  /**
+   * Returns all configuration profiles.
+   * @return All configuration profiles.
+   */
   public List<ConfigurationProfile> getAllProfiles() {
     LOG.trace("getAllProfiles()");
     return profileDao.listProfiles();
   }
 
-
-  public String actionDeleteProfile() {
-    LOG.debug("actionDeleteProfile()");
+  /**
+   * Deletes selected profile.
+   * @param id ID of profile to delete.
+   */
+  public void actionDeleteProfile(String id) {
+    LOG.debug("actionDeleteProfile(id={})", id);
     try {
+      Integer profileID = Integer.valueOf(id);
       profileDao.removeProfile(profileID);
-
-      return "list?faces-redirect=true";
-    } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat profil", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addInfoMessage("form", "Profil byl ", "");
+    } catch (Exception e) {
+      LOG.error("Failed to delete profile: ID = " + id, e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se smazat profil", e);
     }
-    return null;
   }
 
+  /**
+   * Activates selected profile. All profile item will be set to active configuration.
+   * @param id ID of profile to activate.
+   */
+  public void actionActivateProfile(String id) {
+    LOG.trace("actionActivateProfile(id={})", id);
+    try {
+      String login = FacesUtils.getRemoteUser();
+      if (login == null || login.isEmpty()) {
+        throw new NullPointerException("Somehow no user is not logged in and phantoms are not allowed to create configuration profiles.");
+      }
 
-  public String actionActivateProfile() {
-    LOG.trace("actionActivateProfile()");
-    // TODO zkopírovat všechny položky do aktivní konfigurace
-    return null;
-  }
+      CisUser editor = userDao.getUser(login);
+      if (editor == null) {
+        throw new NoResultException("Logged in user has not been found in the database.");
+      }
 
-
-  public Integer getProfileID() {
-    LOG.debug("getProfileID()");
-    return profileID;
-  }
-
-
-  public void setProfileID(Integer profileID) {
-    LOG.debug("setProfileID(profileID={})", profileID);
-    this.profileID = profileID;
+      Integer profileID = Integer.valueOf(id);
+      List<ConfigurationProfileItem> profileItems= profileItemDao.listItems(profileID);
+      itemDao.activateProfile(profileItems, editor);
+    } catch (Exception e) {
+      LOG.error("Failed to activate profile: ID = " + id, e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se aktivovat profil: ID = " + id, e);
+    }
   }
 }

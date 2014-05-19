@@ -16,28 +16,44 @@ import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
+
+/**
+ * Backing bean for profile items manipulation.
+ */
 @Named(value = "userCreate")
 @ViewScoped
 public class UserCreateBean {
+
+  /**Logger object used for logging.*/
   private static final Logger LOG = LoggerFactory.getLogger(UserCreateBean.class);
 
 
   @EJB
+  /**Data access object for user manipulation.*/
   private CisUserDao userDao;
 
+  /**Name of new user.*/
   private String name;
+  /**Surname of new user.*/
   private String surname;
+  /**Login of new user.*/
   private String login;
+  /**Birth date of new user.*/
   private Date birthDate;
 
 
+  /**
+   * Adds new user to database.
+   * @return Navigation outcome.
+   */
   public String actionAddUser() {
     LOG.debug("actionAddUser()");
+
     CisUser newUser = new CisUser();
-    newUser.setFirstName(name);
-    newUser.setLastName(surname);
-    newUser.setBirthDate(birthDate);
-    newUser.setLogin(login);
+      newUser.setFirstName(name);
+      newUser.setLastName(surname);
+      newUser.setBirthDate(birthDate);
+      newUser.setLogin(login);
 
     String link = "";
     try {
@@ -45,59 +61,85 @@ public class UserCreateBean {
 
       // return "edit?faces-redirect=true&includeViewParams=true&id=" + newUser.getId();
       link = "list.xhtml#user-" + newUser.getId();
-      FacesUtils.redirect(link);
-    } catch (IOException exc) {
-      FacesMessagesUtils.failedRedirectMessage(link, exc);
-    } catch (UserAlreadyExistsException exc) {
-      FacesMessagesUtils.addErrorMessage("Uživatel již existuje", FacesUtils.getRootMessage(exc));
+      FacesUtils.redirectToURL(link);
+    } catch (IOException e) {
+      LOG.error("Failed to redirect to: " + link, e);
+      FacesMessagesUtils.failedRedirectMessage(link, e);
+    } catch (UserAlreadyExistsException e) {
+      LOG.error("Failed to add user.", e);
+      FacesMessagesUtils.addErrorMessage("Uživatel již existuje", e);
     }
-
     return null;
   }
 
 
+  /**
+   * Returns user name.
+   * @return User name.
+   */
   public String getName() {
-    LOG.trace("getName()");
+    LOG.debug("getName()");
     return name;
   }
 
-
+  /**
+   * Sets user name.
+   * @param name User name.
+   */
   public void setName(String name) {
     LOG.debug("setName(name={})", name);
     this.name = name;
   }
 
-
+  /**
+   * Returns user surname.
+   * @return User surname.
+   */
   public String getSurname() {
     LOG.trace("getSurname()");
     return surname;
   }
 
-
+  /**
+   * Sets user surname.
+   * @param surname User surname.
+   */
   public void setSurname(String surname) {
     LOG.debug("setSurname(surname={})", surname);
     this.surname = surname;
   }
 
-
+  /**
+   * Returns user login.
+   * @return User login.
+   */
   public String getLogin() {
     LOG.trace("setLogin(login)");
     return login;
   }
 
-
+  /**
+   * Sets user login.
+   * @param login User login.
+   */
   public void setLogin(String login) {
     LOG.debug("setLogin(login={})", login);
     this.login = login;
   }
 
-
+  /**
+   * Returns user birth date.
+   * @return User birth date.
+   */
   public Date getBirthDate() {
     LOG.trace("getBirthDate()");
     return birthDate;
   }
 
-
+  /**
+   * Sets user birth date.
+   * @param birthDate User birth date.
+   */
   public void setBirthDate(Date birthDate) {
     LOG.debug("setBirthDate(birthDate={})", birthDate);
     this.birthDate = birthDate;

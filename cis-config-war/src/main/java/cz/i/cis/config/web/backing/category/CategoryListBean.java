@@ -12,48 +12,47 @@ import org.slf4j.LoggerFactory;
 import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.web.FacesMessagesUtils;
-import cz.i.cis.config.web.FacesUtils;
 
+/**
+ * Backing bean for profile items manipulation.
+ */
 @Named(value = "categoryList")
 @ViewScoped
 public class CategoryListBean {
 
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(CategoryListBean.class);
 
+  /** Data access object for item category manipulation. */
   @EJB
   private ConfigurationCategoryDao categoryDao;
 
-  private Integer categoryID;
 
-
+  /**
+   * Returns collection of available categories.
+   *
+   * @return Collection of available categories.
+   */
   public List<ConfigurationItemCategory> getAllCategories() {
     LOG.debug("getAllCategories()");
     return categoryDao.listCategories();
   }
 
 
-  public String actionDeleteCategory() {
+  /**
+   * Deletes selected category.
+   *
+   * @param id ID of category to delete.
+   */
+  public void actionDeleteCategory(String id) {
     LOG.debug("actionDeleteCategory()");
     try {
+      Integer categoryID = Integer.valueOf(id);
       categoryDao.removeCategory(categoryID);
-
-      return "list?faces-redirect=true";
-    } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat kategorii", FacesUtils.getRootMessage(exc));
+      FacesMessagesUtils.addInfoMessage("form", "Kategorie konfiguračních položek byla smazána", "");
+    } catch (Exception e) {
+      LOG.error("Failed to remove category: ID = " + id, e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se smazat kategorii konfiguračních položek", e);
     }
-
-    return null;
-  }
-
-
-  public Integer getCategoryID() {
-    LOG.debug("getCategoryID()");
-    return categoryID;
-  }
-
-
-  public void setCategoryID(Integer categoryID) {
-    LOG.debug("setCategoryID(profileID={})", categoryID);
-    this.categoryID = categoryID;
   }
 }

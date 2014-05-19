@@ -24,7 +24,7 @@ import cz.i.cis.config.helpers.ConfigurationCategoryTestHelper;
 import cz.i.cis.config.helpers.ConfigurationItemKeyTestHelper;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
-import cz.i.cis.config.jpa.Type;
+import cz.i.cis.config.jpa.ConfigurationItemKeyType;
 import cz.i.cis.config.test.ArquillianITest;
 
 public class ConfigurationItemKeyDaoITest extends ArquillianITest {
@@ -65,7 +65,7 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
     key.setCategory(category);
     key.setDescription("base configuration key");
     key.setKey("base");
-    key.setType(Type.Text);
+    key.setType(ConfigurationItemKeyType.Text);
     dao.addItemKey(key);
     helper.addToDelete(key);
     LOG.debug("key: {}", key);
@@ -74,9 +74,9 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
     final List<ConfigurationItemKey> listKeys = dao.filterItemKeys(category);
     assertFalse("listKeys.isEmpty", listKeys.isEmpty());
     assertEquals(listKeys.get(0), key);
-    key.setType(Type.URL);
+    key.setType(ConfigurationItemKeyType.URL);
     dao.updateItemKey(key);
-    assertTrue(dao.listItemKeys().get(0).getType().equals(Type.URL));
+    assertTrue(dao.listItemKeys().get(0).getType().equals(ConfigurationItemKeyType.URL));
     }
 
   @Test(expected = UniqueKeyException.class)
@@ -109,14 +109,14 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
     key0.setCategory(category);
     key0.setDescription("base configuration key");
     key0.setKey("base");
-    key0.setType(Type.Text);
+    key0.setType(ConfigurationItemKeyType.Text);
 
     final ConfigurationItemKey key1 = new ConfigurationItemKey();
     key1.setId(1);
     key1.setCategory(category);
     key1.setDescription("base configuration key");
     key1.setKey("base");
-    key1.setType(Type.Text);
+    key1.setType(ConfigurationItemKeyType.Text);
 
    assertEquals(key0.hashCode(), key1.hashCode());
    assertEquals(key0, key1);

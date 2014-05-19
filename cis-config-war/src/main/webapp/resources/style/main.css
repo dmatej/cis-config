@@ -184,13 +184,17 @@ ul.form\:table\:error {
  padding: 0px;
 }
 
-.form\:table\:buttonline {
+.form\:table\:buttonline,.form\:table\:buttonline2 {
  display: inline-block;
  float: right;
 }
 
-.form\:table\:buttonline * {
+.form\:table\:buttonline *,.form\:table\:buttonline2 * {
  margin-left: 10px;
+}
+
+.form\:table\:buttonline2 {
+ margin-top: 30px;
 }
 
 input.login,input.short,select.short {
@@ -219,4 +223,19 @@ input.login,input.short,select.short {
 #form\:data-table a.id {
  color: black;
  text-decoration: none;
+}
+
+.form-info-message {
+ color: #035273;
+ font-weight: bold;
+}
+
+.form-warning-message {
+ color: #de851a;
+ font-weight: bold;
+}
+
+.form-error-message {
+ color: #990000;
+ font-weight: bold;
 }

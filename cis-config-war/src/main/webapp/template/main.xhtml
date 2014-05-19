@@ -9,7 +9,10 @@
 <h:head>
   <meta charset="utf-8" />
 
-  <title>CIS config<ui:fragment rendered="#{!empty pageName}"> &gt; <h:outputText value="#{pageName}" /></ui:fragment><ui:fragment rendered="#{!empty pageTitle}"> &gt; <h:outputText value="#{pageTitle}" /></ui:fragment></title>
+  <title>CIS config<ui:fragment rendered="#{!empty pageName}"> - <h:outputText value="#{pageName}" /></ui:fragment><ui:fragment rendered="#{!empty pageTitle}"> - <h:outputText value="#{pageTitle}" /></ui:fragment></title>
+
+  <meta name="description" content="Konfigurační nástroj aplikací CIS" />
+  <meta name="author" content="David Matějček, Rudolf Augusta, Jan Krupička, Michal Dékány, Andriy Piryatynskyy" />
 
   <h:outputStylesheet library="style" name="main.css" />
 </h:head>

@@ -1,67 +1,69 @@
 <ui:composition template="/template/main.xhtml"
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:h="http://xmlns.jcp.org/jsf/html"
-  xmlns:f="http://xmlns.jcp.org/jsf/core"
-  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+ xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:h="http://xmlns.jcp.org/jsf/html"
+ xmlns:f="http://xmlns.jcp.org/jsf/core"
+ xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-  <ui:param name="pageName" value="Konfigurace" />
-  <ui:param name="pageTitle" value="Aktivní konfigurace" />
+ <ui:param name="pageName" value="Konfigurace" />
+ <ui:param name="pageTitle" value="Aktivní konfigurace" />
 
-  <f:metadata>
-    <f:viewParam name="selectedCategory" value="#{activeConfigList.selectedCategory}" />
-    <f:viewAction action="#{activeConfigList.init}" />
-  </f:metadata>
+ <f:metadata>
+  <f:viewParam name="selectedCategory" value="#{activeConfigList.selectedCategory}" />
+  <f:viewAction action="#{activeConfigList.init}" />
+ </f:metadata>
 
-  <ui:define name="content">
-    <h:form>
-      <h:panelGrid columns="2" border="1">
-        <h:panelGroup>Kategorie</h:panelGroup>
+ <ui:define name="content">
+  <h:form id="form">
+   <h:panelGrid columns="2" id="categories">
+    <h:panelGroup>
+     <h:outputLabel for="category" value="Kategorie" />
+    </h:panelGroup>
 
-        <h:panelGroup id="category">
-          <h:selectOneMenu value="#{activeConfigList.selectedCategory}">
-            <f:selectItem itemLabel="vyberte kategorii" itemValue="#{activeConfigList.noneSelector}" />
-            <f:selectItem itemLabel="všechny" itemValue="#{activeConfigList.allSelector}" />
-            <f:selectItems value="#{activeConfigList.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
+    <h:panelGroup>
+     <h:selectOneMenu id="category" value="#{activeConfigList.selectedCategory}">
+      <f:selectItem itemLabel="vyberte kategorii" itemValue="#{activeConfigList.noneSelector}" />
+      <f:selectItem itemLabel="všechny" itemValue="#{activeConfigList.allSelector}" />
+      <f:selectItems value="#{activeConfigList.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
 
-            <f:ajax execute="category" render="configItems" />
-          </h:selectOneMenu>
-        </h:panelGroup>
+      <f:ajax execute="category" render="@form" />
+     </h:selectOneMenu>
+    </h:panelGroup>
 
-      </h:panelGrid>
+   </h:panelGrid>
 
-      <h:dataTable id="configItems" value="#{activeConfigList.filteredActiveItems}" var="item">
-        <h:column>
-          <f:facet name="header">ID</f:facet>
-          <a id="activeConfig-#{item.id}"><h:outputText value="#{item.id}" /></a>
-        </h:column>
-        <h:column>
-          <f:facet name="header">Klíč</f:facet>
-          <h:outputText value="#{item.key.key}" />
-        </h:column>
-        <h:column>
-          <f:facet name="header">Hodnota</f:facet>
-          <h:outputText value="#{item.value}" />
-        </h:column>
-        <h:column>
-          <f:facet name="header">Naposledy změněno</f:facet>
-          <h:outputText value="#{item.value}">
-            <f:convertDateTime type="date" pattern="dd.MM.yyyy HH:mm" />
-          </h:outputText>
-        </h:column>
-        <h:column>
-          <f:facet name="header">Změnil</f:facet>
-          <h:outputText value="#{item.user.login}" />
-        </h:column>
-        <h:column>
-          <h:commandLink value="smazat" onclick="return confirm('Opravdu chcete smazat tuto položku?')">
-            <f:ajax listener="#{activeConfigList.actionDeleteItem(item)}" render="configItems" />
-          </h:commandLink>
-        </h:column>
-      </h:dataTable>
-    </h:form>
+   <ui:param name="items" value="#{activeConfigList.filteredActiveItems}" />
 
-    <ul>
-      <li><a href="/cis/config">Zpět</a></li>
-    </ul>
-  </ui:define>
+   <h:outputText rendered="#{empty items and activeConfigList.selectedCategory != activeConfigList.noneSelector}" escape="false"
+    value="&lt;p&gt;Pro zvolenou kategorii nebyli nalezeny žádné položky.&lt;/p&gt;" />
+
+   <h:dataTable id="data-table" value="#{items}" var="item" rendered="#{not empty items}">
+    <h:column>
+     <f:facet name="header">Klíč</f:facet>
+     <h:outputText value="#{item.key.key}" />
+    </h:column>
+    <h:column>
+     <f:facet name="header">Hodnota</f:facet>
+     <h:outputText value="#{item.value}" />
+    </h:column>
+    <h:column>
+     <f:facet name="header">Naposledy změněno</f:facet>
+     <h:outputText value="#{item.update}">
+      <f:convertDateTime type="date" pattern="dd.MM.yyyy HH:mm" />
+     </h:outputText>
+    </h:column>
+    <h:column>
+     <f:facet name="header">Změnil</f:facet>
+     <h:outputText value="#{item.user.login}" />
+    </h:column>
+    <h:column>
+     <f:facet name="header">Smazání</f:facet>
+     <h:commandLink actionListener="#{activeConfigList.actionDeleteItem(item.id)}" value="smazat" onclick="return confirm('Opravdu chcete smazat tuto položku?');">
+      <f:ajax render="form" />
+     </h:commandLink>
+    </h:column>
+   </h:dataTable>
+
+   <h:messages for="form" infoClass="form-info-message" warnClass="form-warning-message" errorClass="form-error-message" />
+  </h:form>
+ </ui:define>
 </ui:composition>

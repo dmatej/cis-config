@@ -17,29 +17,44 @@ import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.ejb.dao.exceptions.UniqueKeyException;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
-import cz.i.cis.config.jpa.Type;
+import cz.i.cis.config.jpa.ConfigurationItemKeyType;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
+import cz.i.cis.config.web.exceptions.NonExistentCategoryException;
 
-
+/**
+ * Backing bean for item key creation.
+ */
 @Named(value = "itemKeyCreate")
 @ViewScoped
 public class ItemKeyCreateBean {
+
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(ItemKeyCreateBean.class);
 
   @EJB
+  /**Data access object for item key manipulation.*/
   private ConfigurationItemKeyDao itemKeyDao;
   @EJB
+  /**Data access object for item category manipulation.*/
   private ConfigurationCategoryDao categoryDao;
 
+  /** Collection of all item categories. */
   private Map<String, ConfigurationItemCategory> allCategories;
 
+  /** New item key name. */
   private String key;
-  private Type type;
+  /** New item key type. */
+  private ConfigurationItemKeyType type;
+  /** New item key category. */
   private String selectedCategory;
+  /** New item key description. */
   private String description;
 
 
+  /**
+   * Loads available categories.
+   */
   @PostConstruct
   public void init() {
     LOG.debug("init()");
@@ -47,87 +62,152 @@ public class ItemKeyCreateBean {
   }
 
 
-  public String actionAddItemKey(){
+  /**
+   * Adds new item key to database.
+   *
+   * @return Navigation outcome.
+   */
+  public String actionAddItemKey() {
     LOG.debug("actionAddItemKey()");
     String link = "";
     try {
       if (!allCategories.containsKey(selectedCategory)) {
-        throw new IllegalArgumentException("Selected category is not valid.");
+        throw new NonExistentCategoryException();
       }
 
       ConfigurationItemKey newItemKey = new ConfigurationItemKey();
-      newItemKey.setKey(key);
-      newItemKey.setType(type);
-      newItemKey.setCategory(allCategories.get(selectedCategory));
-      newItemKey.setDescription(description);
+        newItemKey.setKey(key);
+        newItemKey.setType(type);
+        newItemKey.setCategory(allCategories.get(selectedCategory));
+        newItemKey.setDescription(description);
 
       itemKeyDao.addItemKey(newItemKey);
 
       // return "edit?faces-redirect=true&includeViewParams=true&id=" + newUser.getId();
       link = "list.xhtml#itemKey-" + newItemKey.getId();
-      FacesUtils.redirect(link);
+      FacesUtils.redirectToURL(link);
+    } catch (UniqueKeyException e) {
+      LOG.error("Failed to add item key: unique key", e);
+      FacesMessagesUtils.addErrorMessage("form:key", "Tento klíč již existuje", e);
+    } catch (IOException e) {
+      LOG.error("Failed to add item key: failed to redirect.", e);
+      FacesMessagesUtils.failedRedirectMessage(link, e);
+    } catch (NonExistentCategoryException e) {
+      LOG.error("Failed to add item key: nonexistent category", e);
+      FacesMessagesUtils.addErrorMessage("form:category", e.getMessage(), "");
+    } catch (Exception e) {
+      LOG.error("Failed to add item key.", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se přidat nový klíč pro konfigurační položky", e);
     }
-    catch (UniqueKeyException exc) {
-      FacesMessagesUtils.addErrorMessage("form:key", "Nepodařilo se přidat nový klíč", FacesUtils.getRootMessage(exc));
-    }
-    catch (IOException exc) {
-      FacesMessagesUtils.failedRedirectMessage(link, exc);
-    }
-    catch (IllegalArgumentException exc) {
-      FacesMessagesUtils.addErrorMessage("form:category", exc.getMessage(), null);
-    }
-    catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat nový klíč", FacesUtils.getRootMessage(exc));
-    }
+
     return null;
   }
 
 
-  public Type[] getAllTypes() {
+  /**
+   * Returns collection of available item key types.
+   *
+   * @return Collection of available item key types.
+   */
+  public ConfigurationItemKeyType[] getAllTypes() {
     LOG.debug("getAllTypes()");
-    return Type.values();
+    return ConfigurationItemKeyType.values();
   }
 
+
+  /**
+   * Returns collection of available categories.
+   *
+   * @return Collection of available categories.
+   */
   public Collection<ConfigurationItemCategory> getAllCategories() {
     LOG.debug("getAllCategories()");
     return allCategories.values();
   }
 
+
+  /**
+   * Returns item key name.
+   *
+   * @return Item key name.
+   */
   public String getKey() {
     LOG.trace("getKey()");
     return key;
   }
 
+
+  /**
+   * Sets item key name.
+   *
+   * @param key Sets item key name.
+   */
   public void setKey(String key) {
     LOG.debug("setKey(key={})", key);
     this.key = key;
   }
 
-  public Type getType() {
+
+  /**
+   * Returns item key type.
+   *
+   * @return Item key type.
+   */
+  public ConfigurationItemKeyType getType() {
     LOG.trace("getType()");
     return type;
   }
 
-  public void setType(Type type) {
+
+  /**
+   * Sets item key type.
+   *
+   * @param type Item key type.
+   */
+  public void setType(ConfigurationItemKeyType type) {
     LOG.debug("setType(type={})", type);
     this.type = type;
   }
 
+
+  /**
+   * Returns selected category.
+   *
+   * @return Selected category.
+   */
   public String getSelectedCategory() {
     LOG.trace("getSelectedCategory()");
     return selectedCategory;
   }
 
+
+  /**
+   * Sets selected category.
+   *
+   * @param category Selected category.
+   */
   public void setSelectedCategory(String category) {
     LOG.debug("setSelectedCategory(category={})", category);
     this.selectedCategory = category;
   }
 
+
+  /**
+   * Returns item key description.
+   *
+   * @return Item key description.
+   */
   public String getDescription() {
     LOG.trace("getDescription()");
     return description;
   }
 
+
+  /**
+   * Sets item key description.
+   *
+   * @param description Item key description.
+   */
   public void setDescription(String description) {
     LOG.debug("setDescription(description={})", description);
     this.description = description;

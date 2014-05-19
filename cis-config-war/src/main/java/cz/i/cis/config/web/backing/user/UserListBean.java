@@ -12,59 +12,78 @@ import org.slf4j.LoggerFactory;
 import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.web.FacesMessagesUtils;
-import cz.i.cis.config.web.FacesUtils;
 
+
+/**
+ * Backing bean for user listing.
+ */
 @Named(value = "userList")
 @ViewScoped
 public class UserListBean {
 
+  /**Logger object used for logging.*/
   private static final Logger LOG = LoggerFactory.getLogger(UserListBean.class);
 
   @EJB
+  /**Data access object for user manipulation.*/
   private CisUserDao userDao;
 
-  private Integer userID;
-
+  /**Collection of all users.*/
   private List<CisUser> allUsers;
 
 
+  /**
+   * Returns all users.
+   * @return All users.
+   */
   public List<CisUser> getAllUsers() {
     LOG.trace("getAllUsers()");
     if (allUsers == null) {
       try {
         allUsers = userDao.listUsers();
-      } catch (IllegalArgumentException exc) {
-        FacesMessagesUtils.addErrorMessage("form:data-table","Cannot select users from database", null);
+      } catch (IllegalArgumentException e) {
+        LOG.error("Failed to load users.", e);
+        FacesMessagesUtils.addErrorMessage("form:data-table", "Cannot select users from database", (String) null);
       }
     }
     return allUsers;
   }
 
-
-  public String actionDeleteUser() {
-    LOG.debug("actionDeleteUser()");
+  /**
+   * Marks selected user as deleted.
+   * @param id ID of user to mark.
+   */
+  public void actionDeleteUser(String id) {
+    LOG.debug("actionDeleteUser(id={})", id);
     try {
+      Integer userID = Integer.valueOf(id);
       userDao.removeUser(userID);
-      return "list?faces-redirect=true";
-    } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat uživatele", FacesUtils.getRootMessage(exc));
-      return null;
+    } catch (Exception e) {
+      LOG.error("Failed to mark user as deleted: ID = " + id, e);
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat uživatele", e);
     }
   }
 
-
-  public String actionRestoreUser() {
-    LOG.debug("actionRestoreUser()");
+  /**
+   * Cancels deletion mark for selected user.
+   * @return ID of user to cancel deletion for.
+   */
+  public void actionRestoreUser(String id) {
+    LOG.debug("actionRestoreUser(id={})", id);
     try {
+      Integer userID = Integer.valueOf(id);
       userDao.restoreUser(userID);
-      return "list?faces-redirect=true";
-    } catch (Exception exc) {
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se obnovit uživatele", FacesUtils.getRootMessage(exc));
+    } catch (Exception e) {
+      LOG.error("Failed to restore user: ID = " + id, e);
+      FacesMessagesUtils.addErrorMessage("Nepodařilo se obnovit uživatele", e);
     }
-    return null;
   }
 
 
+  /**
+   * Returns CSS classes for user listing.
+   * @return CSS classes for user listing.
+   */
   public String getRowClasses() {
     LOG.debug("getRowClasses()");
     StringBuilder classes = new StringBuilder();
@@ -74,19 +93,6 @@ public class UserListBean {
     if (classes.length() > 0) {
       classes.deleteCharAt(classes.length() - 1);
     }
-
     return classes.toString();
-  }
-
-
-  public void setUserID(Integer userID) {
-    LOG.debug("setUserID(userID={})", userID);
-    this.userID = userID;
-  }
-
-
-  public Integer getUserID() {
-    LOG.trace("getUserID()");
-    return userID;
   }
 }

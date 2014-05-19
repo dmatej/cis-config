@@ -14,7 +14,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
 /**
  * Entity implementation class for {@code ConfigurationProfile}.
  *
@@ -43,7 +42,7 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
   private Integer id;
 
   /** Configuration profile name. */
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String name;
 
   /** Description of configuration profile. */
@@ -60,11 +59,6 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
   @JoinColumn(name = "user_id", nullable = false)
   private CisUser user;
 
-  /**
-   * Constructs configuration profile.
-   */
-  public ConfigurationProfile() {
-  }
 
   /**
    * Returns identifier number of this configuration profile.
@@ -75,6 +69,7 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
     return this.id;
   }
 
+
   /**
    * Sets identifier number of this configuration profile.
    *
@@ -83,6 +78,7 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
   public void setId(Integer id) {
     this.id = id;
   }
+
 
   /**
    * Returns name of this configuration profile.
@@ -93,6 +89,7 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
     return this.name;
   }
 
+
   /**
    * Sets name of this configuration profile.
    *
@@ -101,6 +98,7 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
   public void setName(String name) {
     this.name = name;
   }
+
 
   /**
    * Returns description of this configuration profile.
@@ -111,6 +109,7 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
     return this.description;
   }
 
+
   /**
    * Sets description of this configuration profile.
    *
@@ -119,6 +118,7 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
   public void setDescription(String description) {
     this.description = description;
   }
+
 
   /**
    * Returns timestamp of last update of this configuration profile.
@@ -129,6 +129,7 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
     return this.update;
   }
 
+
   /**
    * Sets timestamp of last update of this configuration profile.
    *
@@ -137,6 +138,7 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
   public void setUpdate(Date update) {
     this.update = update;
   }
+
 
   /**
    * Returns CIS user which last changed this configuration profile.
@@ -147,6 +149,7 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
     return this.user;
   }
 
+
   /**
    * Sets CIS user which last changed this configuration profile.
    *
@@ -156,6 +159,7 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
     this.user = user;
   }
 
+
   /**
    * Compares this object with the entered object for order. Returns a
    * negative integer, zero, or a positive integer as this object is less
@@ -163,11 +167,11 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
    *
    * @param profile the configuration profile to be compared.
    * @return a negative integer, zero, or a positive integer as this object
-   * is less than, equal to, or greater than the entered object.
+   *         is less than, equal to, or greater than the entered object.
    */
   @Override
   public int compareTo(ConfigurationProfile profile) {
-    if(profile == null) {
+    if (profile == null) {
       return 1;
     }
 
@@ -177,8 +181,10 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
     return Integer.compare(id1, id2);
   }
 
+
   /**
-   * Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by {@link java.util.HashMap}.
+   * Returns a hash code value for the object. This method is supported for the benefit of hash
+   * tables such as those provided by {@link java.util.HashMap}.
    *
    * @return A hash code value for this object.
    */
@@ -195,6 +201,7 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
 
     return result;
   }
+
 
   /**
    * Indicates whether some object is "equal to" this one.
@@ -272,12 +279,8 @@ public class ConfigurationProfile implements Comparable<ConfigurationProfile>, S
    */
   @Override
   public String toString() {
-    return new StringBuilder(this.getClass().getCanonicalName())
-      .append("[id=").append(this.getId())
-      .append(", name=").append(this.getName())
-      .append(", description=").append(this.getDescription())
-      .append(", update=").append(this.getUpdate().toString())
-      .append(", user_id=").append(this.getUser().getId())
-      .append("]").toString();
+    return new StringBuilder(this.getClass().getCanonicalName()).append("[id=").append(this.getId()).append(", name=")
+        .append(this.getName()).append(", description=").append(this.getDescription()).append(", update=")
+        .append(this.getUpdate().toString()).append(", user_id=").append(this.getUser().getId()).append("]").toString();
   }
 }

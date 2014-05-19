@@ -73,13 +73,6 @@ public class CisUser implements Comparable<CisUser>, Serializable {
 
 
   /**
-   * Constructs CIS user.
-   */
-  public CisUser() {
-  }
-
-
-  /**
    * Returns identifier number of this user.
    *
    * @return Identifier number of this user.
@@ -220,6 +213,7 @@ public class CisUser implements Comparable<CisUser>, Serializable {
     return status == STATUS_DELETED;
   }
 
+
   /**
    * Compares this object with the entered object for order. Returns a
    * negative integer, zero, or a positive integer as this object is less
@@ -227,11 +221,11 @@ public class CisUser implements Comparable<CisUser>, Serializable {
    *
    * @param user CIS user to be compared.
    * @return a negative integer, zero, or a positive integer as this object
-   * is less than, equal to, or greater than the entered object.
+   *         is less than, equal to, or greater than the entered object.
    */
   @Override
   public int compareTo(CisUser user) {
-    if(user == null) {
+    if (user == null) {
       return 1;
     }
 

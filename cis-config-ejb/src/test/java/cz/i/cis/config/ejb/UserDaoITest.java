@@ -33,9 +33,6 @@ import cz.i.cis.config.helpers.UserTestHelper;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.test.ArquillianITest;
 
-/**
- * @author David Matějček
- */
 @Stateless
 public class UserDaoITest extends ArquillianITest {
 
@@ -61,13 +58,13 @@ public class UserDaoITest extends ArquillianITest {
 
   @Test(expected = PersistenceException.class)
   public void createAlreadyExistingUser() throws PersistenceException {
-    final CisUser user0 = helper.createUser();
-    final CisUser user = new CisUser();
-    user.setLastName("XTMatějka");
-    user.setLogin(user0.getLogin());
-    user.setFirstName("XTAfanasi");
-    user.setBirthDate(new Date());
-    dao.addUser(user);
+    final CisUser userFirst = helper.createUser();
+    final CisUser userSecond = new CisUser();
+    userSecond.setLastName("XTMatějka");
+    userSecond.setLogin(userFirst.getLogin());
+    userSecond.setFirstName("XTAfanasi");
+    userSecond.setBirthDate(new Date());
+    dao.addUser(userSecond);
   }
 
 
@@ -120,22 +117,22 @@ public class UserDaoITest extends ArquillianITest {
 
   @Test
   public void testComparation() {
-    final CisUser user0 = new CisUser();
-    user0.setId(1);
-    user0.setLastName("ZXTMatějka");
-    user0.setLogin("xyz");
-    user0.setFirstName("ZTAfanasi");
-    user0.setBirthDate(new Date());
+    final CisUser userFirst = new CisUser();
+    userFirst.setId(1);
+    userFirst.setLastName("ZXTMatějka");
+    userFirst.setLogin("xyz");
+    userFirst.setFirstName("ZTAfanasi");
+    userFirst.setBirthDate(new Date());
 
-    final CisUser user1 = new CisUser();
-    user1.setId(1);
-    user1.setLastName("ZXTMatějka");
-    user1.setLogin("xyz");
-    user1.setFirstName("ZTAfanasi");
-    user1.setBirthDate(DateUtils.addMinutes(user0.getBirthDate(), 360));
+    final CisUser userSecond = new CisUser();
+    userSecond.setId(1);
+    userSecond.setLastName("ZXTMatějka");
+    userSecond.setLogin("xyz");
+    userSecond.setFirstName("ZTAfanasi");
+    userSecond.setBirthDate(DateUtils.addMinutes(userFirst.getBirthDate(), 360));
 
-    assertEquals(user0.hashCode(), user1.hashCode());
+    assertEquals(userFirst.hashCode(), userSecond.hashCode());
     // assertEquals(user0, user1);
-    assertFalse(EqualsBuilder.reflectionEquals(user0, user1, false));
+    assertFalse(EqualsBuilder.reflectionEquals(userFirst, userSecond, false));
   }
 }

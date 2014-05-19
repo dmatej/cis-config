@@ -41,34 +41,34 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurationProfileItemDaoITest.class);
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationProfileItemDao")
-  private ConfigurationProfileItemDao dao;
+  private ConfigurationProfileItemDao profileItemDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemKeyDao")
-  private ConfigurationItemKeyDao dao_key;
+  private ConfigurationItemKeyDao configItemkeyDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryDao")
-  private ConfigurationCategoryDao dao_category;
+  private ConfigurationCategoryDao categoryDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationProfileDao")
-  private ConfigurationProfileDao dao_profile;
+  private ConfigurationProfileDao profileDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/CisUserDao")
-  private CisUserDao dao_user;
+  private CisUserDao userDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationProfileItemTestHelper")
-  private ConfigurationProfileItemTestHelper helper;
+  private ConfigurationProfileItemTestHelper profileItemHelper;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemKeyTestHelper")
-  private ConfigurationItemKeyTestHelper key_helper;
+  private ConfigurationItemKeyTestHelper configItemKeyHelper;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryTestHelper")
-  private ConfigurationCategoryTestHelper category_helper;
+  private ConfigurationCategoryTestHelper categoryHelper;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationProfileTestHelper")
-  private ConfigurationProfileTestHelper profile_helper;
+  private ConfigurationProfileTestHelper profileHelper;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/UserTestHelper")
-  private UserTestHelper user_helper;
+  private UserTestHelper userHelper;
 
 
   @Before
@@ -79,11 +79,11 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
   @After
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void cleanup() {
-    helper.cleanup();
-    user_helper.cleanup();
-    profile_helper.cleanup();
-    category_helper.cleanup();
-    key_helper.cleanup();
+    profileItemHelper.cleanup();
+    userHelper.cleanup();
+    profileHelper.cleanup();
+    categoryHelper.cleanup();
+    configItemKeyHelper.cleanup();
   }
 
 
@@ -91,62 +91,62 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
   public void creatNewConfigurationProfileItem() {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setName("some category name");
-    dao_category.addCategory(category);
-    category_helper.addToDelete(category);
+    categoryDao.addCategory(category);
+    categoryHelper.addToDelete(category);
 
     final ConfigurationItemKey key = new ConfigurationItemKey();
     key.setCategory(category);
     key.setDescription("base configuration key");
     key.setKey("base");
     key.setType(ConfigurationItemKeyType.Text);
-    dao_key.addItemKey(key);
-    key_helper.addToDelete(key);
+    configItemkeyDao.addItemKey(key);
+    configItemKeyHelper.addToDelete(key);
 
     final CisUser user = new CisUser();
     user.setLastName("Jezek");
     user.setLogin("log");
     user.setFirstName("Karl");
     user.setBirthDate(new Date());
-    dao_user.addUser(user);
-    user_helper.addToDelete(user);
+    userDao.addUser(user);
+    userHelper.addToDelete(user);
 
     final ConfigurationProfile profile = new ConfigurationProfile();
     profile.setName("base configuration");
     profile.setDescription("domain configuration");
     profile.setUpdate(new Date());
     profile.setUser(user);
-    dao_profile.addProfile(profile);
-    profile_helper.addToDelete(profile);
+    profileDao.addProfile(profile);
+    profileHelper.addToDelete(profile);
 
-    final ConfigurationProfileItem profile_item = new ConfigurationProfileItem();
-    profile_item.setKey(key);
-    profile_item.setProfile(profile);
-    profile_item.setValue("key-profile");
-    dao.addItem(profile_item);
-    helper.addToDelete(profile_item);
-    LOG.debug("profile_item: {}", profile_item);
-    assertNotNull("profile_item.id", profile_item.getId());
+    final ConfigurationProfileItem profileItem = new ConfigurationProfileItem();
+    profileItem.setKey(key);
+    profileItem.setProfile(profile);
+    profileItem.setValue("key-profile");
+    profileItemDao.addItem(profileItem);
+    profileItemHelper.addToDelete(profileItem);
+    LOG.debug("profileItem: {}", profileItem);
+    assertNotNull("profileItem.id", profileItem.getId());
 
-    profile_item.setValue("profile-key");
-    dao.updateItem(profile_item);
-    assertTrue(dao.listItems().get(0).getValue().equals("profile-key"));
+    profileItem.setValue("profile-key");
+    profileItemDao.updateItem(profileItem);
+    assertTrue(profileItemDao.listItems().get(0).getValue().equals("profile-key"));
   }
 
 
   @Test(expected = PersistenceException.class)
   public void creatAlreadyExistingConfigurationProfileItem() throws PersistenceException {
-    final ConfigurationProfileItem profile_item = helper.createConfigurationProfileItem();
-    final ConfigurationProfileItem copy_profile_item = new ConfigurationProfileItem();
-    copy_profile_item.setProfile(profile_item.getProfile());
-    copy_profile_item.setKey(profile_item.getKey());
-    copy_profile_item.setValue(profile_item.getValue());
-    dao.addItem(copy_profile_item);
+    final ConfigurationProfileItem profileItem = profileItemHelper.createConfigurationProfileItem();
+    final ConfigurationProfileItem profileItemCopy = new ConfigurationProfileItem();
+    profileItemCopy.setProfile(profileItem.getProfile());
+    profileItemCopy.setKey(profileItem.getKey());
+    profileItemCopy.setValue(profileItem.getValue());
+    profileItemDao.addItem(profileItemCopy);
   }
 
 
   @Test
   public void listConfigurationProfileItems() {
-    final List<ConfigurationProfileItem> items = dao.listItems();
+    final List<ConfigurationProfileItem> items = profileItemDao.listItems();
     LOG.debug("list configuration profile items: {}", items);
     assertNotNull("configuration profile items", items);
     assertTrue("items.empty", items.isEmpty());
@@ -158,21 +158,21 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
     final ConfigurationItemKey key = new ConfigurationItemKey();
     final ConfigurationProfile profile = new ConfigurationProfile();
 
-    final ConfigurationProfileItem item0 = new ConfigurationProfileItem();
-    item0.setId(1);
-    item0.setKey(key);
-    item0.setProfile(profile);
-    item0.setValue("key-profile");
+    final ConfigurationProfileItem itemFirst = new ConfigurationProfileItem();
+    itemFirst.setId(1);
+    itemFirst.setKey(key);
+    itemFirst.setProfile(profile);
+    itemFirst.setValue("key-profile");
 
-    final ConfigurationProfileItem item1 = new ConfigurationProfileItem();
-    item1.setId(1);
-    item1.setKey(key);
-    item1.setProfile(profile);
-    item1.setValue("key-profile");
+    final ConfigurationProfileItem itemSecond = new ConfigurationProfileItem();
+    itemSecond.setId(1);
+    itemSecond.setKey(key);
+    itemSecond.setProfile(profile);
+    itemSecond.setValue("key-profile");
 
-    assertEquals(item0.hashCode(), item1.hashCode());
-    assertEquals(item0, item1);
-    assertTrue(item0.equals(item1));
+    assertEquals(itemFirst.hashCode(), itemSecond.hashCode());
+    assertEquals(itemFirst, itemSecond);
+    assertTrue(itemFirst.equals(itemSecond));
   }
 
 }

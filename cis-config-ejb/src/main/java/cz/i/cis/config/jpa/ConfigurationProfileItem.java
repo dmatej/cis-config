@@ -20,7 +20,8 @@ import javax.persistence.UniqueConstraint;
  * @author Mr.FrAnTA (Michal Dékány)
  */
 @Entity
-@Table(name = "configuration_profile_items", uniqueConstraints = @UniqueConstraint(columnNames = {"profile_id", "key_id"}))
+@Table(name = "configuration_profile_items", uniqueConstraints = @UniqueConstraint(columnNames = {"profile_id",
+    "key_id"}))
 public class ConfigurationProfileItem implements Comparable<ConfigurationProfileItem>, Serializable {
 
   /**
@@ -59,6 +60,7 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
   @Transient
   private boolean deleted = false;
 
+
   /**
    * Returns identifier number of this profile item.
    *
@@ -67,6 +69,7 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
   public Integer getId() {
     return this.id;
   }
+
 
   /**
    * Sets identifier number of this profile item.
@@ -77,6 +80,7 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
     this.id = id;
   }
 
+
   /**
    * Returns configuration profile of this item.
    *
@@ -85,6 +89,7 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
   public ConfigurationProfile getProfile() {
     return this.profile;
   }
+
 
   /**
    * Sets configuration profile of this item.
@@ -95,6 +100,7 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
     this.profile = profile;
   }
 
+
   /**
    * Returns configuration item key of this profile item.
    *
@@ -103,6 +109,7 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
   public ConfigurationItemKey getKey() {
     return this.key;
   }
+
 
   /**
    * Sets configuration item key of this profile item.
@@ -113,6 +120,7 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
     this.key = key;
   }
 
+
   /**
    * Returns value of profile item.
    *
@@ -121,6 +129,7 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
   public String getValue() {
     return this.value;
   }
+
 
   /**
    * Sets value of profile item.
@@ -131,6 +140,7 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
     this.value = value;
   }
 
+
   /**
    * Returns information whether is this item deleted.
    *
@@ -139,6 +149,7 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
   public boolean isDeleted() {
     return deleted;
   }
+
 
   /**
    * Sets information whether is this item deleted.
@@ -149,6 +160,7 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
     this.deleted = deleted;
   }
 
+
   /**
    * Compares this object with the entered object for order. Returns a
    * negative integer, zero, or a positive integer as this object is less
@@ -156,11 +168,11 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
    *
    * @param item the configuration profile item to be compared.
    * @return a negative integer, zero, or a positive integer as this object
-   * is less than, equal to, or greater than the entered object.
+   *         is less than, equal to, or greater than the entered object.
    */
   @Override
   public int compareTo(ConfigurationProfileItem item) {
-    if(item == null) {
+    if (item == null) {
       return 1;
     }
 
@@ -170,8 +182,10 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
     return Integer.compare(id1, id2);
   }
 
+
   /**
-   * Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by {@link java.util.HashMap}.
+   * Returns a hash code value for the object. This method is supported for the benefit of hash
+   * tables such as those provided by {@link java.util.HashMap}.
    *
    * @return A hash code value for this object.
    */
@@ -245,6 +259,7 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
     return true;
   }
 
+
   /**
    * Returns string value of configuration profile item in format:
    *
@@ -256,11 +271,8 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
    */
   @Override
   public String toString() {
-    return new StringBuilder(getClass().getCanonicalName())
-        .append("[id=").append(getId())
-        .append(", profile_id=").append( getProfile().getId())
-        .append(", key_id=").append(getKey().getId())
-        .append(", item_value=").append(getValue())
-        .append("]").toString();
+    return new StringBuilder(getClass().getCanonicalName()).append("[id=").append(getId()).append(", profile_id=")
+        .append(getProfile().getId()).append(", key_id=").append(getKey().getId()).append(", item_value=")
+        .append(getValue()).append("]").toString();
   }
 }

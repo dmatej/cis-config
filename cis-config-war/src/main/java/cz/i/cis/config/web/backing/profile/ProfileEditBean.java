@@ -18,7 +18,6 @@ import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileItemDao;
-import cz.i.cis.config.ejb.dao.exceptions.UniqueProfileKeyException;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
 import cz.i.cis.config.jpa.ConfigurationProfile;
@@ -370,7 +369,7 @@ public class ProfileEditBean {
 
       newItemID = -1;
       FacesMessagesUtils.addInfoMessage("form", "Změny konfiguračního profilu byly úspěšně uloženy", null);
-    } catch (UniqueProfileKeyException e) {
+    } catch (Exception e) {
       LOG.error("Failed to save changes.", e);
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se uložit změny konfiguračního profilu", e);
     }

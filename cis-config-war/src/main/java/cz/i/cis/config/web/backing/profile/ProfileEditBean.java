@@ -108,7 +108,7 @@ public class ProfileEditBean {
       this.allCategories = categoryDao.getCategoryMap();
     } catch (IllegalArgumentException e) {
       LOG.error("Failed to load categories.", e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se načíst kategorie z databáze.", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se načíst kategorie z databáze", e);
     }
     refreshItemKeys();
     refreshItems();
@@ -127,7 +127,7 @@ public class ProfileEditBean {
       }
       if (!allCategories.containsKey(selectedCategory)) {
         LOG.warn("Unknown category requested: {}", selectedCategory);
-        FacesMessagesUtils.addErrorMessage("form:category", "Vybraná kategorie neexistuje", null);
+        FacesMessagesUtils.addErrorMessage("form:category", "Vybraná kategorie neexistuje", (String) null);
         filteredItemKeys = Collections.emptyMap();
         return;
       }
@@ -147,7 +147,7 @@ public class ProfileEditBean {
       }
     } catch (Exception e) {
       LOG.error("Failed to refresh item keys.", e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit klíče položek", FacesMessagesUtils.getRootMessage(e));
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo obnovit klíče položek", FacesMessagesUtils.getRootMessage(e));
     }
   }
 
@@ -161,7 +161,7 @@ public class ProfileEditBean {
       profileItems = ConfigurationProfileItemDao.getItemMap(items);
     } catch (Exception e) {
       LOG.error("Failed to retrieve items.", e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo obnovit položky", FacesMessagesUtils.getRootMessage(e));
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo obnovit položky", FacesMessagesUtils.getRootMessage(e));
     }
   }
 
@@ -171,20 +171,20 @@ public class ProfileEditBean {
    */
   protected ProfileItemValues validateCurrentItem() {
     if (NONE_SELECTOR.equals(selectedCategory) || selectedCategory == null) {
-      FacesMessagesUtils.addErrorMessage("form:category", "Není zvolena kategorie", null);
+      FacesMessagesUtils.addErrorMessage("form:category", "Není zvolena kategorie", (String) null);
       return null;
     }
 
     ConfigurationItemKey key = filteredItemKeys.get(selectedItemKey);
 
     if (key == null || NONE_SELECTOR.equals(selectedItemKey) || selectedItemKey == null) {
-      FacesMessagesUtils.addErrorMessage("form:key", "Není zvolen klíč", null);
+      FacesMessagesUtils.addErrorMessage("form:key", "Není zvolen klíč", (String) null);
       return null;
     }
 
     String value = profileItemValue;
     if (value == null || value.isEmpty()) {
-      FacesMessagesUtils.addErrorMessage("form:value", "Není vyplněna hodnota klíče", null);
+      FacesMessagesUtils.addErrorMessage("form:value", "Není vyplněna hodnota klíče", (String) null);
       return null;
     }
 
@@ -212,6 +212,8 @@ public class ProfileEditBean {
 
     profileItems.put(itemId.toString(), item);
 
+    FacesMessagesUtils.addInfoMessage("form", "Položka byla úspěšně přidána", null);
+
     this.setSelectedItemKey(NONE_SELECTOR);
   }
 
@@ -234,6 +236,8 @@ public class ProfileEditBean {
     this.editItem.setKey(values.getKey());
     this.editItem.setValue(values.getValue());
     this.editItem = null;
+
+    FacesMessagesUtils.addInfoMessage("form", "Položka byla upravena", null);
 
     this.setSelectedItemKey(NONE_SELECTOR);
   }
@@ -259,6 +263,7 @@ public class ProfileEditBean {
     editItem = profileItems.get(itemId);
     if(editItem == null) {
       LOG.warn("Requested item not found: ID = {}", itemId);
+      FacesMessagesUtils.addWarningMessage("form", "Položka nebyla nalezena", null);
     } else{
       ConfigurationItemKey key = editItem.getKey();
       ConfigurationItemCategory category = key.getCategory();
@@ -279,11 +284,12 @@ public class ProfileEditBean {
     LOG.debug("actionDeleteItem(itemId={})", itemId);
 
     Integer itemIdInt;
-    try{
+    try {
       itemIdInt = Integer.valueOf(itemId);
     }
-    catch(NumberFormatException e){
+    catch(NumberFormatException e) {
       LOG.warn("Requested ID is not valid: ID = {}", itemId);
+      FacesMessagesUtils.addWarningMessage("form", "Položka ke smazání nebyla nalezena", null);
       return;
     }
 
@@ -293,9 +299,10 @@ public class ProfileEditBean {
     }
 
     final ConfigurationProfileItem deleteItem = profileItems.get(itemId);
-    if(deleteItem == null){
+    if(deleteItem == null) {
       LOG.warn("Requested item not found: ID = {}", itemId);
-    }else{
+      FacesMessagesUtils.addWarningMessage("form", "Položka ke smazání nebyla nalezena", null);
+    } else {
       if (isNewItem(itemIdInt)) {
         // new items delete from cache right away
         profileItems.remove(itemId);
@@ -305,6 +312,7 @@ public class ProfileEditBean {
         deleteItem.setDeleted(true);
         LOG.debug("Existing item marked for deletion: {}", deleteItem);
       }
+      FacesMessagesUtils.addInfoMessage("form", "Položka byla smazána", null);
     }
   }
 
@@ -318,9 +326,12 @@ public class ProfileEditBean {
     final ConfigurationProfileItem restoreItem = profileItems.get(itemId.toString());
     if(restoreItem == null) {
       LOG.warn("Requested item not found: ID = {}", itemId);
+      FacesMessagesUtils.addWarningMessage("form", "Položka k obnovení nebyla nalezena", null);
     }else{
       restoreItem.setDeleted(false);
     }
+
+    FacesMessagesUtils.addInfoMessage("form", "Položka byla obnovena", null);
   }
 
   /**
@@ -335,9 +346,10 @@ public class ProfileEditBean {
       profileItems = ConfigurationProfileItemDao.getItemMap(updatedItems);
 
       newItemID = -1;
+      FacesMessagesUtils.addInfoMessage("form", "Změny konfiguračního profilu byly úspěšně uloženy", null);
     } catch (UniqueProfileKeyException e) {
       LOG.error("Failed to save changes.", e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny: " + FacesMessagesUtils.getRootMessage(e), "");
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se uložit změny konfiguračního profilu", e);
     }
   }
 
@@ -572,6 +584,11 @@ public class ProfileEditBean {
    */
   public String getProfileName() {
     LOG.trace("getProfileName()");
+    if(profile == null) {
+      LOG.warn("Profile is null");
+      return "";
+    }
+
     return profile.getName();
   }
 

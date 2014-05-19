@@ -115,7 +115,7 @@ public class ItemKeyEditBean {
         FacesMessagesUtils.failedRedirectMessage(link, e);
       } catch (IllegalArgumentException e) {
         LOG.error("Failed to update item key.");
-        FacesMessagesUtils.addErrorMessage("form:category", e.getMessage(), null);
+        FacesMessagesUtils.addErrorMessage("form:category", e.getMessage(), (String) null);
       } catch (Exception e) {
         LOG.error("Failed to update item key.");
         FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", e);

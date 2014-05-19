@@ -95,7 +95,7 @@ public class ItemKeyCreateBean {
       FacesMessagesUtils.failedRedirectMessage(link, e);
     } catch (IllegalArgumentException e) {
       LOG.error("Failed to add item key.", e);
-      FacesMessagesUtils.addErrorMessage("form:category", e.getMessage(), null);
+      FacesMessagesUtils.addErrorMessage("form:category", e.getMessage(), (String) null);
     } catch (Exception e) {
       LOG.error("Failed to add item key.", e);
       FacesMessagesUtils.addErrorMessage("Nepodařilo se přidat nový klíč", e);

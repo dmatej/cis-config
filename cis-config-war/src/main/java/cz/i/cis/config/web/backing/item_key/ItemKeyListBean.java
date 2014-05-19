@@ -74,12 +74,13 @@ public class ItemKeyListBean {
     try {
       Integer itemKeyID = Integer.valueOf(id);
       itemKeyDao.removeItemKey(itemKeyID);
+      FacesMessagesUtils.addInfoMessage("form", "Konfigurační klíč byl smazán");
     } catch (ActiveItemKeyException e) {
       LOG.warn("Try to remove item key used in active configuration: ID = " + id, e);
-      FacesMessagesUtils.addErrorMessage("Klíč se používá v aktivní konfiguraci a proto nelze smazat", e);
+      FacesMessagesUtils.addErrorMessage("form", "Konfigurační klíč se používá v aktivní konfiguraci a proto nelze smazat", e);
     } catch (Exception e) {
       LOG.error("Failed to remove item key: ID = " + id, e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat klíč", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se smazat konfigurační klíč", e);
     }
   }
 
@@ -100,17 +101,17 @@ public class ItemKeyListBean {
       }
 
       if (!allCategories.containsKey(selectedCategory)) {
-        throw new IllegalArgumentException("Selected category is not valid.");
+        throw new IllegalArgumentException("Vybraná kategorie není správná (nejspíš neexistuje)");
       }
 
       ConfigurationItemCategory filter = allCategories.get(selectedCategory);
       return itemKeyDao.filterItemKeys(filter);
     } catch (IllegalArgumentException e) {
       LOG.error("Failed to filter item keys.", e);
-      FacesMessagesUtils.addErrorMessage("form:category", e.getMessage(), null);
+      FacesMessagesUtils.addErrorMessage("form:category", e.getMessage(), (String) null);
     } catch(Exception e){
       LOG.error("Failed to filter item keys.", e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se načíst klíče položek.", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se načíst klíče položek", e);
     }
     return Collections.emptyList();
   }
@@ -138,7 +139,7 @@ public class ItemKeyListBean {
    * @return Currently selected category.
    */
   public String getSelectedCategory() {
-    LOG.trace("getSelectedCategory()");
+    LOG.debug("getSelectedCategory()");
     return selectedCategory;
   }
 

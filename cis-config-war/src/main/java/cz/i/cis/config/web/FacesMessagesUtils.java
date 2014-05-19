@@ -71,6 +71,16 @@ public final class FacesMessagesUtils {
   }
 
   /**
+   * Adds faces message with error severity.
+   * @param clientId Related view component id.
+   * @param sumary Short message.
+   * @param cause Error cause. Root message is used for description.
+   */
+  public static void addErrorMessage(final String clientId, final String sumary, final Throwable cause) {
+    addMessage(FacesMessage.SEVERITY_ERROR, clientId, sumary, getRootMessage(cause));
+  }
+
+  /**
    * Adds faces message with warning severity.
    * @param sumary Short message.
    * @param detail Long description.

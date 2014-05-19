@@ -95,10 +95,10 @@ public class ActiveConfigListBean {
       }
     } catch (IllegalArgumentException e) {
       LOG.error("Failed to refresh active items.", e);
-      FacesMessagesUtils.addErrorMessage(e.getMessage(), "");
+      FacesMessagesUtils.addErrorMessage("form", e.getMessage(), "");
     } catch (Exception e) {
       LOG.error("Failed to refresh active items.", e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se obnovit aktivní položky", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se obnovit aktivní položky", e);
     }
   }
 
@@ -115,7 +115,7 @@ public class ActiveConfigListBean {
       configItemDao.removeItem(activeItemID);
     } catch (Exception e) {
       LOG.error("Failed to delete item.", e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat položku", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se smazat položku", e);
     }
   }
 

@@ -10,14 +10,14 @@
   <f:viewAction action="#{profileEdit.init}" />
  </f:metadata>
 
+ <ui:param name="pageName" value="Konfigurační profily" />
+ <ui:param name="pageTitle" value="Editace položek profilu &quot;#{profileEdit.profileName}&quot;" />
 
  <ui:define name="content">
   <c:choose>
    <c:when test="${profileEdit.profile != null}">
-    <ui:param name="pageName" value="Konfigurační profily" />
-    <ui:param name="pageTitle" value="Editace položek profilu &quot;#{profileEdit.profileName}&quot;" />
-
     <h:form id="form">
+     <h:messages for="form" infoClass="form-info-message" warnClass="form-warning-message" errorClass="form-error-message" />
 
      <h:panelGrid columns="3">
       <h:panelGroup>

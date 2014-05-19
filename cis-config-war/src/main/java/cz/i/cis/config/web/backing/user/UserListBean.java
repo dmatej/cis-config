@@ -43,7 +43,7 @@ public class UserListBean {
         allUsers = userDao.listUsers();
       } catch (IllegalArgumentException e) {
         LOG.error("Failed to load users.", e);
-        FacesMessagesUtils.addErrorMessage("form:data-table", "Cannot select users from database", null);
+        FacesMessagesUtils.addErrorMessage("form:data-table", "Cannot select users from database", (String) null);
       }
     }
     return allUsers;

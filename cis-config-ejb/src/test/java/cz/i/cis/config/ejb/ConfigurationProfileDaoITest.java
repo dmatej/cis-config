@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileDao;
-import cz.i.cis.config.ejb.dao.exceptions.UserAlreadyExistsException;
 import cz.i.cis.config.helpers.ConfigurationProfileTestHelper;
 import cz.i.cis.config.helpers.UserTestHelper;
 import cz.i.cis.config.jpa.CisUser;
@@ -52,7 +51,7 @@ public class ConfigurationProfileDaoITest extends ArquillianITest {
 
 
   @Test
-  public void creatNewConfigurationProfile() throws UserAlreadyExistsException {
+  public void creatNewConfigurationProfile() {
 
     final CisUser user = new CisUser();
     user.setLastName("Jezek");
@@ -104,23 +103,23 @@ public class ConfigurationProfileDaoITest extends ArquillianITest {
   public void testComparationConfigurationProfiles() {
     final CisUser user = new CisUser();
 
-    final ConfigurationProfile profile0 = new ConfigurationProfile();
-    profile0.setId(1);
-    profile0.setUser(user);
-    profile0.setDescription("description");
-    profile0.setName("profile name");
-    profile0.setUpdate(new Date());
+    final ConfigurationProfile profileFirst = new ConfigurationProfile();
+    profileFirst.setId(1);
+    profileFirst.setUser(user);
+    profileFirst.setDescription("description");
+    profileFirst.setName("profile name");
+    profileFirst.setUpdate(new Date());
 
-    final ConfigurationProfile profile1 = new ConfigurationProfile();
-    profile1.setId(1);
-    profile1.setUser(user);
-    profile1.setDescription("description");
-    profile1.setName("profile name");
-    profile1.setUpdate(new Date());
+    final ConfigurationProfile profileSecond = new ConfigurationProfile();
+    profileSecond.setId(1);
+    profileSecond.setUser(user);
+    profileSecond.setDescription("description");
+    profileSecond.setName("profile name");
+    profileSecond.setUpdate(new Date());
 
-    assertEquals(profile0.hashCode(), profile1.hashCode());
-    assertEquals(profile0, profile1);
-    assertTrue(profile0.equals(profile1));
+    assertEquals(profileFirst.hashCode(), profileSecond.hashCode());
+    assertEquals(profileFirst, profileSecond);
+    assertTrue(profileFirst.equals(profileSecond));
   }
 
 }

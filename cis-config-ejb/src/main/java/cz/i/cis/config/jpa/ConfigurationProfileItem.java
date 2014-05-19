@@ -15,13 +15,9 @@ import javax.persistence.UniqueConstraint;
 
 /**
  * Entity implementation class for {@code ConfigurationProfileItem}.
- *
- * @author David Matějček
- * @author Mr.FrAnTA (Michal Dékány)
  */
 @Entity
-@Table(name = "configuration_profile_items", uniqueConstraints = @UniqueConstraint(columnNames = {"profile_id",
-    "key_id"}))
+@Table(name = "configuration_profile_items", uniqueConstraints = @UniqueConstraint(columnNames = {"profile_id", "key_id"}))
 public class ConfigurationProfileItem implements Comparable<ConfigurationProfileItem>, Serializable {
 
   /**
@@ -271,8 +267,11 @@ public class ConfigurationProfileItem implements Comparable<ConfigurationProfile
    */
   @Override
   public String toString() {
-    return new StringBuilder(getClass().getCanonicalName()).append("[id=").append(getId()).append(", profile_id=")
-        .append(getProfile().getId()).append(", key_id=").append(getKey().getId()).append(", item_value=")
-        .append(getValue()).append("]").toString();
+    return new StringBuilder(getClass().getCanonicalName())
+      .append("[id=").append(getId())
+      .append(", profile_id=").append(getProfile().getId())
+      .append(", key_id=").append(getKey().getId())
+      .append(", item_value=").append(getValue())
+      .append("]").toString();
   }
 }

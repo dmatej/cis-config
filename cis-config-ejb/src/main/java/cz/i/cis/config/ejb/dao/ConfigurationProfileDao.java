@@ -9,6 +9,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -29,6 +30,19 @@ public class ConfigurationProfileDao {
     return em.find(ConfigurationProfile.class, id);
   }
 
+  public ConfigurationProfile getProfile(String name) {
+    final TypedQuery<ConfigurationProfile> query = em.createQuery(
+        "SELECT profile FROM ConfigurationProfile profile WHERE profile.name = :name",
+        ConfigurationProfile.class);
+
+    query.setParameter("name", name);
+
+    try {
+      return query.getSingleResult();
+    } catch (NoResultException e) {
+      return null;
+    }
+  }
 
   public List<ConfigurationProfile> listProfiles() {
     final TypedQuery<ConfigurationProfile> query = em.createQuery("SELECT profile FROM ConfigurationProfile profile",

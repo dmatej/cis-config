@@ -17,9 +17,6 @@ import javax.persistence.TemporalType;
 
 /**
  * Entity implementation class for {@code ConfigurationItem}.
- *
- * @author David Matějček
- * @author Mr.FrAnTA (Michal Dékány)
  */
 @Entity
 @Table(name = "configuration_items")
@@ -279,8 +276,12 @@ public class ConfigurationItem implements Comparable<ConfigurationItem>, Seriali
    */
   @Override
   public String toString() {
-    return new StringBuilder(getClass().getCanonicalName()).append("[id=").append(getId()).append(", key_id=")
-        .append(getKey().getId()).append(", item_value=").append(getValue()).append(", update=")
-        .append(getUpdate().toString()).append(", user_id=").append(getUser().getId()).append("]").toString();
+    return new StringBuilder(getClass().getCanonicalName())
+      .append("[id=").append(getId())
+      .append(", key_id=").append(getKey().getId())
+      .append(", item_value=").append(getValue())
+      .append(", update=").append(getUpdate().toString())
+      .append(", user_id=").append(getUser().getId())
+      .append("]").toString();
   }
 }

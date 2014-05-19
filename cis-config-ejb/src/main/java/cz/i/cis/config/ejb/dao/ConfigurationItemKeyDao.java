@@ -11,6 +11,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -33,6 +34,19 @@ public class ConfigurationItemKeyDao {
     return em.find(ConfigurationItemKey.class, id);
   }
 
+  public ConfigurationItemKey getItemKey(String key) {
+    final TypedQuery<ConfigurationItemKey> query = em.createQuery(
+        "SELECT itemKey FROM ConfigurationItemKey itemKey WHERE itemKey.key = :key",
+        ConfigurationItemKey.class);
+
+    query.setParameter("key", key);
+
+    try {
+      return query.getSingleResult();
+    } catch (NoResultException exc) {
+      return null;
+    }
+  }
 
   public List<ConfigurationItemKey> listItemKeys() {
     final TypedQuery<ConfigurationItemKey> query = em.createQuery("SELECT itemKey FROM ConfigurationItemKey itemKey",
@@ -43,7 +57,7 @@ public class ConfigurationItemKeyDao {
 
 
   public List<ConfigurationItemKey> filterItemKeys(ConfigurationItemCategory category) {
-    category = em.getReference(ConfigurationItemCategory.class, category.getId());
+    category = em.find(ConfigurationItemCategory.class, category.getId());
 
     final TypedQuery<ConfigurationItemKey> query = em.createQuery(
         "SELECT itemKey FROM ConfigurationItemKey itemKey WHERE itemKey.category = :category",

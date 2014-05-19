@@ -17,9 +17,6 @@ import org.apache.commons.lang3.time.DateUtils;
 
 /**
  * Entity implementation class for {@code CisUser}.
- *
- * @author David Matějček
- * @author Mr.FrAnTA (Michal Dékány)
  */
 @Entity
 @Table(name = "cis_users")

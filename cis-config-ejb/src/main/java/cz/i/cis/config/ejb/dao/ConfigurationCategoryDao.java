@@ -11,6 +11,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
@@ -29,6 +30,19 @@ public class ConfigurationCategoryDao {
     return em.find(ConfigurationItemCategory.class, id);
   }
 
+  public ConfigurationItemCategory getCategory(String name) {
+    final TypedQuery<ConfigurationItemCategory> query = em.createQuery(
+        "SELECT category FROM ConfigurationItemCategory category WHERE category.name = :name",
+        ConfigurationItemCategory.class);
+
+    query.setParameter("name", name);
+
+    try {
+      return query.getSingleResult();
+    } catch (NoResultException e) {
+      return null;
+    }
+  }
 
   public List<ConfigurationItemCategory> listCategories() {
     final TypedQuery<ConfigurationItemCategory> query = em.createQuery(
@@ -62,8 +76,6 @@ public class ConfigurationCategoryDao {
 
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeCategory(Integer id) {
-    ConfigurationItemCategory category = getCategory(id);
-    ConfigurationItemCategory managed = em.merge(category);
-    em.remove(managed);
+    em.remove(em.getReference(ConfigurationItemCategory.class, id));
   }
 }

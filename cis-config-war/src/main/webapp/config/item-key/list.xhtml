@@ -9,62 +9,75 @@
  <ui:param name="pageTitle" value="Seznam klíčů konfiguračních položek" />
 
  <ui:define name="content">
-  <p>
-   <h:link outcome="create" value="Vytvořit nový klíč" />
-  </p>
+  <c:choose>
+   <c:when test="${not empty itemKeyList.allCategories}">
+    <p>
+     <h:link outcome="create" value="Vytvořit nový klíč" />
+    </p>
 
-  <h:form id="form">
-   <h:panelGrid columns="2" id="categories">
-    <h:panelGroup>
-     <h:outputLabel for="category" value="Kategorie" />
-    </h:panelGroup>
+    <h:form id="form">
+     <h:panelGrid columns="2" id="categories">
+      <h:panelGroup>
+       <h:outputLabel for="category" value="Kategorie" />
+      </h:panelGroup>
 
-    <h:panelGroup>
-     <h:selectOneMenu id="category" value="#{itemKeyList.selectedCategory}">
-      <f:selectItem itemLabel="vyberte kategorii" itemValue="#{itemKeyList.noneSelector}" />
-      <f:selectItem itemLabel="všechny" itemValue="#{itemKeyList.allSelector}" />
-      <f:selectItems value="#{itemKeyList.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
+      <h:panelGroup>
+       <h:selectOneMenu id="category" value="#{itemKeyList.selectedCategory}">
+        <f:selectItem itemLabel="vyberte kategorii" itemValue="#{itemKeyList.noneSelector}" />
+        <f:selectItem itemLabel="všechny" itemValue="#{itemKeyList.allSelector}" />
+        <f:selectItems value="#{itemKeyList.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
 
-      <f:ajax execute="category" render="@form" />
-     </h:selectOneMenu>
-    </h:panelGroup>
-   </h:panelGrid>
+        <f:ajax execute="category" render="@form" />
+       </h:selectOneMenu>
+      </h:panelGroup>
+     </h:panelGrid>
 
-   <ui:param name="items" value="#{itemKeyList.filteredItemKeys}" />
+     <ui:param name="items" value="#{itemKeyList.filteredItemKeys}" />
 
-   <h:outputText rendered="#{empty items}" escape="false" value="&lt;p&gt;Nebyly nalezeny žádné klíče.&lt;/p&gt;" />
+     <h:outputText rendered="#{empty items and itemKeyList.selectedCategory != itemKeyList.noneSelector}" escape="false"
+      value="&lt;p&gt;Nebyly nalezeny žádné klíče.&lt;/p&gt;" />
 
-   <h:dataTable id="data-table" value="#{items}" var="itemKey" rendered="#{not empty items}">
-    <h:column>
-     <f:facet name="header">Klíč</f:facet>
-     <h:outputText value="#{itemKey.key}" />
-    </h:column>
-    <h:column>
-     <f:facet name="header">Typ</f:facet>
-     <h:outputText value="#{itemKey.type}" />
-    </h:column>
-    <h:column>
-     <f:facet name="header">Kategorie</f:facet>
-     <h:outputText value="#{itemKey.category.name}" />
-    </h:column>
-    <h:column>
-     <f:facet name="header">Popis</f:facet>
-     <h:outputText value="#{itemKey.description}" />
-    </h:column>
+     <h:dataTable id="data-table" value="#{items}" var="itemKey" rendered="#{not empty items}">
+      <h:column>
+       <f:facet name="header">Klíč</f:facet>
+       <h:outputText value="#{itemKey.key}" />
+      </h:column>
+      <h:column>
+       <f:facet name="header">Typ</f:facet>
+       <h:outputText value="#{itemKey.type}" />
+      </h:column>
+      <h:column>
+       <f:facet name="header">Kategorie</f:facet>
+       <h:outputText value="#{itemKey.category.name}" />
+      </h:column>
+      <h:column>
+       <f:facet name="header">Popis</f:facet>
+       <h:outputText value="#{itemKey.description}" />
+      </h:column>
 
-    <h:column>
-     <f:facet name="header">Smazání</f:facet>
-     <h:commandLink actionListener="#{itemKeyList.actionDeleteItemKey(itemKey.id)}" value="smazat" onclick="return confirm('Opravdu chcete smazat tento klíč? Klíč bude smazán i z neaktivních profilů.');">
-      <f:ajax render="form" />
-     </h:commandLink>
-    </h:column>
-    <h:column>
-     <f:facet name="header">Editace</f:facet>
-     <h:link outcome="edit" value="upravit">
-      <f:param name="id" value="#{itemKey.id}" />
-     </h:link>
-    </h:column>
-   </h:dataTable>
-  </h:form>
+      <h:column>
+       <f:facet name="header">Smazání</f:facet>
+       <h:commandLink actionListener="#{itemKeyList.actionDeleteItemKey(itemKey.id)}" value="smazat"
+        onclick="return confirm('Opravdu chcete smazat tento klíč? Klíč bude smazán i z neaktivních profilů.');">
+        <f:ajax render="form" />
+       </h:commandLink>
+      </h:column>
+      <h:column>
+       <f:facet name="header">Editace</f:facet>
+       <h:link outcome="edit" value="upravit">
+        <f:param name="id" value="#{itemKey.id}" />
+       </h:link>
+      </h:column>
+     </h:dataTable>
+    </h:form>
+   </c:when>
+   <c:otherwise>
+    <p>
+     Nebyla vytvořena žádná kategorie. Pokud chcete vytvořit vytvořit konfigurační klíče,
+     <h:link outcome="/config/category/create" value="vytvořte" />
+     nejprve nějakou.
+    </p>
+   </c:otherwise>
+  </c:choose>
  </ui:define>
 </ui:composition>

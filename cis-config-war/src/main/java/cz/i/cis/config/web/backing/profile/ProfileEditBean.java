@@ -575,6 +575,14 @@ public class ProfileEditBean {
     return profile.getName();
   }
 
+  /**
+   * Returns current profile.
+   * @return Current profile.
+   */
+  public ConfigurationProfile getProfile() {
+    LOG.trace("getProfile()");
+    return profile;
+  }
 
 
   /**

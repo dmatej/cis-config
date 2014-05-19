@@ -20,7 +20,7 @@ public class NonExistentCategoryException extends Exception {
 
 
   /**
-   * {@inheritDoc}
+   * Constructs a new exception with default detail message.
    */
   public NonExistentCategoryException() {
     super("Vybraná kategorie není správná (nejspíš neexistuje)");

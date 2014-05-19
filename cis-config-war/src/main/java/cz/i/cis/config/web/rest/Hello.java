@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.jpa.CisUser;
 
-
 /**
  * Prototype class to test REST API.
  *
@@ -28,9 +27,8 @@ import cz.i.cis.config.jpa.CisUser;
 @Path("hello")
 public class Hello {
 
-  /**Logger object used for logging.*/
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(Hello.class);
-
 
   @EJB
   /**Data access object for user manipulation.*/

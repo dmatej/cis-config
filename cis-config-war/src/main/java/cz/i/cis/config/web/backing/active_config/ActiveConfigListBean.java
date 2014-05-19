@@ -18,6 +18,7 @@ import cz.i.cis.config.jpa.ConfigurationItem;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
+import cz.i.cis.config.web.exceptions.NonExistentCategoryException;
 
 /**
  * Backing bean for active configuration listing.
@@ -87,13 +88,13 @@ public class ActiveConfigListBean {
         filteredActiveItems = configItemDao.listItems();
       } else {
         if (!allCategories.containsKey(selectedCategory)) {
-          throw new IllegalArgumentException("Vybraná kategorie neexistuje");
+          throw new NonExistentCategoryException();
         }
 
         ConfigurationItemCategory filter = allCategories.get(selectedCategory);
         filteredActiveItems = configItemDao.listConfigurationItems(filter);
       }
-    } catch (IllegalArgumentException e) {
+    } catch (NonExistentCategoryException e) {
       LOG.error("Failed to refresh active items.", e);
       FacesMessagesUtils.addErrorMessage("form", e.getMessage(), "");
     } catch (Exception e) {
@@ -113,6 +114,7 @@ public class ActiveConfigListBean {
     try {
       Integer activeItemID = Integer.valueOf(id);
       configItemDao.removeItem(activeItemID);
+      FacesMessagesUtils.addInfoMessage("form", "Položka byla smazána", "");
     } catch (Exception e) {
       LOG.error("Failed to delete item.", e);
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se smazat položku", e);

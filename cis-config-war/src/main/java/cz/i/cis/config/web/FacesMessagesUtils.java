@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Convenience class for work with messages.
  */
@@ -22,9 +21,16 @@ public final class FacesMessagesUtils {
   /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(FacesMessagesUtils.class);
 
+  /**
+   * Private to enforce static access.
+   */
+  private FacesMessagesUtils() {
+    // hidden
+  }
 
   /**
    * Adds faces message with fatal severity.
+   *
    * @param sumary Short info.
    * @param detail Long description.
    */
@@ -32,8 +38,10 @@ public final class FacesMessagesUtils {
     addMessage(FacesMessage.SEVERITY_FATAL, null, sumary, detail);
   }
 
+
   /**
    * Adds faces message with fatal severity.
+   *
    * @param clientId Related view component id.
    * @param sumary Short message.
    * @param detail Long description.
@@ -42,8 +50,10 @@ public final class FacesMessagesUtils {
     addMessage(FacesMessage.SEVERITY_FATAL, clientId, sumary, detail);
   }
 
+
   /**
    * Adds faces message with error severity.
+   *
    * @param sumary Short message.
    * @param detail Long description.
    */
@@ -51,8 +61,10 @@ public final class FacesMessagesUtils {
     addMessage(FacesMessage.SEVERITY_ERROR, null, sumary, detail);
   }
 
+
   /**
    * Adds faces message with error severity.
+   *
    * @param sumary Short message.
    * @param cause Error cause. Root message is used for description.
    */
@@ -60,8 +72,10 @@ public final class FacesMessagesUtils {
     addMessage(FacesMessage.SEVERITY_ERROR, null, sumary, getRootMessage(cause));
   }
 
+
   /**
    * Adds faces message with error severity.
+   *
    * @param clientId Related view component id.
    * @param sumary Short message.
    * @param detail Long description.
@@ -70,8 +84,10 @@ public final class FacesMessagesUtils {
     addMessage(FacesMessage.SEVERITY_ERROR, clientId, sumary, detail);
   }
 
+
   /**
    * Adds faces message with error severity.
+   *
    * @param clientId Related view component id.
    * @param sumary Short message.
    * @param cause Error cause. Root message is used for description.
@@ -80,8 +96,10 @@ public final class FacesMessagesUtils {
     addMessage(FacesMessage.SEVERITY_ERROR, clientId, sumary, getRootMessage(cause));
   }
 
+
   /**
    * Adds faces message with warning severity.
+   *
    * @param sumary Short message.
    * @param detail Long description.
    */
@@ -89,8 +107,10 @@ public final class FacesMessagesUtils {
     addMessage(FacesMessage.SEVERITY_WARN, null, sumary, detail);
   }
 
+
   /**
    * Adds faces message with warning severity.
+   *
    * @param clientId
    * @param sumary Short message.
    * @param detail Long description.
@@ -99,8 +119,10 @@ public final class FacesMessagesUtils {
     addMessage(FacesMessage.SEVERITY_WARN, clientId, sumary, detail);
   }
 
+
   /**
    * Adds faces message with info severity.
+   *
    * @param sumary Short message.
    * @param detail Long description.
    */
@@ -108,8 +130,10 @@ public final class FacesMessagesUtils {
     addMessage(FacesMessage.SEVERITY_INFO, null, sumary, detail);
   }
 
+
   /**
    * Adds faces message with info severity.
+   *
    * @param clientId Related view component id.
    * @param sumary Short message.
    * @param detail Long description.
@@ -118,8 +142,10 @@ public final class FacesMessagesUtils {
     addMessage(FacesMessage.SEVERITY_INFO, clientId, sumary, detail);
   }
 
+
   /**
    * Adds faces message with given severity.
+   *
    * @param severity Message severity.
    * @param sumary Short message.
    * @param detail Long description.
@@ -128,8 +154,10 @@ public final class FacesMessagesUtils {
     addMessage(severity, null, sumary, detail);
   }
 
+
   /**
    * Adds faces message with given severity.
+   *
    * @param severity Message severity.
    * @param clientId Related view component id.
    * @param sumary Short message.
@@ -142,8 +170,10 @@ public final class FacesMessagesUtils {
     FacesContext.getCurrentInstance().addMessage(clientId, msg);
   }
 
+
   /**
    * Returns current messages.
+   *
    * @return Current messages.
    */
   public static List<FacesMessage> getMessages() {
@@ -157,8 +187,10 @@ public final class FacesMessagesUtils {
     return messages;
   }
 
+
   /**
    * Adds faces message with fatal severity for redirection fail.
+   *
    * @param link Failed redirection URL.
    * @param e Error description.
    */
@@ -168,8 +200,10 @@ public final class FacesMessagesUtils {
     addMessage(FacesMessage.SEVERITY_FATAL, sumary, getRootMessage(e));
   }
 
+
   /**
    * Returns inner most throwable message.
+   *
    * @param t Throwable chain.
    * @return Inner most throwable message.
    */

@@ -8,7 +8,6 @@ import javax.faces.context.FacesContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Convenience class helper methods.
  */
@@ -28,6 +27,7 @@ public final class FacesUtils {
 
   /**
    * Redirects to concrete URL.
+   *
    * @param url Redirection target.
    * @throws IOException If redirection fails.
    */
@@ -36,18 +36,22 @@ public final class FacesUtils {
     FacesContext.getCurrentInstance().getExternalContext().redirect(url);
   }
 
+
   /**
    * Redirects to given outcome.
+   *
    * @param outcome Navigation outcome to redirect to.
    */
-  public static void redirectToOutcome(String outcome){
+  public static void redirectToOutcome(String outcome) {
     LOG.debug("redirectToOutcome(outcome={})", outcome);
     FacesContext facesContext = FacesContext.getCurrentInstance();
     facesContext.getApplication().getNavigationHandler().handleNavigation(facesContext, null, outcome);
   }
 
+
   /**
    * Returns session map.
+   *
    * @return Session map.
    */
   public static Map<String, Object> getSessions() {
@@ -55,36 +59,42 @@ public final class FacesUtils {
     return FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
   }
 
+
   /**
    * Returns session item with specified key.
+   *
    * @param sessionName Key of requested session item.
    * @return Session item with specified key.
    */
   public static Object getSession(String sessionName) {
     LOG.debug("getSession(sessionName={})", sessionName);
     Map<String, Object> sessions = getSessions();
-    if(sessions == null) {
+    if (sessions == null) {
       return null;
     }
     return sessions.get(sessionName);
   }
 
+
   /**
    * Sets session item with specified key.
+   *
    * @param sessionName Session item key.
    * @param value Session item value.
    */
   public static void setSession(String sessionName, Object value) {
     LOG.debug("setSession(sessionName={}, value={})", sessionName, value);
     Map<String, Object> sessions = getSessions();
-    if(sessions == null) {
+    if (sessions == null) {
       return;
     }
     sessions.put(sessionName, value);
   }
 
+
   /**
    * Returns request parameter with specified name.
+   *
    * @param key Name of desired request parameter.
    * @return Request parameter with specified name.
    */
@@ -93,11 +103,13 @@ public final class FacesUtils {
     return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(key);
   }
 
+
   /**
    * Returns login of logged in user.
+   *
    * @return Login of logged in user or null.
    */
-  public static String getRemoteUser(){
+  public static String getRemoteUser() {
     LOG.trace("getRemoteUser()");
     return FacesContext.getCurrentInstance().getExternalContext().getRemoteUser();
   }

@@ -11,13 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Servlet to logout current user.
  */
 @WebServlet("/login/logout")
 public class LogoutServlet extends HttpServlet {
-  /**Serial version UID.*/
+
+  /** Serial version UID. */
   private static final long serialVersionUID = 1L;
   /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(LogoutServlet.class);

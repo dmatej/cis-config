@@ -18,7 +18,6 @@ public class UserValidator {
   /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(UserValidator.class);
 
-
   @EJB
   /**Data access object for user manipulation.*/
   private CisUserDao userDao;
@@ -26,6 +25,7 @@ public class UserValidator {
 
   /**
    * Tests login existence.
+   *
    * @return True if login is not used or related user is marked as deleted.
    */
   public boolean loginExist() {
@@ -33,10 +33,12 @@ public class UserValidator {
     Principal currentUser = FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal();
     // FacesUtils.addMessage(FacesMessage.SEVERITY_INFO, currentUser.getName());
     CisUser temp = userDao.getUser(currentUser.getName());
-    if (temp == null)
+    if (temp == null) {
       return false;
-    else if (temp.isDeleted())
-      return false; //FIXME toto je doporučení pro přidání uživatele -> duplicitní login v DB -> chyba
+    } else if (temp.isDeleted()) {
+      // FIXME toto je doporučení pro přidání uživatele -> duplicitní login v DB -> chyba
+      return false;
+    }
 
     return true;
   }

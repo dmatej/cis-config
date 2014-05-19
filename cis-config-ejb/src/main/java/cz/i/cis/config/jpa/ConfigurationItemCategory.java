@@ -39,15 +39,8 @@ public class ConfigurationItemCategory implements Comparable<ConfigurationItemCa
   private Integer id;
 
   /** Name of configuration item category. */
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String name;
-
-
-  /**
-   * Constructs configuration item category.
-   */
-  public ConfigurationItemCategory() {
-  }
 
 
   /**

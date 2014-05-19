@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
-import cz.i.cis.config.ejb.dao.exceptions.UniqueKeyException;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
 import cz.i.cis.config.jpa.ConfigurationItemKeyType;
@@ -86,9 +85,6 @@ public class ItemKeyCreateBean {
       // return "edit?faces-redirect=true&includeViewParams=true&id=" + newUser.getId();
       link = "list.xhtml#itemKey-" + newItemKey.getId();
       FacesUtils.redirectToURL(link);
-    } catch (UniqueKeyException e) {
-      LOG.error("Failed to add item key: unique key", e);
-      FacesMessagesUtils.addErrorMessage("form:key", "Tento klíč již existuje", e);
     } catch (IOException e) {
       LOG.error("Failed to add item key: failed to redirect.", e);
       FacesMessagesUtils.failedRedirectMessage(link, e);

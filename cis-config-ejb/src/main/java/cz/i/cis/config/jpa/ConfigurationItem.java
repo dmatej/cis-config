@@ -71,6 +71,7 @@ public class ConfigurationItem implements Comparable<ConfigurationItem>, Seriali
     return id;
   }
 
+
   /**
    * Sets identifier number of this configuration item.
    *
@@ -89,6 +90,7 @@ public class ConfigurationItem implements Comparable<ConfigurationItem>, Seriali
   public ConfigurationItemKey getKey() {
     return key;
   }
+
 
   /**
    * Sets key of this configuration item.
@@ -109,6 +111,7 @@ public class ConfigurationItem implements Comparable<ConfigurationItem>, Seriali
     return value;
   }
 
+
   /**
    * Sets value of this configuration item.
    *
@@ -118,6 +121,7 @@ public class ConfigurationItem implements Comparable<ConfigurationItem>, Seriali
     this.value = value;
   }
 
+
   /**
    * Returns timestamp of last update of this configuration item.
    *
@@ -126,6 +130,7 @@ public class ConfigurationItem implements Comparable<ConfigurationItem>, Seriali
   public Date getUpdate() {
     return update;
   }
+
 
   /**
    * Sets timestamp of last update of this configuration item.
@@ -146,6 +151,7 @@ public class ConfigurationItem implements Comparable<ConfigurationItem>, Seriali
     return user;
   }
 
+
   /**
    * Sets CIS user which last changed configuration item.
    *
@@ -155,6 +161,7 @@ public class ConfigurationItem implements Comparable<ConfigurationItem>, Seriali
     this.user = user;
   }
 
+
   /**
    * Compares this object with the entered object for order. Returns a
    * negative integer, zero, or a positive integer as this object is less
@@ -162,11 +169,11 @@ public class ConfigurationItem implements Comparable<ConfigurationItem>, Seriali
    *
    * @param item the configuration item to be compared.
    * @return a negative integer, zero, or a positive integer as this object
-   * is less than, equal to, or greater than the entered object.
+   *         is less than, equal to, or greater than the entered object.
    */
   @Override
   public int compareTo(ConfigurationItem item) {
-    if(item == null) {
+    if (item == null) {
       return 1;
     }
 
@@ -176,8 +183,10 @@ public class ConfigurationItem implements Comparable<ConfigurationItem>, Seriali
     return Integer.compare(id1, id2);
   }
 
+
   /**
-   * Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by {@link java.util.HashMap}.
+   * Returns a hash code value for the object. This method is supported for the benefit of hash
+   * tables such as those provided by {@link java.util.HashMap}.
    *
    * @return A hash code value for this object.
    */
@@ -194,6 +203,7 @@ public class ConfigurationItem implements Comparable<ConfigurationItem>, Seriali
 
     return result;
   }
+
 
   /**
    * Indicates whether some object is "equal to" this one.
@@ -257,6 +267,7 @@ public class ConfigurationItem implements Comparable<ConfigurationItem>, Seriali
     return true;
   }
 
+
   /**
    * Returns string value of configuration item in format:
    *
@@ -268,12 +279,8 @@ public class ConfigurationItem implements Comparable<ConfigurationItem>, Seriali
    */
   @Override
   public String toString() {
-    return new StringBuilder(getClass().getCanonicalName())
-        .append("[id=").append(getId())
-        .append(", key_id=").append(getKey().getId())
-        .append(", item_value=").append(getValue())
-        .append(", update=").append(getUpdate().toString())
-        .append(", user_id=").append(getUser().getId())
-        .append("]").toString();
+    return new StringBuilder(getClass().getCanonicalName()).append("[id=").append(getId()).append(", key_id=")
+        .append(getKey().getId()).append(", item_value=").append(getValue()).append(", update=")
+        .append(getUpdate().toString()).append(", user_id=").append(getUser().getId()).append("]").toString();
   }
 }

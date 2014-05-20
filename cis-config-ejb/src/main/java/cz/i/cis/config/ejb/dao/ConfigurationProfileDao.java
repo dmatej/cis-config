@@ -11,9 +11,12 @@ import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import cz.i.cis.config.ejb.dao.exceptions.CisUserDaoException;
+import cz.i.cis.config.ejb.dao.exceptions.ConfigurationProfileDaoException;
 import cz.i.cis.config.jpa.ConfigurationProfile;
 
 /**
@@ -78,10 +81,16 @@ public class ConfigurationProfileDao {
    * Inserts configuration profile entity into database.
    *
    * @param profile configuration profile entity which will be inserted into database.
+   * @throws ConfigurationProfileDaoException
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void addProfile(ConfigurationProfile profile) {
-    em.persist(profile);
+  public void addProfile(ConfigurationProfile profile) throws ConfigurationProfileDaoException {
+    try {
+      em.persist(profile);
+      em.flush(); // to get persistence exception
+    } catch (PersistenceException e) {
+      throw new ConfigurationProfileDaoException("Cannot insert profile " + profile, e);
+    }
   }
 
 
@@ -90,10 +99,18 @@ public class ConfigurationProfileDao {
    *
    * @param profile configuration profile entity which will be updated.
    * @return Updated instance of configuration profile entity.
+   * @throws CisUserDaoException
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public ConfigurationProfile updateProfile(ConfigurationProfile profile) {
-    return em.merge(profile);
+  public ConfigurationProfile updateProfile(ConfigurationProfile profile) throws CisUserDaoException {
+    try {
+      ConfigurationProfile merged = em.merge(profile);
+      em.flush();
+
+      return merged;
+    } catch (PersistenceException e) {
+      throw new CisUserDaoException("Cannot update profile " + profile, e);
+    }
   }
 
 
@@ -101,14 +118,21 @@ public class ConfigurationProfileDao {
    * Deletes configuration profile entity by entered id.
    *
    * @param id identifier of configuration profile entity which will be deleted.
+   * @throws CisUserDaoException
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void removeProfile(Integer id) {
+  public void removeProfile(Integer id) throws CisUserDaoException {
     ConfigurationProfile profile = getProfile(id);
-    final Query profileItemsDeleteQuery = em.createQuery("DELETE FROM ConfigurationProfileItem profileItem WHERE profileItem.profile = :profile");
+    final Query profileItemsDeleteQuery = em
+        .createQuery("DELETE FROM ConfigurationProfileItem profileItem WHERE profileItem.profile = :profile");
     profileItemsDeleteQuery.setParameter("profile", profile);
     profileItemsDeleteQuery.executeUpdate();
 
-    em.remove(profile);
+    try {
+      em.remove(profile);
+      em.flush();
+    } catch (PersistenceException e) {
+      throw new CisUserDaoException("Cannot remove profile " + profile, e);
+    }
   }
 }

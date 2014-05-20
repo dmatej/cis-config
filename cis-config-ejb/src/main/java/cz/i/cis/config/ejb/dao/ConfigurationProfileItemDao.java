@@ -13,8 +13,10 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
+import cz.i.cis.config.ejb.dao.exceptions.ConfigurationProfileItemDaoException;
 import cz.i.cis.config.jpa.ConfigurationProfileItem;
 
 /**
@@ -64,10 +66,16 @@ public class ConfigurationProfileItemDao {
    * Inserts configuration profile item entity into database.
    *
    * @param item configuration profile item entity which will be inserted into database.
+   * @throws ConfigurationProfileItemDaoException
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void addItem(ConfigurationProfileItem item) {
-    em.persist(item);
+  public void addItem(ConfigurationProfileItem item) throws ConfigurationProfileItemDaoException {
+    try {
+      em.persist(item);
+      em.flush(); // to get persistence exception
+    } catch (PersistenceException e) {
+      throw new ConfigurationProfileItemDaoException("Cannot insert profile item " + item, e);
+    }
   }
 
 
@@ -76,10 +84,18 @@ public class ConfigurationProfileItemDao {
    *
    * @param item configuration profile item entity which will be updated.
    * @return Updated instance of configuration profile item entity.
+   * @throws ConfigurationProfileItemDaoException
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public ConfigurationProfileItem updateItem(ConfigurationProfileItem item) {
-    return em.merge(item);
+  public ConfigurationProfileItem updateItem(ConfigurationProfileItem item) throws ConfigurationProfileItemDaoException {
+    try {
+      ConfigurationProfileItem merged = em.merge(item);
+      em.flush();
+
+      return merged;
+    } catch (PersistenceException e) {
+      throw new ConfigurationProfileItemDaoException("Cannot update profile item " + item, e);
+    }
   }
 
 
@@ -87,10 +103,16 @@ public class ConfigurationProfileItemDao {
    * Deletes entered configuration profile item entity.
    *
    * @param item configuration profile item entity which will be deleted.
+   * @throws ConfigurationProfileItemDaoException
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void removeItem(ConfigurationProfileItem item) {
-    em.remove(em.getReference(ConfigurationProfileItem.class, item.getId()));
+  public void removeItem(ConfigurationProfileItem item) throws ConfigurationProfileItemDaoException {
+    try {
+      em.remove(em.getReference(ConfigurationProfileItem.class, item.getId()));
+      em.flush(); // to get persistence exception
+    } catch (PersistenceException e) {
+      throw new ConfigurationProfileItemDaoException("Cannot remove profile item " + item, e);
+    }
   }
 
 
@@ -99,9 +121,11 @@ public class ConfigurationProfileItemDao {
    *
    * @param profileItems configuration profile items entity that will be saved.
    * @return List of configuration profile items entity.
+   * @throws ConfigurationProfileItemDaoException
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public List<ConfigurationProfileItem> saveChanges(Map<String, ConfigurationProfileItem> profileItems) {
+  public List<ConfigurationProfileItem> saveChanges(Map<String, ConfigurationProfileItem> profileItems)
+    throws ConfigurationProfileItemDaoException {
     List<ConfigurationProfileItem> updatedItems = new ArrayList<>(profileItems.size());
 
     for (ConfigurationProfileItem item : profileItems.values()) {

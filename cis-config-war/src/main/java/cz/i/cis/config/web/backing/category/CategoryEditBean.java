@@ -67,29 +67,36 @@ public class CategoryEditBean {
    *
    * @return Navigation outcome.
    */
-  public void actionUpdateCategory() {
+  public String actionUpdateCategory() {
     LOG.debug("actionUpdateCategory()");
     if (category == null) {
       LOG.error("Cannot edit category which is null");
-      FacesMessagesUtils.addErrorMessage("Musíte editovat existujícíkategorii konfiguračních položek, abyste mohli uložit její změny.", "");
-      return;
+      FacesMessagesUtils.addErrorMessage("Musíte editovat existující kategorii konfiguračních položek, abyste mohli uložit její změny.", "");
+      return null;
     }
 
     String link = "";
     try {
-      category.setName(name);
+      ConfigurationItemCategory category = categoryDao.getCategory(name);
+      if(category != null && category.getId() != this.category.getId()) {
+        FacesMessagesUtils.addErrorMessage("form:name", "Kategorie konfiguračních položek se zadaným jménem již existuje", "");
+        return null;
+      }
 
-      category = categoryDao.updateCategory(category);
+      this.category.setName(name);
+      this.category = categoryDao.updateCategory(category);
 
-      link = "list.xhtml#category-" + category.getId();
+      link = "list.xhtml#category-" + this.category.getId();
       FacesUtils.redirectToURL(link);
     } catch (IOException e) {
       LOG.error("Failed to update category: cannot redirect", e);
       FacesMessagesUtils.failedRedirectMessage(link, e);
     } catch (Exception e) {
-      LOG.error("Failed to update category: category = " + category, e);
+      LOG.error("Failed to update category: category = " + this.category, e);
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se uložit změny", e);
     }
+
+    return null;
   }
 
 

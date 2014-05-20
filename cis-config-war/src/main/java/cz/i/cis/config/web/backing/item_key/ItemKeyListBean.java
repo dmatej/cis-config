@@ -39,11 +39,11 @@ public class ItemKeyListBean {
   /** Session key for selected category. */
   private static final String SESSION_NAME = "item-key-category";
 
+  /** Data access object for item key manipulation. */
   @EJB
-  /**Data access object for item key manipulation.*/
   private ConfigurationItemKeyDao itemKeyDao;
+  /** Data access object for item category manipulation. */
   @EJB
-  /**Data access object for item category manipulation.*/
   private ConfigurationCategoryDao categoryDao;
 
   /** Currently selected item key category. */
@@ -78,7 +78,8 @@ public class ItemKeyListBean {
       FacesMessagesUtils.addInfoMessage("form", "Konfigurační klíč byl smazán", "");
     } catch (ActiveItemKeyException e) {
       LOG.warn("Try to remove item key used in active configuration: ID = " + id, e);
-      FacesMessagesUtils.addErrorMessage("form", "Konfigurační klíč se používá v aktivní konfiguraci a proto nelze smazat", e);
+      FacesMessagesUtils.addErrorMessage("form",
+          "Konfigurační klíč se používá v aktivní konfiguraci a proto nelze smazat", e);
     } catch (Exception e) {
       LOG.error("Failed to remove item key: ID = " + id, e);
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se smazat konfigurační klíč", e);

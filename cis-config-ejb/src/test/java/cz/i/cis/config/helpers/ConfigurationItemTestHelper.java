@@ -63,20 +63,16 @@ public class ConfigurationItemTestHelper {
 
 
   public void cleanup() {
-    if (configuration_items.isEmpty()) {
-      return;
-    }
-    try {
-      CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-      CriteriaDelete<ConfigurationItem> delete = criteriaBuilder
-          .createCriteriaDelete(ConfigurationItem.class);
-      Root<ConfigurationItem> root = delete.from(ConfigurationItem.class);
-      delete.where(root.in(configuration_items));
-      Query query = em.createQuery(delete);
-      int cnt = query.executeUpdate();
-      LOG.debug("Deleted configuration items: {}", cnt);
-    } catch (Exception e) {
-      LOG.error("Cleanup failed", e);
-    }
+//    if (configuration_items.isEmpty()) {
+//      return;
+//    }
+    CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+    CriteriaDelete<ConfigurationItem> delete = criteriaBuilder
+        .createCriteriaDelete(ConfigurationItem.class);
+//    Root<ConfigurationItem> root = delete.from(ConfigurationItem.class);
+//    delete.where(root.in(configuration_items));
+    Query query = em.createQuery(delete);
+    int cnt = query.executeUpdate();
+    LOG.debug("Deleted configuration items: {}", cnt);
   }
 }

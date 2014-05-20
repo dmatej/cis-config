@@ -27,11 +27,11 @@ public class ProfileCreateBean {
   /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(ProfileCreateBean.class);
 
-  @EJB
   /**Data access object for profile manipulation.*/
-  private ConfigurationProfileDao profileDao;
   @EJB
+  private ConfigurationProfileDao profileDao;
   /**Data access object for user manipulation.*/
+  @EJB
   private CisUserDao userDao;
 
   /** New profile name. */
@@ -75,7 +75,7 @@ public class ProfileCreateBean {
     } catch (Exception e) {
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se přidat nový profil", e);
     }
-    
+
     return null;
   }
 

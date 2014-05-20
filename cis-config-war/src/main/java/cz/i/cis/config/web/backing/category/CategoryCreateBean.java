@@ -41,8 +41,14 @@ public class CategoryCreateBean {
     LOG.debug("actionAddCategory()");
     String link = "";
     try {
-      ConfigurationItemCategory category = new ConfigurationItemCategory();
-        category.setName(name);
+      ConfigurationItemCategory category = categoryDao.getCategory(name);
+      if (category != null) {
+        FacesMessagesUtils.addErrorMessage("form:name", "Kategorie konfiguračních položek se zadaným jménem již existuje", "");
+        return null;
+      }
+
+      category = new ConfigurationItemCategory();
+      category.setName(name);
 
       categoryDao.addCategory(category);
 

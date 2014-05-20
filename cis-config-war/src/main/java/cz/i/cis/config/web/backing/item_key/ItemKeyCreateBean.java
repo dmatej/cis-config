@@ -31,11 +31,12 @@ public class ItemKeyCreateBean {
   /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(ItemKeyCreateBean.class);
 
+  /** Data access object for item key manipulation. */
   @EJB
-  /**Data access object for item key manipulation.*/
   private ConfigurationItemKeyDao itemKeyDao;
+
+  /** Data access object for item category manipulation. */
   @EJB
-  /**Data access object for item category manipulation.*/
   private ConfigurationCategoryDao categoryDao;
 
   /** Collection of all item categories. */
@@ -74,11 +75,17 @@ public class ItemKeyCreateBean {
         throw new NonExistentCategoryException();
       }
 
-      ConfigurationItemKey newItemKey = new ConfigurationItemKey();
-        newItemKey.setKey(key);
-        newItemKey.setType(type);
-        newItemKey.setCategory(allCategories.get(selectedCategory));
-        newItemKey.setDescription(description);
+      ConfigurationItemKey newItemKey = itemKeyDao.getItemKey(key);
+      if (newItemKey != null) {
+        FacesMessagesUtils.addErrorMessage("form:key", "Klíč pro konfigurační položky se zadaným jménem již existuje", "");
+        return null;
+      }
+
+      newItemKey = new ConfigurationItemKey();
+      newItemKey.setKey(key);
+      newItemKey.setType(type);
+      newItemKey.setCategory(allCategories.get(selectedCategory));
+      newItemKey.setDescription(description);
 
       itemKeyDao.addItemKey(newItemKey);
 

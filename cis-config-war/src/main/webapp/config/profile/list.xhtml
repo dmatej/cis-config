@@ -59,10 +59,12 @@
     <h:column>
      <f:facet name="header">Aktivace</f:facet>
      <h:commandLink actionListener="#{profileList.actionActivateProfile(profile.id)}" value="aktivovat">
-      <f:ajax />
+      <f:ajax render="form" />
      </h:commandLink>
     </h:column>
    </h:dataTable>
+
+    <h:messages for="form" infoClass="form-info-message" warnClass="form-warning-message" errorClass="form-error-message" />
   </h:form>
  </ui:define>
 </ui:composition>

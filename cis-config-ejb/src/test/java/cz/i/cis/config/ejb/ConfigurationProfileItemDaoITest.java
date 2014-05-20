@@ -19,11 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.CisUserDao;
-import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
+import cz.i.cis.config.ejb.dao.ConfigurationItemCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileItemDao;
-import cz.i.cis.config.exceptions.CisUserDaoException;
+import cz.i.cis.config.ejb.dao.exceptions.CisUserDaoException;
 import cz.i.cis.config.helpers.ConfigurationCategoryTestHelper;
 import cz.i.cis.config.helpers.ConfigurationItemKeyTestHelper;
 import cz.i.cis.config.helpers.ConfigurationProfileItemTestHelper;
@@ -48,7 +48,7 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
   private ConfigurationItemKeyDao configItemkeyDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryDao")
-  private ConfigurationCategoryDao categoryDao;
+  private ConfigurationItemCategoryDao categoryDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationProfileDao")
   private ConfigurationProfileDao profileDao;

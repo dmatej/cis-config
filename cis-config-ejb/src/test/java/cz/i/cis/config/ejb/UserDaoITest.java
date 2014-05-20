@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.CisUserDao;
-import cz.i.cis.config.exceptions.CisUserDaoException;
+import cz.i.cis.config.ejb.dao.exceptions.CisUserDaoException;
 import cz.i.cis.config.helpers.UserTestHelper;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.test.ArquillianITest;

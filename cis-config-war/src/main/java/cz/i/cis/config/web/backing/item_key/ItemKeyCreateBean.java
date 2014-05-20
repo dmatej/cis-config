@@ -12,7 +12,7 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
+import cz.i.cis.config.ejb.dao.ConfigurationItemCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
@@ -37,7 +37,7 @@ public class ItemKeyCreateBean {
 
   /** Data access object for item category manipulation. */
   @EJB
-  private ConfigurationCategoryDao categoryDao;
+  private ConfigurationItemCategoryDao categoryDao;
 
   /** Collection of all item categories. */
   private Map<String, ConfigurationItemCategory> allCategories;

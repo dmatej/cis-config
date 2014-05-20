@@ -23,7 +23,7 @@ import cz.i.cis.config.jpa.ConfigurationItemCategory;
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
-public class ConfigurationCategoryDao {
+public class ConfigurationItemCategoryDao {
 
   /** JPA entity manager for work with entities. */
   @PersistenceContext(name = "cis-jta")

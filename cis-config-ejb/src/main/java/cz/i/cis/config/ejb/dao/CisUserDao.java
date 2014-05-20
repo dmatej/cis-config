@@ -14,7 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
-import cz.i.cis.config.exceptions.CisUserDaoException;
+import cz.i.cis.config.ejb.dao.exceptions.CisUserDaoException;
 import cz.i.cis.config.jpa.CisUser;
 
 /**
@@ -82,7 +82,7 @@ public class CisUserDao {
       em.persist(user);
       em.flush(); // to get persistence exception
     } catch (PersistenceException e) {
-      throw new CisUserDaoException("Cannot insert entered user", e);
+      throw new CisUserDaoException("Cannot insert user " + user, e);
     }
 
   }
@@ -93,7 +93,7 @@ public class CisUserDao {
    *
    * @param user user entity which will be updated.
    * @return Updated instance of user entity.
-   * @throws CisUserDaoException
+   * @throws CisUserDaoException If user cannot be updated.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public CisUser updateUser(CisUser user) throws CisUserDaoException {
@@ -103,7 +103,7 @@ public class CisUserDao {
 
       return merged;
     } catch (PersistenceException e) {
-      throw new CisUserDaoException("Cannot insert entered user", e);
+      throw new CisUserDaoException("Cannot update user " + user, e);
     }
   }
 
@@ -113,10 +113,9 @@ public class CisUserDao {
    *
    * @param user user entity which will have updated status.
    * @param newStatus new status for entered user.
-   * @throws CisUserDaoException
+   * @throws CisUserDaoException If user status cannot be updated.
    */
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void updateUserStatus(CisUser user, Integer newStatus) throws CisUserDaoException {
+  private void updateUserStatus(CisUser user, Integer newStatus) throws CisUserDaoException {
     user.setStatus(newStatus);
     updateUser(user);
   }
@@ -126,12 +125,17 @@ public class CisUserDao {
    * Deletes user entity by entered id (sets status to {@link CisUser#STATUS_DELETED}).
    *
    * @param id identifier of user entity which will be deleted.
-   * @throws CisUserDaoException
+   * @throws CisUserDaoException If user is already deleted or if user cannot be updated.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeUser(Integer id) throws CisUserDaoException {
     CisUser user = getUser(id);
-    updateUserStatus(user, CisUser.STATUS_DELETED);
+    if (user.getStatus() == CisUser.STATUS_VALID) {
+      updateUserStatus(user, CisUser.STATUS_DELETED);
+      return;
+    }
+
+    throw new CisUserDaoException("User is already deleted: " + user);
   }
 
 
@@ -139,7 +143,7 @@ public class CisUserDao {
    * Restores user entity by entered id (sets status to {@link CisUser#STATUS_VALID}).
    *
    * @param id identifier of user entity which will be deleted.
-   * @throws CisUserDaoException
+   * @throws CisUserDaoException If user isn't already deleted or if user cannot be updated.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void restoreUser(Integer id) throws CisUserDaoException {
@@ -148,6 +152,7 @@ public class CisUserDao {
       updateUserStatus(user, CisUser.STATUS_VALID);
       return;
     }
-    throw new IllegalStateException("User is not deleted: " + user);
+
+    throw new CisUserDaoException("User is not deleted: " + user);
   }
 }

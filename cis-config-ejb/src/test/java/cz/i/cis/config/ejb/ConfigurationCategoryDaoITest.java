@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
+import cz.i.cis.config.ejb.dao.ConfigurationItemCategoryDao;
 import cz.i.cis.config.helpers.ConfigurationCategoryTestHelper;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.test.ArquillianITest;
@@ -27,7 +27,7 @@ public class ConfigurationCategoryDaoITest extends ArquillianITest {
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurationCategoryDaoITest.class);
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryDao")
-  private ConfigurationCategoryDao dao;
+  private ConfigurationItemCategoryDao dao;
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryTestHelper")
   private ConfigurationCategoryTestHelper helper;
 

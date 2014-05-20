@@ -14,8 +14,6 @@
 
  <ui:define name="content">
   <h:form id="form">
-   <h:messages for="form" infoClass="form-info-message" warnClass="form-warning-message" errorClass="form-error-message" />
-
    <h:panelGrid columns="3">
     <h:panelGroup>
      <h:outputLabel for="category" value="Kategorie" />
@@ -91,8 +89,9 @@
     <h:panelGroup />
    </h:panelGrid>
 
+   <h:messages for="form" infoClass="form-info-message" warnClass="form-warning-message" errorClass="form-error-message" />
+
    <ui:param name="items" value="#{profileEdit.profileItems}" />
-   <h:outputText rendered="#{empty items}" escape="false" value="&lt;p&gt;V profilu nebyly nalezeny žádné položky.&lt;/p&gt;" />
 
    <h:dataTable id="data-table" value="#{items}" var="item" rendered="#{not empty items}">
     <h:column>

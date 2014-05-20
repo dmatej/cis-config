@@ -12,7 +12,7 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
+import cz.i.cis.config.ejb.dao.ConfigurationItemCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemDao;
 import cz.i.cis.config.jpa.ConfigurationItem;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
@@ -39,7 +39,7 @@ public class ActiveConfigListBean {
 
   /** Data access object for item category manipulation. */
   @EJB
-  private ConfigurationCategoryDao categoryDao;
+  private ConfigurationItemCategoryDao categoryDao;
   /** Data access object for active configuration manipulation. */
   @EJB
   private ConfigurationItemDao configItemDao;

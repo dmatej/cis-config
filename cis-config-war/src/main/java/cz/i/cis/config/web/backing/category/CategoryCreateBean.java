@@ -9,7 +9,7 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
+import cz.i.cis.config.ejb.dao.ConfigurationItemCategoryDao;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
@@ -26,7 +26,7 @@ public class CategoryCreateBean {
 
   /** Data access object for item category manipulation. */
   @EJB
-  private ConfigurationCategoryDao categoryDao;
+  private ConfigurationItemCategoryDao categoryDao;
 
   /** Name of new category. */
   private String name;

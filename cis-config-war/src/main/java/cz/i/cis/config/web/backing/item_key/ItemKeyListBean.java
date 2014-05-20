@@ -13,7 +13,7 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
+import cz.i.cis.config.ejb.dao.ConfigurationItemCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.ejb.dao.exceptions.ActiveItemKeyException;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
@@ -44,7 +44,7 @@ public class ItemKeyListBean {
   private ConfigurationItemKeyDao itemKeyDao;
   /** Data access object for item category manipulation. */
   @EJB
-  private ConfigurationCategoryDao categoryDao;
+  private ConfigurationItemCategoryDao categoryDao;
 
   /** Currently selected item key category. */
   private String selectedCategory;

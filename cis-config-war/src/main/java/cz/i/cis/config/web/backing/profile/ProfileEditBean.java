@@ -14,7 +14,7 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
+import cz.i.cis.config.ejb.dao.ConfigurationItemCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileItemDao;
@@ -45,7 +45,7 @@ public class ProfileEditBean {
   private ConfigurationProfileItemDao itemDao;
   /** Data access object for item category manipulation. */
   @EJB
-  private ConfigurationCategoryDao categoryDao;
+  private ConfigurationItemCategoryDao categoryDao;
   /** Data access object for item key manipulation. */
   @EJB
   private ConfigurationItemKeyDao itemKeyDao;

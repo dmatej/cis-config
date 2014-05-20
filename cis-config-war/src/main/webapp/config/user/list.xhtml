@@ -4,61 +4,58 @@
  xmlns:f="http://xmlns.jcp.org/jsf/core"
  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
- <ui:param name="pageName" value="Uživatelé" />
- <ui:param name="pageTitle" value="Seznam uživatelů" />
+  <ui:param name="pageName" value="Uživatelé" />
+  <ui:param name="pageTitle" value="Seznam uživatelů" />
 
- <ui:define name="content">
-  <p>
-   <h:link outcome="create" value="Vytvořit nového uživatele" />
-  </p>
+  <ui:define name="content">
+    <p>
+      <h:link outcome="create" value="Vytvořit nového uživatele" />
+    </p>
 
-  <h:form id="form">
-   <ui:param name="items" value="#{userList.allUsers}" />
+    <h:form id="form">
+      <ui:param name="items" value="#{userList.allUsers}" />
 
-   <h:outputText rendered="#{empty items}" escape="false" value="&lt;p&gt;Nebyli nalezeni žádní uživatelé.&lt;/p&gt;" />
+      <h:outputText rendered="#{empty items}" escape="false" value="&lt;p&gt;Nebyli nalezeni žádní uživatelé.&lt;/p&gt;" />
 
-   <h:dataTable id="data-table" value="#{items}" var="cisUser" rendered="#{not empty items}" rowClasses="#{userList.rowClasses}">
-    <h:column>
-     <f:facet name="header">Login</f:facet>
-     <h:outputText value="#{cisUser.login}" />
-    </h:column>
-    <h:column>
-     <f:facet name="header">Jméno</f:facet>
-     <h:outputText value="#{cisUser.firstName}" />
-    </h:column>
-    <h:column>
-     <f:facet name="header">Příjmení</f:facet>
-     <h:outputText value="#{cisUser.lastName}" />
-    </h:column>
-    <h:column>
-     <f:facet name="header">Datum narození</f:facet>
-     <h:outputText value="#{cisUser.birthDate}">
-      <f:convertDateTime type="date" pattern="dd.MM.yyyy" />
-     </h:outputText>
-    </h:column>
+      <h:dataTable id="data-table" value="#{items}" var="cisUser" rendered="#{not empty items}" rowClasses="#{userList.rowClasses}">
+        <h:column>
+          <f:facet name="header">Login</f:facet>
+          <h:outputText value="#{cisUser.login}" />
+        </h:column>
+        <h:column>
+          <f:facet name="header">Jméno</f:facet>
+          <h:outputText value="#{cisUser.firstName}" />
+        </h:column>
+        <h:column>
+          <f:facet name="header">Příjmení</f:facet>
+          <h:outputText value="#{cisUser.lastName}" />
+        </h:column>
+        <h:column>
+          <f:facet name="header">Datum narození</f:facet>
+          <h:outputText value="#{cisUser.birthDate}">
+            <f:convertDateTime type="date" pattern="dd.MM.yyyy" />
+          </h:outputText>
+        </h:column>
 
-    <h:column>
-     <h:commandLink action="#{userList.actionDeleteUser}" value="smazat" rendered="#{cisUser.valid}">
-      <f:setPropertyActionListener target="#{userList.userID}" value="#{cisUser.id}" />
-     </h:commandLink>
-    </h:column>
+        <h:column>
+          <f:facet name="header">Smazání / Obnovení</f:facet>
+          <h:commandLink action="#{userList.actionDeleteUser}" value="smazat" rendered="#{cisUser.valid}">
+            <f:setPropertyActionListener target="#{userList.userID}" value="#{cisUser.id}" />
+          </h:commandLink>
+          <h:commandLink style="text-decoration: none;" action="#{userList.actionRestoreUser}" value="obnovit" rendered="#{cisUser.deleted}">
+            <f:setPropertyActionListener target="#{userList.userID}" value="#{cisUser.id}" />
+          </h:commandLink>
+        </h:column>
 
-    <h:column>
-     <f:facet name="header">Editace</f:facet>
-     <h:link outcome="edit" value="upravit">
-      <f:param name="id" value="#{cisUser.id}" />
-     </h:link>
-    </h:column>
+        <h:column>
+          <f:facet name="header">Editace</f:facet>
+          <h:link outcome="edit" value="upravit">
+            <f:param name="id" value="#{cisUser.id}" />
+          </h:link>
+        </h:column>
+      </h:dataTable>
 
-    <h:column>
-     <f:facet name="header">Obnovení</f:facet>
-     <h:commandLink style="text-decoration: none;" action="#{userList.actionRestoreUser}" value="obnovit" rendered="#{cisUser.deleted}">
-      <f:setPropertyActionListener target="#{userList.userID}" value="#{cisUser.id}" />
-     </h:commandLink>
-    </h:column>
-   </h:dataTable>
-
-   <h:messages for="form" infoClass="form-info-message" warnClass="form-warning-message" errorClass="form-error-message" />
-  </h:form>
- </ui:define>
+      <h:messages for="form" infoClass="form-info-message" warnClass="form-warning-message" errorClass="form-error-message" />
+    </h:form>
+  </ui:define>
 </ui:composition>

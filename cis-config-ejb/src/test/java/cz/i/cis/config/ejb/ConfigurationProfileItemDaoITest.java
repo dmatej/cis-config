@@ -222,6 +222,11 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
     assertTrue("profileItems.size == 2", profileItems.size() == 2);
   }
 
+  @Test
+  public void testRemoveConfigurationProfileItems() throws ConfigurationProfileItemDaoException {
+    final ConfigurationProfileItem profileItem1 = profileItemHelper.createConfigurationProfileItem();
+    profileItemDao.removeItem(profileItem1);
+  }
 
   @Test
   public void testComparationConfigurationProfileItems() {

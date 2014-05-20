@@ -13,10 +13,12 @@ import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import cz.i.cis.config.ejb.dao.exceptions.ActiveItemKeyException;
+import cz.i.cis.config.ejb.dao.exceptions.ConfigurationItemKeyDaoException;
 import cz.i.cis.config.jpa.ConfigurationItem;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
@@ -44,6 +46,7 @@ public class ConfigurationItemKeyDao {
     return em.find(ConfigurationItemKey.class, id);
   }
 
+
   /**
    * Finds configuration item key entity with entered key name.
    *
@@ -52,8 +55,7 @@ public class ConfigurationItemKeyDao {
    */
   public ConfigurationItemKey getItemKey(String key) {
     final TypedQuery<ConfigurationItemKey> query = em.createQuery(
-        "SELECT itemKey FROM ConfigurationItemKey itemKey WHERE itemKey.key = :key",
-        ConfigurationItemKey.class);
+        "SELECT itemKey FROM ConfigurationItemKey itemKey WHERE itemKey.key = :key", ConfigurationItemKey.class);
 
     query.setParameter("key", key);
 
@@ -100,10 +102,16 @@ public class ConfigurationItemKeyDao {
    * Inserts configuration item key entity into database.
    *
    * @param key configuration item key entity which will be inserted into database.
+   * @throws ConfigurationItemKeyDaoException
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void addItemKey(ConfigurationItemKey key) {
-    em.persist(key);
+  public void addItemKey(ConfigurationItemKey key) throws ConfigurationItemKeyDaoException {
+    try {
+      em.persist(key);
+      em.flush(); // to get persistence exception
+    } catch (PersistenceException e) {
+      throw new ConfigurationItemKeyDaoException("Cannot insert key " + key, e);
+    }
   }
 
 
@@ -112,10 +120,18 @@ public class ConfigurationItemKeyDao {
    *
    * @param key configuration item key entity which will be updated.
    * @return Updated instance of configuration item key entity.
+   * @throws ConfigurationItemKeyDaoException
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public ConfigurationItemKey updateItemKey(ConfigurationItemKey key) {
-    return em.merge(key);
+  public ConfigurationItemKey updateItemKey(ConfigurationItemKey key) throws ConfigurationItemKeyDaoException {
+    try {
+      ConfigurationItemKey merged = em.merge(key);
+      em.flush();
+
+      return merged;
+    } catch (PersistenceException e) {
+      throw new ConfigurationItemKeyDaoException("Cannot update key " + key, e);
+    }
   }
 
 
@@ -137,7 +153,8 @@ public class ConfigurationItemKeyDao {
       throw new ActiveItemKeyException("Key " + itemKey.getKey() + " is used in an active configuration!");
     }
 
-    final Query profileDeleteQuery = em.createQuery("DELETE FROM ConfigurationProfileItem item WHERE item.key = :itemKey");
+    final Query profileDeleteQuery = em
+        .createQuery("DELETE FROM ConfigurationProfileItem item WHERE item.key = :itemKey");
     profileDeleteQuery.setParameter("itemKey", itemKey);
     profileDeleteQuery.executeUpdate();
 

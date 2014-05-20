@@ -1,7 +1,12 @@
 package cz.i.cis.config.ejb.dao.exceptions;
 
-
 public class ConfigurationItemKeyDaoException extends Exception {
+
+  /**
+   *
+   */
+  private static final long serialVersionUID = 5688501812322859151L;
+
 
   public ConfigurationItemKeyDaoException() {
     // TODO Auto-generated constructor stub

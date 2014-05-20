@@ -26,6 +26,7 @@ import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileDao;
 import cz.i.cis.config.ejb.dao.ConfigurationProfileItemDao;
 import cz.i.cis.config.ejb.dao.exceptions.CisUserDaoException;
+import cz.i.cis.config.ejb.dao.exceptions.ConfigurationItemKeyDaoException;
 import cz.i.cis.config.ejb.dao.exceptions.ConfigurationProfileDaoException;
 import cz.i.cis.config.ejb.dao.exceptions.ConfigurationProfileItemDaoException;
 import cz.i.cis.config.helpers.ConfigurationCategoryTestHelper;
@@ -94,7 +95,7 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
 
   @Test
   public void creatNewConfigurationProfileItem() throws CisUserDaoException, ConfigurationProfileItemDaoException,
-    ConfigurationProfileDaoException {
+    ConfigurationProfileDaoException, ConfigurationItemKeyDaoException {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setName("some category name");
     categoryDao.addCategory(category);

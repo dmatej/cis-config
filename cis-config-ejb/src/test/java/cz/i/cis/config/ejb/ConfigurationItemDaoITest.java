@@ -22,6 +22,7 @@ import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.ejb.dao.ConfigurationCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
+import cz.i.cis.config.exceptions.CisUserDaoException;
 import cz.i.cis.config.helpers.ConfigurationCategoryTestHelper;
 import cz.i.cis.config.helpers.ConfigurationItemKeyTestHelper;
 import cz.i.cis.config.helpers.ConfigurationItemTestHelper;
@@ -78,7 +79,7 @@ public class ConfigurationItemDaoITest extends ArquillianITest {
 
 
   @Test
-  public void creatNewConfigurationItem() {
+  public void creatNewConfigurationItem() throws CisUserDaoException {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setName("some category name");
     categoryDao.addCategory(category);

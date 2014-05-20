@@ -11,7 +11,7 @@
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputText id="first-name" styleClass="important short" required="true" requiredMessage="Nebylo vyplněno jméno" value="#{user.name}" size="40" />
+    <h:inputText id="first-name" styleClass="important short" required="true" requiredMessage="Nebylo vyplněno jméno" value="#{user.name}" size="40" maxlength="50" />
    </h:panelGroup>
 
    <h:panelGroup>
@@ -23,7 +23,7 @@
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputText id="last-name" styleClass="important short" required="true" requiredMessage="Nebylo vyplněno příjmení" value="#{user.surname}" size="40" />
+    <h:inputText id="last-name" styleClass="important short" required="true" requiredMessage="Nebylo vyplněno příjmení" value="#{user.surname}" size="40" maxlength="50" />
    </h:panelGroup>
 
    <h:panelGroup>
@@ -35,7 +35,7 @@
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputText id="login" styleClass="important short" required="true" requiredMessage="Nebyl vyplněn login" value="#{user.login}" size="40" />
+    <h:inputText id="login" styleClass="important short" required="true" requiredMessage="Nebyl vyplněn login" value="#{user.login}" size="40" maxlength="50" />
    </h:panelGroup>
 
    <h:panelGroup>
@@ -48,7 +48,7 @@
 
    <h:panelGroup>
     <h:inputText id="birthdate" styleClass="important short" required="true" requiredMessage="Nebylo vyplněno datum narození" value="#{user.birthDate}" label="d.M.yyyy"
-     converterMessage="Datum zadejte ve formátu d.M.yyyy" size="40">
+     converterMessage="Datum zadejte ve formátu d.M.yyyy" size="40" maxlength="10">
      <f:convertDateTime pattern="d.M.yyyy" />
     </h:inputText>
    </h:panelGroup>

@@ -86,10 +86,10 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void cleanup() {
     profileItemHelper.cleanup();
-    userHelper.cleanup();
     profileHelper.cleanup();
-    categoryHelper.cleanup();
     configItemKeyHelper.cleanup();
+    categoryHelper.cleanup();
+    userHelper.cleanup();
   }
 
 

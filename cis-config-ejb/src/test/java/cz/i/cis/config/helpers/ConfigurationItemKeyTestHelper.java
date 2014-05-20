@@ -57,23 +57,18 @@ public class ConfigurationItemKeyTestHelper {
 
 
   public void cleanup() {
-    if (keys.isEmpty()) {
-      return;
-    }
+//    if (keys.isEmpty()) {
+//      return;
+//    }
 
-
-    try {
-      CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-      CriteriaDelete<ConfigurationItemKey> delete = criteriaBuilder
-          .createCriteriaDelete(ConfigurationItemKey.class);
-      Root<ConfigurationItemKey> root = delete.from(ConfigurationItemKey.class);
-      delete.where(root.in(keys));
-      Query query = em.createQuery(delete);
-      int cnt = query.executeUpdate();
-      LOG.debug("Deleted configuration item keys: {}", cnt);
-    } catch (Exception e) {
-      LOG.error("Cleanup failed", e);
-    }
+    CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+    CriteriaDelete<ConfigurationItemKey> delete = criteriaBuilder
+        .createCriteriaDelete(ConfigurationItemKey.class);
+//    Root<ConfigurationItemKey> root = delete.from(ConfigurationItemKey.class);
+//    delete.where(root.in(keys));
+    Query query = em.createQuery(delete);
+    int cnt = query.executeUpdate();
+    LOG.debug("Deleted configuration item keys: {}", cnt);
   }
 }
 

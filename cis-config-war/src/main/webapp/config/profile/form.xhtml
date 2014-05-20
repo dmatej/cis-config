@@ -12,7 +12,7 @@
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputText id="name" styleClass="important" required="true" requiredMessage="Nenbyl vyplněn název" value="#{profile.name}" size="40" />
+    <h:inputText id="name" styleClass="important" required="true" requiredMessage="Nenbyl vyplněn název" value="#{profile.name}" size="40" maxlength="100" />
    </h:panelGroup>
 
    <h:panelGroup>
@@ -24,7 +24,9 @@
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputTextarea id="description" required="false" value="#{profile.description}" rows="4" cols="40" />
+    <h:inputTextarea id="description" required="false" value="#{profile.description}" rows="4" cols="40">
+      <f:validateLength maximum="100" />
+    </h:inputTextarea>
    </h:panelGroup>
 
    <h:panelGroup>

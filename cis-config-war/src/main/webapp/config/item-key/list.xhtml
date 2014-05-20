@@ -38,7 +38,7 @@
       value="&lt;p&gt;Nebyly nalezeny žádné klíče.&lt;/p&gt;" />
 
      <h:dataTable id="data-table" value="#{items}" var="itemKey" rendered="#{not empty items}">
-      <h:column>
+      <h:column id="itemKey-#{itemKey.id}">
        <f:facet name="header">Klíč</f:facet>
        <h:outputText value="#{itemKey.key}" />
       </h:column>

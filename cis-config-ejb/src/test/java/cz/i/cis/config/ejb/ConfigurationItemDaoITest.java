@@ -5,11 +5,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,12 +28,14 @@ import cz.i.cis.config.ejb.dao.exceptions.ConfigurationItemKeyDaoException;
 import cz.i.cis.config.helpers.ConfigurationCategoryTestHelper;
 import cz.i.cis.config.helpers.ConfigurationItemKeyTestHelper;
 import cz.i.cis.config.helpers.ConfigurationItemTestHelper;
+import cz.i.cis.config.helpers.ConfigurationProfileItemTestHelper;
 import cz.i.cis.config.helpers.UserTestHelper;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.jpa.ConfigurationItem;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
 import cz.i.cis.config.jpa.ConfigurationItemKeyType;
+import cz.i.cis.config.jpa.ConfigurationProfileItem;
 import cz.i.cis.config.test.ArquillianITest;
 
 public class ConfigurationItemDaoITest extends ArquillianITest {
@@ -62,6 +66,9 @@ public class ConfigurationItemDaoITest extends ArquillianITest {
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemKeyTestHelper")
   private ConfigurationItemKeyTestHelper keyHelper;
 
+  @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationProfileItemTestHelper")
+  private ConfigurationProfileItemTestHelper profileHelper;
+
 
   @Before
   public void init() {
@@ -69,12 +76,12 @@ public class ConfigurationItemDaoITest extends ArquillianITest {
 
 
   @After
-  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void cleanup() {
     configurationItemHelper.cleanup();
-    userHelper.cleanup();
-    categoryHelper.cleanup();
+    profileHelper.cleanup();
     keyHelper.cleanup();
+    categoryHelper.cleanup();
+    userHelper.cleanup();
   }
 
 
@@ -127,6 +134,25 @@ public class ConfigurationItemDaoITest extends ArquillianITest {
     configurationCopy.setUser(configuration.getUser());
     configurationCopy.setValue(configuration.getValue());
     configurationItemDao.addItem(configurationCopy);
+  }
+
+
+  @Test
+  public void testRemoveItem() throws ConfigurationItemDaoException {
+    final ConfigurationItem configuration = configurationItemHelper.createConfigurationItem();
+    configurationItemDao.removeItem(configuration.getId());
+    assertTrue(configurationItemDao.listItems().size() == 0);
+  }
+
+
+  @Test
+  public void testActivateProfile() throws Exception {
+    final ConfigurationProfileItem profileItem = profileHelper.createConfigurationProfileItem();
+    List<ConfigurationProfileItem> list = new LinkedList<ConfigurationProfileItem>();
+    list.add(profileItem);
+    final CisUser user0 = userHelper.createUser();
+    configurationItemHelper.createConfigurationItem();
+    configurationItemDao.activateProfile(list, user0);
   }
 
 

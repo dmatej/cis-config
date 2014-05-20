@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.After;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,20 +64,19 @@ public class ConfigurationProfileItemTestHelper {
 
 
   public void cleanup() {
-    if (profile_items.isEmpty()) {
-      return;
-    }
-    try {
-      CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-      CriteriaDelete<ConfigurationProfileItem> delete = criteriaBuilder
-          .createCriteriaDelete(ConfigurationProfileItem.class);
-      Root<ConfigurationProfileItem> root = delete.from(ConfigurationProfileItem.class);
-      delete.where(root.in(profile_items));
-      Query query = em.createQuery(delete);
-      int cnt = query.executeUpdate();
-      LOG.debug("Deleted configuration profile items: {}", cnt);
-    } catch (Exception e) {
-      LOG.error("Cleanup failed", e);
-    }
+    LOG.debug("cleanup()");
+//    if (profile_items.isEmpty()) {
+//      return;
+//    }
+    CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+    CriteriaDelete<ConfigurationProfileItem> delete = criteriaBuilder
+        .createCriteriaDelete(ConfigurationProfileItem.class);
+//    Root<ConfigurationProfileItem> root = delete.from(ConfigurationProfileItem.class);
+//    delete.where(root.in(profile_items));
+    Query query = em.createQuery(delete);
+    int cnt = query.executeUpdate();
+    LOG.debug("Deleted configuration profile items: {}", cnt);
+    int profileCnt = em.createQuery("delete from ConfigurationProfile p").executeUpdate();
+    LOG.debug("Deleted configuration profiles: {}", profileCnt);
   }
 }

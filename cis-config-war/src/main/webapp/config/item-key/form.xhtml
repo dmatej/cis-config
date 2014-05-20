@@ -15,7 +15,7 @@
      </h:panelGroup>
 
      <h:panelGroup>
-      <h:inputText id="key" styleClass="important" required="true" requiredMessage="Nebyl vyplněn klíč" value="#{itemKey.key}" />
+      <h:inputText id="key" styleClass="important" required="true" requiredMessage="Nebyl vyplněn klíč" value="#{itemKey.key}" maxlength="100" />
      </h:panelGroup>
 
      <h:panelGroup>
@@ -55,7 +55,9 @@
      </h:panelGroup>
 
      <h:panelGroup>
-      <h:inputTextarea id="description" required="false" value="#{itemKey.description}" rows="4" cols="40" />
+      <h:inputTextarea id="description" required="false" value="#{itemKey.description}" rows="4" cols="40">
+        <f:validateLength maximum="100" />
+      </h:inputTextarea>
      </h:panelGroup>
 
      <h:panelGroup>

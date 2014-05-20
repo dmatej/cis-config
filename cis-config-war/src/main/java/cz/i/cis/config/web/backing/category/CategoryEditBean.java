@@ -77,22 +77,22 @@ public class CategoryEditBean {
 
     String link = "";
     try {
-      ConfigurationItemCategory category = categoryDao.getCategory(name);
-      if(category != null && category.getId() != this.category.getId()) {
+      ConfigurationItemCategory oldCategory = categoryDao.getCategory(name);
+      if(oldCategory != null && oldCategory.getId() != category.getId()) {
         FacesMessagesUtils.addErrorMessage("form:name", "Kategorie konfiguračních položek se zadaným jménem již existuje", "");
         return null;
       }
 
-      this.category.setName(name);
-      this.category = categoryDao.updateCategory(category);
+      category.setName(name);
+      category = categoryDao.updateCategory(category);
 
-      link = "list.xhtml#category-" + this.category.getId();
+      link = "list.xhtml#category-" + category.getId();
       FacesUtils.redirectToURL(link);
     } catch (IOException e) {
       LOG.error("Failed to update category: cannot redirect", e);
       FacesMessagesUtils.failedRedirectMessage(link, e);
     } catch (Exception e) {
-      LOG.error("Failed to update category: category = " + this.category, e);
+      LOG.error("Failed to update category: category = " + category, e);
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se uložit změny", e);
     }
 

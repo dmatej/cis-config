@@ -20,32 +20,33 @@ import cz.i.cis.config.jpa.ConfigurationProfileItem;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
-
 /**
  * Backing bean for profile listing.
  */
 @Named(value = "profileList")
 @ViewScoped
 public class ProfileListBean {
-  /**Logger object used for logging.*/
+
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(ProfileListBean.class);
 
+  /** Data access object for profile manipulation. */
   @EJB
-  /**Data access object for profile manipulation.*/
   private ConfigurationProfileDao profileDao;
+  /** Data access object for profile items manipulation. */
   @EJB
-  /**Data access object for profile items manipulation.*/
   private ConfigurationProfileItemDao profileItemDao;
+  /** Data access object for active configuration manipulation. */
   @EJB
-  /**Data access object for active configuration manipulation.*/
   private ConfigurationItemDao itemDao;
+  /** Data access object for user manipulation. */
   @EJB
-  /**Data access object for user manipulation.*/
   private CisUserDao userDao;
 
 
   /**
    * Returns all configuration profiles.
+   *
    * @return All configuration profiles.
    */
   public List<ConfigurationProfile> getAllProfiles() {
@@ -53,8 +54,10 @@ public class ProfileListBean {
     return profileDao.listProfiles();
   }
 
+
   /**
    * Deletes selected profile.
+   *
    * @param id ID of profile to delete.
    */
   public void actionDeleteProfile(String id) {
@@ -62,15 +65,17 @@ public class ProfileListBean {
     try {
       Integer profileID = Integer.valueOf(id);
       profileDao.removeProfile(profileID);
-      FacesMessagesUtils.addInfoMessage("form", "Profil byl ", "");
+      FacesMessagesUtils.addInfoMessage("form", "Profil byl smazán", "");
     } catch (Exception e) {
       LOG.error("Failed to delete profile: ID = " + id, e);
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se smazat profil", e);
     }
   }
 
+
   /**
    * Activates selected profile. All profile item will be set to active configuration.
+   *
    * @param id ID of profile to activate.
    */
   public void actionActivateProfile(String id) {
@@ -78,7 +83,8 @@ public class ProfileListBean {
     try {
       String login = FacesUtils.getRemoteUser();
       if (login == null || login.isEmpty()) {
-        throw new NullPointerException("Somehow no user is not logged in and phantoms are not allowed to create configuration profiles.");
+        throw new NullPointerException(
+            "Somehow no user is not logged in and phantoms are not allowed to create configuration profiles.");
       }
 
       CisUser editor = userDao.getUser(login);
@@ -87,11 +93,12 @@ public class ProfileListBean {
       }
 
       Integer profileID = Integer.valueOf(id);
-      List<ConfigurationProfileItem> profileItems= profileItemDao.listItems(profileID);
+      List<ConfigurationProfileItem> profileItems = profileItemDao.listItems(profileID);
       itemDao.activateProfile(profileItems, editor);
+      FacesMessagesUtils.addInfoMessage("form", "Profil byl aktivován", "");
     } catch (Exception e) {
       LOG.error("Failed to activate profile: ID = " + id, e);
-      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se aktivovat profil: ID = " + id, e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se aktivovat profil", e);
     }
   }
 }

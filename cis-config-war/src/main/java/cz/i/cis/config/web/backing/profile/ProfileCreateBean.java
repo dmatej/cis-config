@@ -27,10 +27,10 @@ public class ProfileCreateBean {
   /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(ProfileCreateBean.class);
 
-  /**Data access object for profile manipulation.*/
+  /** Data access object for profile manipulation. */
   @EJB
   private ConfigurationProfileDao profileDao;
-  /**Data access object for user manipulation.*/
+  /** Data access object for user manipulation. */
   @EJB
   private CisUserDao userDao;
 
@@ -50,27 +50,30 @@ public class ProfileCreateBean {
     try {
       String login = FacesUtils.getRemoteUser();
       if (login == null || login.isEmpty()) {
-        throw new NullPointerException(
-            "Somehow no user is not logged in and phantoms are not allowed to create configuration profiles.");
+        throw new NullPointerException("Nepřihlášený uživatel nemá povoleno vytvářet konfigurační profily");
       }
       CisUser editor = userDao.getUser(login);
       if (editor == null) {
-        throw new NoResultException("Logged in user has not been found in the database.");
+        throw new NoResultException("Přihlášený uživatel nebyl nalezen v databázi");
       }
 
-      ConfigurationProfile profile = new ConfigurationProfile();
-        profile.setName(name);
-        profile.setDescription(description);
-        profile.setUser(editor);
-        profile.setUpdate(new Date());
+      ConfigurationProfile newProfile = profileDao.getProfile(name);
+      if (newProfile != null) {
+        FacesMessagesUtils.addErrorMessage("form:name", "Profil se zadaným jménem již existuje", "");
+        return null;
+      }
 
-      profileDao.addProfile(profile);
+      newProfile = new ConfigurationProfile();
+        newProfile.setName(name);
+        newProfile.setDescription(description);
+        newProfile.setUser(editor);
+        newProfile.setUpdate(new Date());
 
-      return "edit?faces-redirect=true&includeViewParams=true&id=" + profile.getId();
+      profileDao.addProfile(newProfile);
+
+      return "edit?faces-redirect=true&includeViewParams=true&id=" + newProfile.getId();
       // FacesUtils.redirect("list.xhtml#user-" + profile.getId());
-    } catch (NullPointerException e) {
-      FacesMessagesUtils.addErrorMessage(FacesMessagesUtils.getRootMessage(e), "");
-    } catch (NoResultException e) {
+    } catch (NullPointerException | NoResultException e) { // only JRE7
       FacesMessagesUtils.addErrorMessage(FacesMessagesUtils.getRootMessage(e), "");
     } catch (Exception e) {
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se přidat nový profil", e);

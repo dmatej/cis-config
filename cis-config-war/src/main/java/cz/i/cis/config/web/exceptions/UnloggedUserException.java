@@ -1,9 +1,9 @@
 package cz.i.cis.config.web.exceptions;
 
 /**
- * This exception serves for baking beans for nonexistent category.
+ * This exception serves for baking beans for unlogged user.
  */
-public class NonExistentCategoryException extends Exception {
+public class UnloggedUserException extends Exception {
 
   /**
    * Determines if a de-serialized file is compatible with this class.
@@ -14,21 +14,21 @@ public class NonExistentCategoryException extends Exception {
    * Not necessary to include in first version of the class, but included here
    * as a reminder of its importance.
    */
-  private static final long serialVersionUID = -1960527705644759335L;
+  private static final long serialVersionUID = 181128710277863872L;
 
 
   /**
    * Constructs a new exception with default detail message.
    */
-  public NonExistentCategoryException() {
-    super("Vybraná kategorie není správná (nejspíš neexistuje)");
+  public UnloggedUserException() {
+    super("Nepřihlášený uživatel nemá povoleno dělat jakékoliv změny");
   }
 
 
   /**
    * {@inheritDoc}
    */
-  public NonExistentCategoryException(String message) {
+  public UnloggedUserException(String message) {
     super(message);
   }
 
@@ -36,7 +36,7 @@ public class NonExistentCategoryException extends Exception {
   /**
    * {@inheritDoc}
    */
-  public NonExistentCategoryException(Throwable cause) {
+  public UnloggedUserException(Throwable cause) {
     super(cause);
   }
 
@@ -44,7 +44,7 @@ public class NonExistentCategoryException extends Exception {
   /**
    * {@inheritDoc}
    */
-  public NonExistentCategoryException(String message, Throwable cause) {
+  public UnloggedUserException(String message, Throwable cause) {
     super(message, cause);
   }
 }

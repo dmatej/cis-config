@@ -10,7 +10,6 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.persistence.PersistenceException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.ConfigurationItemCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
+import cz.i.cis.config.ejb.dao.exceptions.ConfigurationItemKeyDaoException;
 import cz.i.cis.config.helpers.ConfigurationCategoryTestHelper;
 import cz.i.cis.config.helpers.ConfigurationItemKeyTestHelper;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
@@ -55,7 +55,7 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
   }
 
   @Test
-  public void creatNewConfigurationItemKey() {
+  public void creatNewConfigurationItemKey() throws ConfigurationItemKeyDaoException {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setName("some category name");
     configurationCategoryDao.addCategory(category);
@@ -79,8 +79,8 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
     assertTrue(configurationItemKeyDao.listItemKeys().get(0).getType().equals(ConfigurationItemKeyType.URL));
     }
 
-  @Test(expected = PersistenceException.class)
-  public void creatAlreadyExistingConfigurationKey() throws PersistenceException {
+  @Test(expected = ConfigurationItemKeyDaoException.class)
+  public void creatAlreadyExistingConfigurationKey() throws ConfigurationItemKeyDaoException {
     final ConfigurationItemKey key = configurationItemKeyHelper.createConfigurationKey();
     final ConfigurationItemKey keyCopy = new ConfigurationItemKey();
     keyCopy.setCategory(key.getCategory());

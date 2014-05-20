@@ -102,7 +102,7 @@ public class ConfigurationItemKeyDao {
    * Inserts configuration item key entity into database.
    *
    * @param key configuration item key entity which will be inserted into database.
-   * @throws ConfigurationItemKeyDaoException
+   * @throws ConfigurationItemKeyDaoException If configuration item key cannot be added.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addItemKey(ConfigurationItemKey key) throws ConfigurationItemKeyDaoException {
@@ -120,7 +120,7 @@ public class ConfigurationItemKeyDao {
    *
    * @param key configuration item key entity which will be updated.
    * @return Updated instance of configuration item key entity.
-   * @throws ConfigurationItemKeyDaoException
+   * @throws ConfigurationItemKeyDaoException If configuration item key cannot be updated.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public ConfigurationItemKey updateItemKey(ConfigurationItemKey key) throws ConfigurationItemKeyDaoException {
@@ -140,9 +140,10 @@ public class ConfigurationItemKeyDao {
    *
    * @param id identifier of configuration item entity which will be deleted.
    * @throws ActiveItemKeyException If an item key is used at active configuration.
+   * @throws ConfigurationItemKeyDaoException If cannot remove item key with entered id.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void removeItemKey(Integer id) throws ActiveItemKeyException {
+  public void removeItemKey(Integer id) throws ActiveItemKeyException, ConfigurationItemKeyDaoException {
     ConfigurationItemKey itemKey = getItemKey(id);
 
     final TypedQuery<ConfigurationItem> activeQuery = em.createQuery(
@@ -153,12 +154,18 @@ public class ConfigurationItemKeyDao {
       throw new ActiveItemKeyException("Key " + itemKey.getKey() + " is used in an active configuration!");
     }
 
-    final Query profileDeleteQuery = em
-        .createQuery("DELETE FROM ConfigurationProfileItem item WHERE item.key = :itemKey");
+    try {
+    final Query profileDeleteQuery = em.createQuery(
+        "DELETE FROM ConfigurationProfileItem item WHERE item.key = :itemKey");
     profileDeleteQuery.setParameter("itemKey", itemKey);
     profileDeleteQuery.executeUpdate();
+    em.flush();
 
     em.remove(itemKey);
+    em.flush();
+    } catch(PersistenceException e) {
+      throw new ConfigurationItemKeyDaoException("Cannot remove key with id: " + id, e);
+    }
   }
 
 

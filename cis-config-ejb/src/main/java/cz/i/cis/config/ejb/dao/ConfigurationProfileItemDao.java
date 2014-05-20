@@ -66,7 +66,7 @@ public class ConfigurationProfileItemDao {
    * Inserts configuration profile item entity into database.
    *
    * @param item configuration profile item entity which will be inserted into database.
-   * @throws ConfigurationProfileItemDaoException
+   * @throws ConfigurationProfileItemDaoException If profile item cannot be added.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addItem(ConfigurationProfileItem item) throws ConfigurationProfileItemDaoException {
@@ -84,7 +84,7 @@ public class ConfigurationProfileItemDao {
    *
    * @param item configuration profile item entity which will be updated.
    * @return Updated instance of configuration profile item entity.
-   * @throws ConfigurationProfileItemDaoException
+   * @throws ConfigurationProfileItemDaoException If profile item cannot be updated.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public ConfigurationProfileItem updateItem(ConfigurationProfileItem item) throws ConfigurationProfileItemDaoException {
@@ -103,7 +103,7 @@ public class ConfigurationProfileItemDao {
    * Deletes entered configuration profile item entity.
    *
    * @param item configuration profile item entity which will be deleted.
-   * @throws ConfigurationProfileItemDaoException
+   * @throws ConfigurationProfileItemDaoException If configuration profile item cannot be removed.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeItem(ConfigurationProfileItem item) throws ConfigurationProfileItemDaoException {
@@ -121,11 +121,10 @@ public class ConfigurationProfileItemDao {
    *
    * @param profileItems configuration profile items entity that will be saved.
    * @return List of configuration profile items entity.
-   * @throws ConfigurationProfileItemDaoException
+   * @throws ConfigurationProfileItemDaoException If changes in configuration profile cannot be saved.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public List<ConfigurationProfileItem> saveChanges(Map<String, ConfigurationProfileItem> profileItems)
-    throws ConfigurationProfileItemDaoException {
+  public List<ConfigurationProfileItem> saveChanges(Map<String, ConfigurationProfileItem> profileItems) throws ConfigurationProfileItemDaoException {
     List<ConfigurationProfileItem> updatedItems = new ArrayList<>(profileItems.size());
 
     for (ConfigurationProfileItem item : profileItems.values()) {

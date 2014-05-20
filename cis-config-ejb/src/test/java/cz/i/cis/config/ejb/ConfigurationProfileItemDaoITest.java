@@ -141,8 +141,7 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
 
 
   @Test(expected = ConfigurationProfileItemDaoException.class)
-  public void creatAlreadyExistingConfigurationProfileItem() throws PersistenceException,
-    ConfigurationProfileItemDaoException {
+  public void creatAlreadyExistingConfigurationProfileItem() throws ConfigurationProfileItemDaoException {
     final ConfigurationProfileItem profileItem = profileItemHelper.createConfigurationProfileItem();
     final ConfigurationProfileItem profileItemCopy = new ConfigurationProfileItem();
     profileItemCopy.setProfile(profileItem.getProfile());
@@ -153,7 +152,7 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
 
 
   @Test(expected = ConfigurationProfileItemDaoException.class)
-  public void updateWrongConfigurationProfileItem() throws PersistenceException, ConfigurationProfileItemDaoException {
+  public void updateWrongConfigurationProfileItem() throws ConfigurationProfileItemDaoException {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setId(1);
     final ConfigurationItemKey key = new ConfigurationItemKey();

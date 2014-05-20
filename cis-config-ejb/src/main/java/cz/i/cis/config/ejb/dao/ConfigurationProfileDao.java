@@ -16,24 +16,40 @@ import javax.persistence.TypedQuery;
 
 import cz.i.cis.config.jpa.ConfigurationProfile;
 
+/**
+ * Data access object for work with {@code ConfigurationProfile} entities.
+ */
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class ConfigurationProfileDao {
 
+  /** JPA entity manager for work with entities. */
   @PersistenceContext(name = "cis-jta")
   private EntityManager em;
 
 
+  /**
+   * Finds configuration profile entity with entered id.
+   *
+   * @param id identifier of configuration profile entity.
+   * @return Found configuration profile entity or {@code null} if the entity does not exist.
+   */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public ConfigurationProfile getProfile(Integer id) {
     return em.find(ConfigurationProfile.class, id);
   }
 
+
+  /**
+   * Finds configuration profile entity with entered name.
+   *
+   * @param name name of configuration profile entity.
+   * @return Found configuration profile entity or {@code null} if the entity does not exist.
+   */
   public ConfigurationProfile getProfile(String name) {
     final TypedQuery<ConfigurationProfile> query = em.createQuery(
-        "SELECT profile FROM ConfigurationProfile profile WHERE profile.name = :name",
-        ConfigurationProfile.class);
+        "SELECT profile FROM ConfigurationProfile profile WHERE profile.name = :name", ConfigurationProfile.class);
 
     query.setParameter("name", name);
 
@@ -44,6 +60,12 @@ public class ConfigurationProfileDao {
     }
   }
 
+
+  /**
+   * Returns list of all configuration profiles.
+   *
+   * @return List of all configuration profiles.
+   */
   public List<ConfigurationProfile> listProfiles() {
     final TypedQuery<ConfigurationProfile> query = em.createQuery("SELECT profile FROM ConfigurationProfile profile",
         ConfigurationProfile.class);
@@ -52,18 +74,34 @@ public class ConfigurationProfileDao {
   }
 
 
+  /**
+   * Inserts configuration profile entity into database.
+   *
+   * @param profile configuration profile entity which will be inserted into database.
+   */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addProfile(ConfigurationProfile profile) {
     em.persist(profile);
   }
 
 
+  /**
+   * Updates entered configuration profile entity.
+   *
+   * @param profile configuration profile entity which will be updated.
+   * @return Updated instance of configuration profile entity.
+   */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public ConfigurationProfile updateProfile(ConfigurationProfile profile) {
     return em.merge(profile);
   }
 
 
+  /**
+   * Deletes configuration profile entity by entered id.
+   *
+   * @param id identifier of configuration profile entity which will be deleted.
+   */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeProfile(Integer id) {
     ConfigurationProfile profile = getProfile(id);

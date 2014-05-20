@@ -100,16 +100,18 @@ public class ConfigurationProfileDao {
    * @param profile configuration profile entity which will be updated.
    * @return Updated instance of configuration profile entity.
    * @throws CisUserDaoException
+   * @throws ConfigurationProfileDaoException
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public ConfigurationProfile updateProfile(ConfigurationProfile profile) throws CisUserDaoException {
+  public ConfigurationProfile updateProfile(ConfigurationProfile profile) throws CisUserDaoException,
+    ConfigurationProfileDaoException {
     try {
       ConfigurationProfile merged = em.merge(profile);
       em.flush();
 
       return merged;
     } catch (PersistenceException e) {
-      throw new CisUserDaoException("Cannot update profile " + profile, e);
+      throw new ConfigurationProfileDaoException("Cannot update profile " + profile, e);
     }
   }
 
@@ -119,9 +121,10 @@ public class ConfigurationProfileDao {
    *
    * @param id identifier of configuration profile entity which will be deleted.
    * @throws CisUserDaoException
+   * @throws ConfigurationProfileDaoException
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void removeProfile(Integer id) throws CisUserDaoException {
+  public void removeProfile(Integer id) throws CisUserDaoException, ConfigurationProfileDaoException {
     ConfigurationProfile profile = getProfile(id);
     final Query profileItemsDeleteQuery = em
         .createQuery("DELETE FROM ConfigurationProfileItem profileItem WHERE profileItem.profile = :profile");
@@ -132,7 +135,7 @@ public class ConfigurationProfileDao {
       em.remove(profile);
       em.flush();
     } catch (PersistenceException e) {
-      throw new CisUserDaoException("Cannot remove profile " + profile, e);
+      throw new ConfigurationProfileDaoException("Cannot remove profile " + profile, e);
     }
   }
 }

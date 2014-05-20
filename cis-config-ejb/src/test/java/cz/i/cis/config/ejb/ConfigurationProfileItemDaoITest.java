@@ -167,7 +167,6 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
     profileItem.setId(1);
     profileItem.setKey(key);
     profileItem.setProfile(profile);
-    profileItem.setId(1);
 
     profileItemDao.updateItem(profileItem);
   }

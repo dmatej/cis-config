@@ -49,6 +49,7 @@ public class CategoryListBean {
     try {
       Integer categoryID = Integer.valueOf(id);
       categoryDao.removeCategory(categoryID);
+
       FacesMessagesUtils.addInfoMessage("form", "Kategorie konfiguračních položek byla smazána", "");
     } catch (Exception e) {
       LOG.error("Failed to remove category: ID = " + id, e);

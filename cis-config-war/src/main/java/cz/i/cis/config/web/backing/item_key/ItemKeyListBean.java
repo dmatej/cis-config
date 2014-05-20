@@ -62,6 +62,9 @@ public class ItemKeyListBean {
 
     String category = (String) FacesUtils.getSession(SESSION_NAME);
     selectedCategory = (category == null) ? NONE_SELECTOR : category;
+    if(!allCategories.containsKey(selectedCategory)) {
+      selectedCategory = NONE_SELECTOR;
+    }
   }
 
 

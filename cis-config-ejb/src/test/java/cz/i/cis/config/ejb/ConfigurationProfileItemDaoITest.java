@@ -95,7 +95,7 @@ public class ConfigurationProfileItemDaoITest extends ArquillianITest {
 
   @Test
   public void creatNewConfigurationProfileItem() throws CisUserDaoException, ConfigurationProfileItemDaoException,
-    ConfigurationProfileDaoException, ConfigurationItemKeyDaoException {
+    ConfigurationProfileDaoException, ConfigurationItemKeyDaoException, Exception {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setName("some category name");
     categoryDao.addCategory(category);

@@ -26,7 +26,7 @@ public class ConfigurationCategoryDaoITest extends ArquillianITest {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurationCategoryDaoITest.class);
 
-  @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryDao")
+  @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemCategoryDao")
   private ConfigurationItemCategoryDao dao;
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryTestHelper")
   private ConfigurationCategoryTestHelper helper;
@@ -40,7 +40,7 @@ public class ConfigurationCategoryDaoITest extends ArquillianITest {
 
 
   @Test
-  public void creatNewConfigurationCategory() {
+  public void creatNewConfigurationCategory() throws Exception {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setName("Connection settings for registers");
     dao.addCategory(category);
@@ -70,7 +70,7 @@ public class ConfigurationCategoryDaoITest extends ArquillianITest {
 
 
   @Test
-  public void testMethodsConfigurationCategoriesDao() {
+  public void testMethodsConfigurationCategoriesDao() throws Exception {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setName("some category");
     helper.addToDelete(category);

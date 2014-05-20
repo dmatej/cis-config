@@ -10,8 +10,6 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.persistence.PersistenceException;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +21,7 @@ import cz.i.cis.config.ejb.dao.ConfigurationItemCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
 import cz.i.cis.config.ejb.dao.exceptions.CisUserDaoException;
+import cz.i.cis.config.ejb.dao.exceptions.ConfigurationItemDaoException;
 import cz.i.cis.config.ejb.dao.exceptions.ConfigurationItemKeyDaoException;
 import cz.i.cis.config.helpers.ConfigurationCategoryTestHelper;
 import cz.i.cis.config.helpers.ConfigurationItemKeyTestHelper;
@@ -45,7 +44,7 @@ public class ConfigurationItemDaoITest extends ArquillianITest {
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/CisUserDao")
   private CisUserDao cisUserDao;
 
-  @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryDao")
+  @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemCategoryDao")
   private ConfigurationItemCategoryDao categoryDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemKeyDao")
@@ -80,7 +79,7 @@ public class ConfigurationItemDaoITest extends ArquillianITest {
 
 
   @Test
-  public void creatNewConfigurationItem() throws CisUserDaoException, ConfigurationItemKeyDaoException {
+  public void creatNewConfigurationItem() throws CisUserDaoException, ConfigurationItemKeyDaoException, Exception {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setName("some category name");
     categoryDao.addCategory(category);
@@ -119,8 +118,8 @@ public class ConfigurationItemDaoITest extends ArquillianITest {
   }
 
 
-  @Test(expected = PersistenceException.class)
-  public void creatAlreadyExistingConfigurationItem() throws PersistenceException {
+  @Test(expected = ConfigurationItemDaoException.class)
+  public void creatAlreadyExistingConfigurationItem() throws Exception {
     final ConfigurationItem configuration = configurationItemHelper.createConfigurationItem();
     final ConfigurationItem configurationCopy = new ConfigurationItem();
     configurationCopy.setKey(configuration.getKey());

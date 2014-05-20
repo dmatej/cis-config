@@ -3,6 +3,7 @@ package cz.i.cis.config.ejb;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.ConfigurationItemCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
+import cz.i.cis.config.ejb.dao.exceptions.ActiveItemKeyException;
 import cz.i.cis.config.ejb.dao.exceptions.ConfigurationItemKeyDaoException;
 import cz.i.cis.config.helpers.ConfigurationCategoryTestHelper;
 import cz.i.cis.config.helpers.ConfigurationItemKeyTestHelper;
@@ -34,7 +36,7 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemKeyDao")
   private ConfigurationItemKeyDao configurationItemKeyDao;
 
-  @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryDao")
+  @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemCategoryDao")
   private ConfigurationItemCategoryDao configurationCategoryDao;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryTestHelper")
@@ -43,9 +45,11 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemKeyTestHelper")
   private ConfigurationItemKeyTestHelper configurationItemKeyHelper;
 
+
   @Before
   public void init() {
   }
+
 
   @After
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -54,8 +58,9 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
     categoryHelper.cleanup();
   }
 
+
   @Test
-  public void creatNewConfigurationItemKey() throws ConfigurationItemKeyDaoException {
+  public void creatNewConfigurationItemKey() throws ConfigurationItemKeyDaoException, Exception {
     final ConfigurationItemCategory category = new ConfigurationItemCategory();
     category.setName("some category name");
     configurationCategoryDao.addCategory(category);
@@ -77,7 +82,7 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
     key.setType(ConfigurationItemKeyType.URL);
     configurationItemKeyDao.updateItemKey(key);
     assertTrue(configurationItemKeyDao.listItemKeys().get(0).getType().equals(ConfigurationItemKeyType.URL));
-    }
+  }
 
   @Test(expected = ConfigurationItemKeyDaoException.class)
   public void creatAlreadyExistingConfigurationKey() throws ConfigurationItemKeyDaoException {
@@ -88,17 +93,36 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
     keyCopy.setType(key.getType());
     keyCopy.setKey(key.getKey());
     configurationItemKeyDao.addItemKey(keyCopy);
-    }
+  }
+
 
   @Test
   public void listConfigurationKeys() {
     final List<ConfigurationItemKey> keys = configurationItemKeyDao.listItemKeys();
     LOG.debug("list configuration item keys: {}", keys);
     assertNotNull("configuration item keys", keys);
-    assertTrue("keys.empty",keys.isEmpty());
+    assertTrue("keys.empty", keys.isEmpty());
   }
 
 
+  @Test
+  public void testItemKey() {
+    final ConfigurationItemKey key = configurationItemKeyHelper.createConfigurationKey();
+    assertEquals(key.hashCode(), configurationItemKeyDao.getItemKey(key.getId()).hashCode());
+    assertEquals(key.hashCode(), configurationItemKeyDao.getItemKey(key.getKey()).hashCode());
+    String k = key.getKey() + "a";
+    final ConfigurationItemKey keyNull = configurationItemKeyDao.getItemKey(k);
+    assertNull(keyNull);
+  }
+
+//  @Test
+//  public void testRemoveItemKey() throws Exception{
+//    final ConfigurationItemKey key = configurationItemKeyHelper.createConfigurationKey();
+//    configurationItemKeyDao.addItemKey(key);
+//    configurationItemKeyDao.removeItemKey(key.getId());
+//    assertTrue(configurationItemKeyDao.getItemKeyMap(itemKeys));
+//
+//  }
 
   @Test
   public void testComparationKeys() {
@@ -118,9 +142,9 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
     keySecond.setKey("base");
     keySecond.setType(ConfigurationItemKeyType.Text);
 
-   assertEquals(keyFirst.hashCode(), keySecond.hashCode());
-   assertEquals(keyFirst, keySecond);
-   assertTrue(keyFirst.equals(keySecond));
+    assertEquals(keyFirst.hashCode(), keySecond.hashCode());
+    assertEquals(keyFirst, keySecond);
+    assertTrue(keyFirst.equals(keySecond));
   }
 
 }

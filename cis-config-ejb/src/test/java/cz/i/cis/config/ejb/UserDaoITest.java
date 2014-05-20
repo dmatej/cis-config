@@ -6,7 +6,7 @@ package cz.i.cis.config.ejb;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -17,7 +17,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.time.DateUtils;
@@ -108,16 +107,16 @@ public class UserDaoITest extends ArquillianITest {
     dao.updateUser(user);
     LOG.debug("update user name: {}", user);
     assertSame(user.getStatus(), CisUser.STATUS_VALID);
-    dao.updateUserStatus(user, CisUser.STATUS_DELETED);
-    assertNotSame(user.getStatus(), CisUser.STATUS_VALID);
+
     final CisUser cu = dao.getUser("dan");
     assertEquals(user.hashCode(), cu.hashCode());
-
+    final CisUser cuNull = dao.getUser("");
+    assertNull(cuNull);
   }
 
 
   @Test
-  public void testRestoreUser() throws CisUserDaoException {
+  public void testDeleteRestoreUser() throws CisUserDaoException {
     final CisUser user = new CisUser();
     user.setLastName("Jezik");
     user.setLogin("dan");
@@ -126,9 +125,51 @@ public class UserDaoITest extends ArquillianITest {
 
     helper.addToDelete(user);
     dao.addUser(user);
-    dao.updateUserStatus(user, CisUser.STATUS_DELETED);
+
+    dao.removeUser(user.getId());
+    assertSame(dao.getUser(user.getId()).getStatus(), CisUser.STATUS_DELETED);
+
     dao.restoreUser(user.getId());
     assertSame(dao.getUser(user.getId()).getStatus(), CisUser.STATUS_VALID);
+  }
+
+
+  @Test(expected = CisUserDaoException.class)
+  public void testDeleteUser() throws CisUserDaoException {
+    final CisUser user = new CisUser();
+    user.setLastName("Jezik");
+    user.setLogin("dan");
+    user.setFirstName("Daniel");
+    user.setBirthDate(new Date());
+
+    helper.addToDelete(user);
+    dao.addUser(user);
+
+    dao.removeUser(user.getId());
+    assertSame(dao.getUser(user.getId()).getStatus(), CisUser.STATUS_DELETED);
+    dao.removeUser(user.getId());
+  }
+
+
+  @Test(expected = CisUserDaoException.class)
+  public void testResoteExistingUser() throws CisUserDaoException {
+    final CisUser user = new CisUser();
+    user.setLastName("Jezik");
+    user.setLogin("dan");
+    user.setFirstName("Daniel");
+    user.setBirthDate(new Date());
+
+    helper.addToDelete(user);
+    dao.addUser(user);
+    dao.restoreUser(user.getId());
+  }
+
+
+  @Test(expected = CisUserDaoException.class)
+  public void testWrongUpdate() throws CisUserDaoException {
+    final CisUser user = new CisUser();
+    user.setId(10);
+    dao.updateUser(user);
   }
 
 
@@ -152,6 +193,7 @@ public class UserDaoITest extends ArquillianITest {
     assertTrue(userFirst.equals(userSecond));
     assertFalse(EqualsBuilder.reflectionEquals(userFirst, userSecond, false));
     int result = userFirst.compareTo(userFirst);
+    LOG.debug("result = {}", result);
     assertTrue("expected to be equal", result == 0);
   }
 }

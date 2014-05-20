@@ -79,10 +79,16 @@ public class ConfigurationItemDao {
    * Inserts configuration item entity into database.
    *
    * @param item configuration item entity which will be inserted into database.
+   * @throws ConfigurationItemDaoException
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void addItem(ConfigurationItem item) {
-    em.persist(item);
+  public void addItem(ConfigurationItem item) throws ConfigurationItemDaoException {
+    try {
+      em.persist(item);
+      em.flush();
+    } catch (PersistenceException e) {
+      throw new ConfigurationItemDaoException("Cannot insert item : " + item.toString(), e);
+    }
   }
 
 

@@ -1,8 +1,11 @@
 package cz.i.cis.config.ejb.dao.exceptions;
 
+import javax.ejb.ApplicationException;
+
 /**
  * Exception which serves for data access object for configuration profiles.
  */
+@ApplicationException(rollback = true)
 public class ConfigurationProfileDaoException extends Exception {
 
   /**

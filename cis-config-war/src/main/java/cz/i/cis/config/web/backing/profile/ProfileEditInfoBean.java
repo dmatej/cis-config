@@ -108,8 +108,8 @@ public class ProfileEditInfoBean {
       profile = profileDao.updateProfile(profile);
       link = "list.xhtml#profile-" + profile.getId();
       FacesUtils.redirectToURL(link);
-    } catch (IOException exc) {
-      FacesMessagesUtils.failedRedirectMessage(link, exc);
+    } catch (IOException e) {
+      FacesMessagesUtils.failedRedirectMessage(link, e);
     } catch (NonExistentCategoryException | UserNotFoundException e) { // only JRE7
       FacesMessagesUtils.addErrorMessage(FacesMessagesUtils.getRootMessage(e), "");
     } catch (Exception e) {

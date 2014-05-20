@@ -1,13 +1,13 @@
 <ui:composition template="/template/main.xhtml"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+ xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:h="http://xmlns.jcp.org/jsf/html"
+ xmlns:f="http://xmlns.jcp.org/jsf/core"
+ xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-  <ui:define name="title">404</ui:define>
+ <ui:param name="pageName" value="CIS config" />
+ <ui:param name="pageTitle" value="Chyba 404" />
 
-  <ui:define name="content">
-    <h1>404</h1>
-    <p>Strkáš nos, kam nemáš.</p>
-  </ui:define>
+ <ui:define name="content">
+  <p>Je nám líto, ale požadovaná stránka nebyla nalezena.</p>
+ </ui:define>
 </ui:composition>

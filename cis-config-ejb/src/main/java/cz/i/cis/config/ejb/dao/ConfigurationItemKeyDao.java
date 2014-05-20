@@ -21,19 +21,35 @@ import cz.i.cis.config.jpa.ConfigurationItem;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 import cz.i.cis.config.jpa.ConfigurationItemKey;
 
+/**
+ * Data access object for work with {@code ConfigurationItemKey} entities.
+ */
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class ConfigurationItemKeyDao {
 
+  /** JPA entity manager for work with entities. */
   @PersistenceContext(name = "cis-jta")
   private EntityManager em;
 
 
+  /**
+   * Finds configuration item key entity with entered id.
+   *
+   * @param id identifier of configuration item key entity.
+   * @return Found configuration item key entity or {@code null} if the entity does not exist.
+   */
   public ConfigurationItemKey getItemKey(Integer id) {
     return em.find(ConfigurationItemKey.class, id);
   }
 
+  /**
+   * Finds configuration item key entity with entered key name.
+   *
+   * @param key name of configuration item key entity.
+   * @return Found configuration item key entity or {@code null} if the entity does not exist.
+   */
   public ConfigurationItemKey getItemKey(String key) {
     final TypedQuery<ConfigurationItemKey> query = em.createQuery(
         "SELECT itemKey FROM ConfigurationItemKey itemKey WHERE itemKey.key = :key",
@@ -48,6 +64,12 @@ public class ConfigurationItemKeyDao {
     }
   }
 
+
+  /**
+   * Returns list of all configuration item keys.
+   *
+   * @return List of all configuration item keys.
+   */
   public List<ConfigurationItemKey> listItemKeys() {
     final TypedQuery<ConfigurationItemKey> query = em.createQuery("SELECT itemKey FROM ConfigurationItemKey itemKey",
         ConfigurationItemKey.class);
@@ -56,6 +78,12 @@ public class ConfigurationItemKeyDao {
   }
 
 
+  /**
+   * Returns list of configuration item keys by category.
+   *
+   * @param category category for filter list
+   * @return List of configuration item keys by category.
+   */
   public List<ConfigurationItemKey> filterItemKeys(ConfigurationItemCategory category) {
     category = em.find(ConfigurationItemCategory.class, category.getId());
 
@@ -68,27 +96,35 @@ public class ConfigurationItemKeyDao {
   }
 
 
-  public static Map<String, ConfigurationItemKey> getItemKeyMap(List<ConfigurationItemKey> itemKeys) {
-    Map<String, ConfigurationItemKey> itemKeyMap = new HashMap<>();
-    for (ConfigurationItemKey itemKey : itemKeys) {
-      itemKeyMap.put(itemKey.getId() + "", itemKey);
-    }
-
-    return itemKeyMap;
-  }
-
-
+  /**
+   * Inserts configuration item key entity into database.
+   *
+   * @param key configuration item key entity which will be inserted into database.
+   */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addItemKey(ConfigurationItemKey key) {
     em.persist(key);
   }
 
 
+  /**
+   * Updates entered configuration item key entity.
+   *
+   * @param key configuration item key entity which will be updated.
+   * @return Updated instance of configuration item key entity.
+   */
+  @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public ConfigurationItemKey updateItemKey(ConfigurationItemKey key) {
     return em.merge(key);
   }
 
 
+  /**
+   * Deletes configuration item key entity by entered id.
+   *
+   * @param id identifier of configuration item entity which will be deleted.
+   * @throws ActiveItemKeyException If an item key is used at active configuration.
+   */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeItemKey(Integer id) throws ActiveItemKeyException {
     ConfigurationItemKey itemKey = getItemKey(id);
@@ -106,5 +142,21 @@ public class ConfigurationItemKeyDao {
     profileDeleteQuery.executeUpdate();
 
     em.remove(itemKey);
+  }
+
+
+  /**
+   * Returns map of entered list of configuration item keys.
+   *
+   * @param itemKeys list of configuration item keys for put to map.
+   * @return Map of entered list of configuration item keys.
+   */
+  public static Map<String, ConfigurationItemKey> getItemKeyMap(List<ConfigurationItemKey> itemKeys) {
+    Map<String, ConfigurationItemKey> itemKeyMap = new HashMap<>();
+    for (ConfigurationItemKey itemKey : itemKeys) {
+      itemKeyMap.put(itemKey.getId() + "", itemKey);
+    }
+
+    return itemKeyMap;
   }
 }

@@ -110,7 +110,7 @@ public class UserDaoITest extends ArquillianITest {
 
     final CisUser cu = dao.getUser("dan");
     assertEquals(user.hashCode(), cu.hashCode());
-    final CisUser cuNull = dao.getUser("");
+    final CisUser cuNull = dao.getUser(user.getLogin() + "a");
     assertNull(cuNull);
   }
 

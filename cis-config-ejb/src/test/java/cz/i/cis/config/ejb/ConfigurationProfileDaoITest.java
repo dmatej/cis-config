@@ -11,6 +11,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+
 import org.junit.After;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -91,11 +92,13 @@ public class ConfigurationProfileDaoITest extends ArquillianITest {
     profileDao.addProfile(profileCopy);
   }
 
+
   @Test
   public void testRemoveConfigurationProfile() throws ConfigurationProfileDaoException, CisUserDaoException {
     final ConfigurationProfile profile = profileHelper.createConfigurationProfile();
     profileDao.removeProfile(profile.getId());
   }
+
 
   @Test(expected = ConfigurationProfileDaoException.class)
   public void testWrongUpdate() throws CisUserDaoException, ConfigurationProfileDaoException {
@@ -125,7 +128,8 @@ public class ConfigurationProfileDaoITest extends ArquillianITest {
     final ConfigurationProfile profile = profileHelper.createConfigurationProfile();
     assertEquals(profile.hashCode(), profileDao.getProfile(profile.getId()).hashCode());
     assertEquals(profile.hashCode(), profileDao.getProfile(profile.getName()).hashCode());
-    final ConfigurationProfile profileNull = profileDao.getProfile("x");
+    String n = profile.getName() + "a";
+    final ConfigurationProfile profileNull = profileDao.getProfile(n);
     assertNull(profileNull);
   }
 

@@ -4,6 +4,7 @@
  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
  <h:form id="form">
+  <h:messages for="form" infoClass="form-info-message" warnClass="form-warning-message" errorClass="form-error-message" />
   <h:panelGrid columns="3" id="table">
    <h:panelGroup>
     <h:outputLabel for="first-name" value="Jméno" />
@@ -30,15 +31,15 @@
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:outputLabel for="nickname" value="Login" />
+    <h:outputLabel for="login" value="Login" />
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:inputText id="nickname" styleClass="important short" required="true" requiredMessage="Nebyl vyplněn login" value="#{user.login}" size="40" />
+    <h:inputText id="login" styleClass="important short" required="true" requiredMessage="Nebyl vyplněn login" value="#{user.login}" size="40" />
    </h:panelGroup>
 
    <h:panelGroup>
-    <h:messages for="nickname" styleClass="form:table:error" />
+    <h:messages for="login" styleClass="form:table:error" />
    </h:panelGroup>
 
    <h:panelGroup>

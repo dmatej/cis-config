@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.persistence.NoResultException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +15,8 @@ import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.jpa.ConfigurationProfile;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
+import cz.i.cis.config.web.exceptions.NonExistentCategoryException;
+import cz.i.cis.config.web.exceptions.UserNotFoundException;
 
 /**
  * Backing bean for profile creation.
@@ -27,11 +28,11 @@ public class ProfileCreateBean {
   /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(ProfileCreateBean.class);
 
+  /** Data access object for profile manipulation. */
   @EJB
-  /**Data access object for profile manipulation.*/
   private ConfigurationProfileDao profileDao;
+  /** Data access object for user manipulation. */
   @EJB
-  /**Data access object for user manipulation.*/
   private CisUserDao userDao;
 
   /** New profile name. */
@@ -50,32 +51,35 @@ public class ProfileCreateBean {
     try {
       String login = FacesUtils.getRemoteUser();
       if (login == null || login.isEmpty()) {
-        throw new NullPointerException(
-            "Somehow no user is not logged in and phantoms are not allowed to create configuration profiles.");
+        throw new NonExistentCategoryException();
       }
       CisUser editor = userDao.getUser(login);
       if (editor == null) {
-        throw new NoResultException("Logged in user has not been found in the database.");
+        throw new UserNotFoundException();
       }
 
-      ConfigurationProfile profile = new ConfigurationProfile();
-        profile.setName(name);
-        profile.setDescription(description);
-        profile.setUser(editor);
-        profile.setUpdate(new Date());
+      ConfigurationProfile newProfile = profileDao.getProfile(name);
+      if (newProfile != null) {
+        FacesMessagesUtils.addErrorMessage("form:name", "Profil se zadaným jménem již existuje", "");
+        return null;
+      }
 
-      profileDao.addProfile(profile);
+      newProfile = new ConfigurationProfile();
+      newProfile.setName(name);
+      newProfile.setDescription(description);
+      newProfile.setUser(editor);
+      newProfile.setUpdate(new Date());
 
-      return "edit?faces-redirect=true&includeViewParams=true&id=" + profile.getId();
+      profileDao.addProfile(newProfile);
+
+      return "edit?faces-redirect=true&includeViewParams=true&id=" + newProfile.getId();
       // FacesUtils.redirect("list.xhtml#user-" + profile.getId());
-    } catch (NullPointerException e) {
-      FacesMessagesUtils.addErrorMessage(FacesMessagesUtils.getRootMessage(e), "");
-    } catch (NoResultException e) {
+    } catch (NonExistentCategoryException | UserNotFoundException e) { // only JRE7
       FacesMessagesUtils.addErrorMessage(FacesMessagesUtils.getRootMessage(e), "");
     } catch (Exception e) {
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se přidat nový profil", e);
     }
-    
+
     return null;
   }
 

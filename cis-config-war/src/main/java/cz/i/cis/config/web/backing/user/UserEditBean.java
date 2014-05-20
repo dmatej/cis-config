@@ -15,7 +15,6 @@ import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
 
-
 /**
  * Backing bean for profile items manipulation.
  */
@@ -23,25 +22,25 @@ import cz.i.cis.config.web.FacesUtils;
 @ViewScoped
 public class UserEditBean {
 
-  /**Logger object used for logging.*/
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(UserEditBean.class);
 
+  /** Data access object for user manipulation. */
   @EJB
-  /**Data access object for user manipulation.*/
   private CisUserDao userDao;
 
-  /**ID of currently edited user. It is set via request parameter.*/
+  /** ID of currently edited user. It is set via request parameter. */
   private Integer id;
-  /**Currently edited user. It is initialized in init() method with use of id field.*/
+  /** Currently edited user. It is initialized in init() method with use of id field. */
   private CisUser user;
 
-  /**Edited user name.*/
+  /** Edited user name. */
   private String name;
-  /**Edited user surname.*/
+  /** Edited user surname. */
   private String surname;
-  /**Edited user login.*/
+  /** Edited user login. */
   private String login;
-  /**Edited user birth date.*/
+  /** Edited user birth date. */
   private Date birthDate;
 
 
@@ -54,57 +53,69 @@ public class UserEditBean {
       user = userDao.getUser(id);
     } catch (IllegalArgumentException e) {
       LOG.error("Failed to load user during initialization: ID = " + id, e);
-      FacesMessagesUtils.addErrorMessage("Uživatel není validní: ID = " + id, e);
-    }
-    if (user == null) {
-      LOG.error("User not loaded during initialization, redirecting to list: ID = {}", id);
-      FacesMessagesUtils.addErrorMessage("Zvolený uživatel nebyl nalezen v databázi - ID = " + id, "");
+      FacesMessagesUtils.addErrorMessage("form", "Uživatel není validní: ID = " + id, e);
       FacesUtils.redirectToOutcome("list");
       return;
-    } else {
-      name = user.getFirstName();
-      surname = user.getLastName();
-      login = user.getLogin();
-      birthDate = user.getBirthDate();
     }
+
+    if (user == null) {
+      LOG.error("User not loaded during initialization, redirecting to list: ID = {}", id);
+      FacesMessagesUtils.addErrorMessage("form", "Zvolený uživatel nebyl nalezen v databázi: ID = " + id, "");
+      FacesUtils.redirectToOutcome("list");
+      return;
+    }
+
+    name = user.getFirstName();
+    surname = user.getLastName();
+    login = user.getLogin();
+    birthDate = user.getBirthDate();
   }
 
 
   /**
    * Persists changes.
+   *
    * @return Navigation outcome.
    */
   public String actionUpdateUser() {
     LOG.debug("actionUpdateUser()");
-    if (user != null) {
-      user.setFirstName(name);
-      user.setLastName(surname);
-      user.setLogin(login);
-      user.setBirthDate(birthDate);
-
-      String link = "";
-      try {
-        user = userDao.updateUser(user);
-
-        // FacesUtils.addMessage(FacesMessage.SEVERITY_INFO, "Změny byly uloženy.");
-        link = "list.xhtml#user-" + user.getId();
-        FacesUtils.redirectToURL(link);
-      } catch (IOException e) {
-        LOG.error("Failed to redirect to: " + link, e);
-        FacesMessagesUtils.failedRedirectMessage(link, e);
-      } catch (Exception e) {
-        LOG.error("Failed to persist changes.", e);
-        FacesMessagesUtils.addErrorMessage("Nepodařilo se uložit změny", e);
-      }
-    } else {
+    if (user == null) {
       FacesMessagesUtils.addErrorMessage("Musíte editovat existujícího uživatele, abyste mohli uložit jeho změny.", "");
+      return null;
     }
+
+    CisUser oldUser = userDao.getUser(login);
+    if (oldUser != null && oldUser.getId() != user.getId()) {
+      FacesMessagesUtils.addErrorMessage("form:login", "Uživatel se zadaným loginem již existuje", "");
+      return null;
+    }
+
+    user.setFirstName(name);
+    user.setLastName(surname);
+    user.setLogin(login);
+    user.setBirthDate(birthDate);
+
+    String link = "";
+    try {
+      user = userDao.updateUser(user);
+
+      link = "list.xhtml#user-" + user.getId();
+      FacesUtils.redirectToURL(link);
+    } catch (IOException e) {
+      LOG.error("Failed to persist changes: failed to redirect", e);
+      FacesMessagesUtils.failedRedirectMessage(link, e);
+    } catch (Exception e) {
+      LOG.error("Failed to persist changes.", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se uložit změny", e);
+    }
+
     return null;
   }
 
 
   /**
    * Returns ID of edited user.
+   *
    * @return ID of edited user.
    */
   public Integer getId() {
@@ -112,8 +123,10 @@ public class UserEditBean {
     return id;
   }
 
+
   /**
    * Sets ID of edited user.
+   *
    * @param id ID of edited user.
    */
   public void setId(Integer id) {
@@ -121,8 +134,10 @@ public class UserEditBean {
     this.id = id;
   }
 
+
   /**
    * Returns edited user name.
+   *
    * @return Edited user name.
    */
   public String getName() {
@@ -130,8 +145,10 @@ public class UserEditBean {
     return name;
   }
 
+
   /**
    * Sets edited user name.
+   *
    * @param name Edited user name.
    */
   public void setName(String name) {
@@ -139,8 +156,10 @@ public class UserEditBean {
     this.name = name;
   }
 
+
   /**
    * Returns edited user surname.
+   *
    * @return Edited user surname.
    */
   public String getSurname() {
@@ -148,8 +167,10 @@ public class UserEditBean {
     return surname;
   }
 
+
   /**
    * Sets edited user surname.
+   *
    * @param surname Edited user surname.
    */
   public void setSurname(String surname) {
@@ -157,8 +178,10 @@ public class UserEditBean {
     this.surname = surname;
   }
 
+
   /**
    * Returns edited user login.
+   *
    * @return Edited user login.
    */
   public String getLogin() {
@@ -166,8 +189,10 @@ public class UserEditBean {
     return login;
   }
 
+
   /**
    * Sets edited user login.
+   *
    * @param login Edited user login.
    */
   public void setLogin(String login) {
@@ -175,16 +200,20 @@ public class UserEditBean {
     this.login = login;
   }
 
+
   /**
    * Returns edited user birth date.
+   *
    * @return Edited user birth date.
    */
   public Date getBirthDate() {
     return birthDate;
   }
 
+
   /**
    * Sets edited user birth date.
+   *
    * @param birthDate Edited user birth date.
    */
   public void setBirthDate(Date birthDate) {

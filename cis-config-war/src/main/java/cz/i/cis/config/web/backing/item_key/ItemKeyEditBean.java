@@ -30,10 +30,10 @@ public class ItemKeyEditBean {
   /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(ItemKeyEditBean.class);
 
-  /**Data access object for item key manipulation.*/
+  /** Data access object for item key manipulation. */
   @EJB
   private ConfigurationItemKeyDao itemKeyDao;
-  /**Data access object for item category manipulation.*/
+  /** Data access object for item category manipulation. */
   @EJB
   private ConfigurationCategoryDao categoryDao;
 
@@ -103,7 +103,8 @@ public class ItemKeyEditBean {
     LOG.debug("actionUpdateItemKey()");
     if (itemKey == null) {
       LOG.error("Cannot edit itemKey which is null");
-      FacesMessagesUtils.addErrorMessage("Musíte editovat existující klíč pro konfigurační položky, abyste mohli uložit jeho změny.", "");
+      FacesMessagesUtils.addErrorMessage(
+          "Musíte editovat existující klíč pro konfigurační položky, abyste mohli uložit jeho změny.", "");
       return;
     }
 
@@ -111,6 +112,13 @@ public class ItemKeyEditBean {
     try {
       if (!allCategories.containsKey(selectedCategory)) {
         throw new NonExistentCategoryException();
+      }
+
+      ConfigurationItemKey oldItemKey = itemKeyDao.getItemKey(key);
+      if (oldItemKey != null && oldItemKey.getId() != itemKey.getId()) {
+        FacesMessagesUtils.addErrorMessage("form:key", "Klíč pro konfigurační položky se zadaným jménem již existuje",
+            "");
+        return;
       }
 
       itemKey.setKey(key);

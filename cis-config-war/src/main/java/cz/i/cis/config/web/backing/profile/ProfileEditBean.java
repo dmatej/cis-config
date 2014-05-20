@@ -37,17 +37,17 @@ public class ProfileEditBean {
   /** Selection placeholder for "no selection". */
   private static final String NONE_SELECTOR = "none";
 
+  /** Data access object for profile manipulation. */
   @EJB
-  /**Data access object for profile manipulation.*/
   private ConfigurationProfileDao profileDao;
+  /** Data access object for profile item manipulation. */
   @EJB
-  /**Data access object for profile item manipulation.*/
   private ConfigurationProfileItemDao itemDao;
+  /** Data access object for item category manipulation. */
   @EJB
-  /**Data access object for item category manipulation.*/
   private ConfigurationCategoryDao categoryDao;
+  /** Data access object for item key manipulation. */
   @EJB
-  /**Data access object for item key manipulation.*/
   private ConfigurationItemKeyDao itemKeyDao;
 
   /** ID of currently edited profile. It is set via request parameter. */
@@ -110,6 +110,7 @@ public class ProfileEditBean {
       LOG.error("Failed to load categories.", e);
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se načíst kategorie z databáze", e);
     }
+
     refreshItemKeys();
     refreshItems();
   }

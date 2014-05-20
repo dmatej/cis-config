@@ -1,6 +1,3 @@
-/**
- *
- */
 package cz.i.cis.config.web.filter;
 
 import java.io.IOException;
@@ -25,8 +22,6 @@ import cz.i.cis.config.jpa.CisUser;
 
 /**
  * Redirects client to new user registration if the user still does not exist in application.
- *
- * @author David Matějček
  */
 @WebFilter(filterName = "UserFilter", urlPatterns = {"/config/*"}, dispatcherTypes = DispatcherType.REQUEST)
 public class UserFilter implements Filter {

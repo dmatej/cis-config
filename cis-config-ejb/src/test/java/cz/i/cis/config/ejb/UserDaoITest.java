@@ -17,7 +17,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.persistence.PersistenceException;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -29,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.CisUserDao;
+import cz.i.cis.config.exceptions.CisUserDaoException;
 import cz.i.cis.config.helpers.UserTestHelper;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.test.ArquillianITest;
@@ -56,8 +56,8 @@ public class UserDaoITest extends ArquillianITest {
   }
 
 
-  @Test(expected = PersistenceException.class)
-  public void createAlreadyExistingUser() throws PersistenceException {
+  @Test(expected = CisUserDaoException.class)
+  public void createAlreadyExistingUser() throws CisUserDaoException {
     final CisUser userFirst = helper.createUser();
     final CisUser userSecond = new CisUser();
     userSecond.setLastName("XTMatějka");
@@ -69,7 +69,7 @@ public class UserDaoITest extends ArquillianITest {
 
 
   @Test
-  public void createNewUser() {
+  public void createNewUser() throws CisUserDaoException {
     final CisUser user = new CisUser();
     user.setLastName("ZXTMatějka");
     user.setLogin(RandomStringUtils.random(6, true, true));
@@ -92,7 +92,7 @@ public class UserDaoITest extends ArquillianITest {
 
 
   @Test
-  public void testMethodsUserDao() {
+  public void testMethodsUserDao() throws CisUserDaoException {
     final CisUser user = new CisUser();
     user.setLastName("Jezik");
     user.setLogin("dan");
@@ -112,6 +112,23 @@ public class UserDaoITest extends ArquillianITest {
     assertNotSame(user.getStatus(), CisUser.STATUS_VALID);
     final CisUser cu = dao.getUser("dan");
     assertEquals(user.hashCode(), cu.hashCode());
+
+  }
+
+
+  @Test
+  public void testRestoreUser() throws CisUserDaoException {
+    final CisUser user = new CisUser();
+    user.setLastName("Jezik");
+    user.setLogin("dan");
+    user.setFirstName("Daniel");
+    user.setBirthDate(new Date());
+
+    helper.addToDelete(user);
+    dao.addUser(user);
+    dao.updateUserStatus(user, CisUser.STATUS_DELETED);
+    dao.restoreUser(user.getId());
+    assertSame(dao.getUser(user.getId()).getStatus(), CisUser.STATUS_VALID);
   }
 
 
@@ -132,7 +149,9 @@ public class UserDaoITest extends ArquillianITest {
     userSecond.setBirthDate(DateUtils.addMinutes(userFirst.getBirthDate(), 360));
 
     assertEquals(userFirst.hashCode(), userSecond.hashCode());
-    // assertEquals(user0, user1);
+    assertTrue(userFirst.equals(userSecond));
     assertFalse(EqualsBuilder.reflectionEquals(userFirst, userSecond, false));
+    int result = userFirst.compareTo(userFirst);
+    assertTrue("expected to be equal", result == 0);
   }
 }

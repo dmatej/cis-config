@@ -114,6 +114,7 @@ public class UserListBean {
     this.userID = userID;
   }
 
+
   /**
    * Returns user identifier.
    *

@@ -38,21 +38,19 @@
       value="&lt;p&gt;Nebyly nalezeny žádné klíče.&lt;/p&gt;" />
 
      <h:dataTable id="data-table" value="#{items}" var="itemKey" rendered="#{not empty items}">
-      <h:column id="itemKey-#{itemKey.id}">
+      <h:column>
        <f:facet name="header">Klíč</f:facet>
-       <h:outputText value="#{itemKey.key}" />
+       <a id="itemKey-#{itemKey.id}" class="bookmark"><h:outputText value="#{itemKey.key}" /></a>
       </h:column>
+
       <h:column>
        <f:facet name="header">Typ</f:facet>
        <h:outputText value="#{itemKey.type}" />
       </h:column>
+
       <h:column>
        <f:facet name="header">Kategorie</f:facet>
        <h:outputText value="#{itemKey.category.name}" />
-      </h:column>
-      <h:column>
-       <f:facet name="header">Popis</f:facet>
-       <h:outputText value="#{itemKey.description}" />
       </h:column>
 
       <h:column>
@@ -62,6 +60,7 @@
         <f:ajax render="form" />
        </h:commandLink>
       </h:column>
+
       <h:column>
        <f:facet name="header">Editace</f:facet>
        <h:link outcome="edit" value="upravit">

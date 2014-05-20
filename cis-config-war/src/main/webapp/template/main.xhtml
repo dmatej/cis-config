@@ -35,7 +35,7 @@
    </div>
   </ui:fragment>
 
-  <ui:fragment rendered="#{not empty facesContext.messageList}">
+  <ui:fragment rendered="#{facesMessagesHelper.globalMessagesExists()}">
    <div id="page-messages-box">
      <div id="page-messages-box-header">
       <h2>Upozornění</h2>

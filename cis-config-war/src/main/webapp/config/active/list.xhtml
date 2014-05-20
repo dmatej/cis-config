@@ -41,20 +41,24 @@
      <f:facet name="header">Klíč</f:facet>
      <h:outputText value="#{item.key.key}" />
     </h:column>
+
     <h:column>
      <f:facet name="header">Hodnota</f:facet>
      <h:outputText value="#{item.value}" />
     </h:column>
+
     <h:column>
      <f:facet name="header">Naposledy změněno</f:facet>
      <h:outputText value="#{item.update}">
       <f:convertDateTime type="date" pattern="dd.MM.yyyy HH:mm" />
      </h:outputText>
     </h:column>
+
     <h:column>
      <f:facet name="header">Změnil</f:facet>
      <h:outputText value="#{item.user.login}" />
     </h:column>
+
     <h:column>
      <f:facet name="header">Smazání</f:facet>
      <h:commandLink actionListener="#{activeConfigList.actionDeleteItem(item.id)}" value="smazat" onclick="return confirm('Opravdu chcete smazat tuto položku?');">

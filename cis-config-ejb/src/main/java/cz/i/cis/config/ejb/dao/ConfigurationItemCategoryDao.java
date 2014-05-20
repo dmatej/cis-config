@@ -13,8 +13,10 @@ import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
+import cz.i.cis.config.ejb.dao.exceptions.ConfigurationItemCategoryDaoException;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
 
 /**
@@ -39,6 +41,7 @@ public class ConfigurationItemCategoryDao {
   public ConfigurationItemCategory getCategory(Integer id) {
     return em.find(ConfigurationItemCategory.class, id);
   }
+
 
   /**
    * Finds configuration item category entity with entered name.
@@ -93,10 +96,16 @@ public class ConfigurationItemCategoryDao {
    * Inserts configuration item category entity into database.
    *
    * @param category configuration item category entity which will be inserted into database.
+   * @throws ConfigurationItemCategoryDaoException If entered category cannot be added.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void addCategory(ConfigurationItemCategory category) {
-    em.persist(category);
+  public void addCategory(ConfigurationItemCategory category) throws ConfigurationItemCategoryDaoException {
+    try {
+      em.persist(category);
+      em.flush();
+    } catch (PersistenceException exc) {
+      throw new ConfigurationItemCategoryDaoException("Cannot insert category " + category);
+    }
   }
 
 
@@ -105,10 +114,19 @@ public class ConfigurationItemCategoryDao {
    *
    * @param category configuration item category entity which will be updated.
    * @return Updated instance of configuration item category entity.
+   * @throws ConfigurationItemCategoryDaoException If entered category cannot be updated.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public ConfigurationItemCategory updateCategory(ConfigurationItemCategory category) {
-    return em.merge(category);
+  public ConfigurationItemCategory updateCategory(ConfigurationItemCategory category)
+    throws ConfigurationItemCategoryDaoException {
+    try {
+      ConfigurationItemCategory merged = em.merge(category);
+      em.flush();
+
+      return merged;
+    } catch (PersistenceException e) {
+      throw new ConfigurationItemCategoryDaoException("Cannot update category: " + category, e);
+    }
   }
 
 
@@ -116,9 +134,15 @@ public class ConfigurationItemCategoryDao {
    * Deletes configuration item category entity by entered id.
    *
    * @param id identifier of configuration item category entity which will be deleted.
+   * @throws ConfigurationItemCategoryDaoException If cannot remove category with entered id.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void removeCategory(Integer id) {
-    em.remove(em.getReference(ConfigurationItemCategory.class, id));
+  public void removeCategory(Integer id) throws ConfigurationItemCategoryDaoException {
+    try {
+      em.remove(em.getReference(ConfigurationItemCategory.class, id));
+      em.flush();
+    } catch (PersistenceException e) {
+      throw new ConfigurationItemCategoryDaoException("Cannot remove category with id: " + id, e);
+    }
   }
 }

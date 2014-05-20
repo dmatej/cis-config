@@ -61,7 +61,7 @@ public class ConfigurationItemKeyDao {
 
     try {
       return query.getSingleResult();
-    } catch (NoResultException exc) {
+    } catch (NoResultException e) {
       return null;
     }
   }
@@ -110,7 +110,7 @@ public class ConfigurationItemKeyDao {
       em.persist(key);
       em.flush(); // to get persistence exception
     } catch (PersistenceException e) {
-      throw new ConfigurationItemKeyDaoException("Cannot insert key " + key, e);
+      throw new ConfigurationItemKeyDaoException("Cannot insert key: " + key, e);
     }
   }
 
@@ -130,7 +130,7 @@ public class ConfigurationItemKeyDao {
 
       return merged;
     } catch (PersistenceException e) {
-      throw new ConfigurationItemKeyDaoException("Cannot update key " + key, e);
+      throw new ConfigurationItemKeyDaoException("Cannot update key: " + key, e);
     }
   }
 
@@ -155,15 +155,15 @@ public class ConfigurationItemKeyDao {
     }
 
     try {
-    final Query profileDeleteQuery = em.createQuery(
-        "DELETE FROM ConfigurationProfileItem item WHERE item.key = :itemKey");
-    profileDeleteQuery.setParameter("itemKey", itemKey);
-    profileDeleteQuery.executeUpdate();
-    em.flush();
+      final Query profileDeleteQuery = em.createQuery(
+          "DELETE FROM ConfigurationProfileItem item WHERE item.key = :itemKey");
+      profileDeleteQuery.setParameter("itemKey", itemKey);
+      profileDeleteQuery.executeUpdate();
+      em.flush();
 
-    em.remove(itemKey);
-    em.flush();
-    } catch(PersistenceException e) {
+      em.remove(itemKey);
+      em.flush();
+    } catch (PersistenceException e) {
       throw new ConfigurationItemKeyDaoException("Cannot remove key with id: " + id, e);
     }
   }

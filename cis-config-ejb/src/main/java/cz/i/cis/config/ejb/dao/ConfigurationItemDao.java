@@ -13,8 +13,10 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
+import cz.i.cis.config.ejb.dao.exceptions.ConfigurationItemDaoException;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.jpa.ConfigurationItem;
 import cz.i.cis.config.jpa.ConfigurationItemCategory;
@@ -89,10 +91,18 @@ public class ConfigurationItemDao {
    *
    * @param item configuration item entity which will be updated.
    * @return Updated instance of configuration item entity.
+   * @throws ConfigurationItemDaoException If entered configuration item cannot be updated.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public ConfigurationItem updateItem(ConfigurationItem item) {
-    return em.merge(item);
+  public ConfigurationItem updateItem(ConfigurationItem item) throws ConfigurationItemDaoException {
+    try {
+      ConfigurationItem merged = em.merge(item);
+      em.flush();
+
+      return merged;
+    } catch (PersistenceException e) {
+      throw new ConfigurationItemDaoException("Cannot update configuration item: " + item, e);
+    }
   }
 
 
@@ -100,21 +110,30 @@ public class ConfigurationItemDao {
    * Deletes configuration item entity by entered id.
    *
    * @param id identifier of configuration item entity which will be deleted.
+   * @throws ConfigurationItemDaoException If configuration item with entered id cannot be removed.
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void removeItem(Integer id) {
-    em.remove(em.getReference(ConfigurationItem.class, id));
+  public void removeItem(Integer id) throws ConfigurationItemDaoException {
+    try {
+      em.remove(em.getReference(ConfigurationItem.class, id));
+      em.flush();
+    } catch (PersistenceException e) {
+      throw new ConfigurationItemDaoException("Cannot remove configuration item with id: " + id, e);
+    }
   }
 
 
   /**
-   * Activates profile that means it inserts entered list of profile items into table for configuration items.
+   * Activates profile that means it inserts entered list of profile items into table for
+   * configuration items.
    *
    * @param profileItems list of profile items to insert.
    * @param user user who activated profile.
+   * @throws ConfigurationItemDaoException If entered profile items cannot be changed to
+   *           configuration items (activation of profile items).
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
-  public void activateProfile(List<ConfigurationProfileItem> profileItems, CisUser user) {
+  public void activateProfile(List<ConfigurationProfileItem> profileItems, CisUser user) throws ConfigurationItemDaoException {
     List<ConfigurationItem> configurationItems = listItems();
     Map<ConfigurationItemKey, ConfigurationItem> items = new HashMap<>();
 

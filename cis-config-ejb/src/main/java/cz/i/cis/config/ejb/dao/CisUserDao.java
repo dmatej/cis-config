@@ -82,9 +82,8 @@ public class CisUserDao {
       em.persist(user);
       em.flush(); // to get persistence exception
     } catch (PersistenceException e) {
-      throw new CisUserDaoException("Cannot insert user " + user, e);
+      throw new CisUserDaoException("Cannot insert user: " + user, e);
     }
-
   }
 
 
@@ -103,7 +102,7 @@ public class CisUserDao {
 
       return merged;
     } catch (PersistenceException e) {
-      throw new CisUserDaoException("Cannot update user " + user, e);
+      throw new CisUserDaoException("Cannot update user: " + user, e);
     }
   }
 

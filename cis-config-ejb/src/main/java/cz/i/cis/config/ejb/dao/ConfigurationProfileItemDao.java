@@ -74,7 +74,7 @@ public class ConfigurationProfileItemDao {
       em.persist(item);
       em.flush(); // to get persistence exception
     } catch (PersistenceException e) {
-      throw new ConfigurationProfileItemDaoException("Cannot insert profile item " + item, e);
+      throw new ConfigurationProfileItemDaoException("Cannot insert profile item: " + item, e);
     }
   }
 
@@ -94,7 +94,7 @@ public class ConfigurationProfileItemDao {
 
       return merged;
     } catch (PersistenceException e) {
-      throw new ConfigurationProfileItemDaoException("Cannot update profile item " + item, e);
+      throw new ConfigurationProfileItemDaoException("Cannot update profile item: " + item, e);
     }
   }
 
@@ -111,7 +111,7 @@ public class ConfigurationProfileItemDao {
       em.remove(em.getReference(ConfigurationProfileItem.class, item.getId()));
       em.flush(); // to get persistence exception
     } catch (PersistenceException e) {
-      throw new ConfigurationProfileItemDaoException("Cannot remove profile item " + item, e);
+      throw new ConfigurationProfileItemDaoException("Cannot remove profile item: " + item, e);
     }
   }
 

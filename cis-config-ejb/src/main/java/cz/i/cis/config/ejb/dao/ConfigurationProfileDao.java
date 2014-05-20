@@ -88,7 +88,7 @@ public class ConfigurationProfileDao {
       em.persist(profile);
       em.flush(); // to get persistence exception
     } catch (PersistenceException e) {
-      throw new ConfigurationProfileDaoException("Cannot insert profile " + profile, e);
+      throw new ConfigurationProfileDaoException("Cannot insert profile: " + profile, e);
     }
   }
 
@@ -108,7 +108,7 @@ public class ConfigurationProfileDao {
 
       return merged;
     } catch (PersistenceException e) {
-      throw new ConfigurationProfileDaoException("Cannot update profile " + profile, e);
+      throw new ConfigurationProfileDaoException("Cannot update profile: " + profile, e);
     }
   }
 
@@ -128,10 +128,11 @@ public class ConfigurationProfileDao {
     profileItemsDeleteQuery.executeUpdate();
 
     try {
+      em.flush(); // removes items
       em.remove(profile);
       em.flush();
     } catch (PersistenceException e) {
-      throw new ConfigurationProfileDaoException("Cannot remove profile " + profile, e);
+      throw new ConfigurationProfileDaoException("Cannot remove profile: " + profile, e);
     }
   }
 }

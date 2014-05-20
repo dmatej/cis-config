@@ -59,6 +59,7 @@ public class ItemKeyCreateBean {
   public void init() {
     LOG.debug("init()");
     allCategories = categoryDao.getCategoryMap();
+    selectedCategory = (String) FacesUtils.getSession(ItemKeyListBean.SESSION_NAME);
   }
 
 

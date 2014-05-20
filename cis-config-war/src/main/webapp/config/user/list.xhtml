@@ -38,9 +38,8 @@
     </h:column>
 
     <h:column>
-     <f:facet name="header">Smazání</f:facet>
-     <h:commandLink actionListener="#{userList.actionDeleteUser(cisUser.id)}" value="smazat" rendered="#{cisUser.valid}">
-      <f:ajax render="form" />
+     <h:commandLink action="#{userList.actionDeleteUser}" value="smazat" rendered="#{cisUser.valid}">
+      <f:setPropertyActionListener target="#{userList.userID}" value="#{cisUser.id}" />
      </h:commandLink>
     </h:column>
 
@@ -53,8 +52,8 @@
 
     <h:column>
      <f:facet name="header">Obnovení</f:facet>
-     <h:commandLink style="text-decoration: none;" actionListener="#{userList.actionRestoreUser(cisUser.id)}" value="obnovit" rendered="#{cisUser.deleted}">
-      <f:ajax render="form" />
+     <h:commandLink style="text-decoration: none;" action="#{userList.actionRestoreUser}" value="obnovit" rendered="#{cisUser.deleted}">
+      <f:setPropertyActionListener target="#{userList.userID}" value="#{cisUser.id}" />
      </h:commandLink>
     </h:column>
    </h:dataTable>

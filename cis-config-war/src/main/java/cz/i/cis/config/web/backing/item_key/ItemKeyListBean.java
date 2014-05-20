@@ -37,7 +37,7 @@ public class ItemKeyListBean {
   /** Selection placeholder for "all" selection. */
   private static final String ALL_SELECTOR = "all";
   /** Session key for selected category. */
-  private static final String SESSION_NAME = "item-key-category";
+  public static final String SESSION_NAME = "item-key-category";
 
   /** Data access object for item key manipulation. */
   @EJB

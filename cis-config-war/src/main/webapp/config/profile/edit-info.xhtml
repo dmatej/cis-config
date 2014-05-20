@@ -8,7 +8,7 @@
  <ui:param name="pageTitle" value="Editace konfiguračního profilu" />
 
  <f:metadata>
-  <f:viewParam name="id" value="#{profileEditInfo.id}" required="true" requiredMessage="Pro editaci profilu je nutné zadat parametr id." />
+  <f:viewParam name="id" value="#{profileEditInfo.id}" required="true" converter="IdentifierConverter" requiredMessage="Pro editaci profilu je nutné zadat parametr id." />
   <f:viewAction action="#{profileEditInfo.init}" />
  </f:metadata>
 

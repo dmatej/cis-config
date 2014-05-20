@@ -53,14 +53,14 @@ public class UserEditBean {
       user = userDao.getUser(id);
     } catch (IllegalArgumentException e) {
       LOG.error("Failed to load user during initialization: ID = " + id, e);
-      FacesMessagesUtils.addErrorMessage("form", "Uživatel není validní: ID = " + id, e);
+      FacesMessagesUtils.addErrorMessage("Uživatel není validní: ID = " + id, e);
       FacesUtils.redirectToOutcome("list");
       return;
     }
 
     if (user == null) {
       LOG.error("User not loaded during initialization, redirecting to list: ID = {}", id);
-      FacesMessagesUtils.addErrorMessage("form", "Zvolený uživatel nebyl nalezen v databázi: ID = " + id, "");
+      FacesMessagesUtils.addErrorMessage("Zvolený uživatel nebyl nalezen v databázi: ID = " + id, "");
       FacesUtils.redirectToOutcome("list");
       return;
     }

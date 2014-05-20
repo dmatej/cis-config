@@ -6,7 +6,7 @@
   <jdbc-connection-pool name="cisConfig" res-type="javax.sql.ConnectionPoolDataSource"
     datasource-classname="org.postgresql.ds.PGConnectionPoolDataSource" is-isolation-level-guaranteed="false">
     <property name="portNumber" value="5432"></property>
-    <property name="databaseName" value="cis"></property>
+    <property name="databaseName" value="cis-itest"></property>
     <property name="roleName" value="cis"></property>
     <property name="serverName" value="localhost"></property>
     <property name="user" value="cis"></property>

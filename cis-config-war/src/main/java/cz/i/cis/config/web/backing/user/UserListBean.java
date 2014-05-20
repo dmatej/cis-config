@@ -13,7 +13,6 @@ import cz.i.cis.config.ejb.dao.CisUserDao;
 import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.web.FacesMessagesUtils;
 
-
 /**
  * Backing bean for user listing.
  */
@@ -21,19 +20,20 @@ import cz.i.cis.config.web.FacesMessagesUtils;
 @ViewScoped
 public class UserListBean {
 
-  /**Logger object used for logging.*/
+  /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(UserListBean.class);
 
+  /** Data access object for user manipulation. */
   @EJB
-  /**Data access object for user manipulation.*/
   private CisUserDao userDao;
 
-  /**Collection of all users.*/
+  /** Collection of all users. */
   private List<CisUser> allUsers;
 
 
   /**
    * Returns all users.
+   *
    * @return All users.
    */
   public List<CisUser> getAllUsers() {
@@ -43,14 +43,16 @@ public class UserListBean {
         allUsers = userDao.listUsers();
       } catch (IllegalArgumentException e) {
         LOG.error("Failed to load users.", e);
-        FacesMessagesUtils.addErrorMessage("form:data-table", "Cannot select users from database", (String) null);
+        FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se získat uživatele z databaze", "");
       }
     }
     return allUsers;
   }
 
+
   /**
    * Marks selected user as deleted.
+   *
    * @param id ID of user to mark.
    */
   public void actionDeleteUser(String id) {
@@ -58,14 +60,17 @@ public class UserListBean {
     try {
       Integer userID = Integer.valueOf(id);
       userDao.removeUser(userID);
+      FacesMessagesUtils.addInfoMessage("form", "Uživatel byl smazán", "");
     } catch (Exception e) {
       LOG.error("Failed to mark user as deleted: ID = " + id, e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se smazat uživatele", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se smazat uživatele", e);
     }
   }
 
+
   /**
    * Cancels deletion mark for selected user.
+   *
    * @return ID of user to cancel deletion for.
    */
   public void actionRestoreUser(String id) {
@@ -73,15 +78,17 @@ public class UserListBean {
     try {
       Integer userID = Integer.valueOf(id);
       userDao.restoreUser(userID);
+      FacesMessagesUtils.addInfoMessage("form", "Uživatel byl obnoven", "");
     } catch (Exception e) {
       LOG.error("Failed to restore user: ID = " + id, e);
-      FacesMessagesUtils.addErrorMessage("Nepodařilo se obnovit uživatele", e);
+      FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se obnovit uživatele", e);
     }
   }
 
 
   /**
    * Returns CSS classes for user listing.
+   *
    * @return CSS classes for user listing.
    */
   public String getRowClasses() {

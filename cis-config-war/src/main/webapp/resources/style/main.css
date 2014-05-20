@@ -95,14 +95,14 @@ a:hover {
  padding: 2px;
 }
 
-#page-body-content-header {
+#page-body-content-header, #page-messages-box-header {
  height: 20px;
  background: #dddddd;
  line-height: 20px;
  vertical-align: middle;
 }
 
-#page-body-content-header h2 {
+#page-body-content-header h2, #page-messages-box-header h2 {
  padding-left: 2px;
 }
 
@@ -225,17 +225,31 @@ input.login,input.short,select.short {
  text-decoration: none;
 }
 
-.form-info-message {
+#page-messages-box {
+ width: 1018px;
+ margin-top: 10px;
+ background: white;
+ border: 1px #bbbbbb solid;
+ padding: 2px;
+}
+
+#page-messages {
+ width: 1018px;
+ padding: 5px;
+ background: #c4c4c4;
+}
+
+.form-info-message,.info-message {
  color: #035273;
  font-weight: bold;
 }
 
-.form-warning-message {
+.form-warning-message,.warning-message {
  color: #de851a;
  font-weight: bold;
 }
 
-.form-error-message {
+.form-error-message,.error-message {
  color: #990000;
  font-weight: bold;
 }

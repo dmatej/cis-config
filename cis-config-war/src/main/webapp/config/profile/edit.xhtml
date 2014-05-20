@@ -5,7 +5,7 @@
  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
  <f:metadata>
-  <f:viewParam name="id" value="#{profileEdit.id}" required="true" requiredMessage="Pro editaci profilu je nutné zadat parametr id." />
+  <f:viewParam name="id" value="#{profileEdit.id}" required="true" converter="IdentifierConverter" requiredMessage="Pro editaci profilu je nutné zadat parametr id." />
   <f:viewAction action="#{profileEdit.init}" />
  </f:metadata>
 

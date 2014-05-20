@@ -8,7 +8,7 @@
  <ui:param name="pageTitle" value="Editace kategorie konfiguračních položek" />
 
  <f:metadata>
-  <f:viewParam name="id" value="#{categoryEdit.id}" required="true" requiredMessage="Pro editaci kategorie je nutné zadat parametr id." />
+  <f:viewParam name="id" value="#{categoryEdit.id}" required="true" converter="IdentifierConverter" requiredMessage="Pro editaci kategorie je nutné zadat parametr id." />
   <f:viewAction action="#{categoryEdit.init}" />
  </f:metadata>
 

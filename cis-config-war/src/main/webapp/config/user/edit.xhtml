@@ -8,7 +8,7 @@
  <ui:param name="pageTitle" value="Editace uživatele" />
 
  <f:metadata>
-  <f:viewParam name="id" value="#{userEdit.id}" required="true" requiredMessage="Pro editaci uživatele je nutné zadat parametr id." />
+  <f:viewParam name="id" value="#{userEdit.id}" required="true" converter="IdentifierConverter" requiredMessage="Pro editaci uživatele je nutné zadat parametr id." />
   <f:viewAction action="#{userEdit.init}" />
  </f:metadata>
 

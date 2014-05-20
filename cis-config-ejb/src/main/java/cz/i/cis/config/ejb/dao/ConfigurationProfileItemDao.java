@@ -17,15 +17,24 @@ import javax.persistence.TypedQuery;
 
 import cz.i.cis.config.jpa.ConfigurationProfileItem;
 
+/**
+ * Data access object for work with {@code ConfigurationItemCategory} entities.
+ */
 @Local
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class ConfigurationProfileItemDao {
 
+  /** JPA entity manager for work with entities. */
   @PersistenceContext(name = "cis-jta")
   private EntityManager em;
 
 
+  /**
+   * Returns list of all configuration profile items.
+   *
+   * @return List of all configuration profile items.
+   */
   public List<ConfigurationProfileItem> listItems() {
     final TypedQuery<ConfigurationProfileItem> query = em.createQuery("SELECT item FROM ConfigurationProfileItem item",
         ConfigurationProfileItem.class);
@@ -34,6 +43,12 @@ public class ConfigurationProfileItemDao {
   }
 
 
+  /**
+   * Returns list of configuration profile items by entered profile id.
+   *
+   * @param profileID profile identifier for filter list
+   * @return List of configuration profile items by entered profile id.
+   */
   public List<ConfigurationProfileItem> listItems(Integer profileID) {
     final TypedQuery<ConfigurationProfileItem> query = em.createQuery(
         "SELECT item FROM ConfigurationProfileItem item WHERE item.profile.id = :profileID",
@@ -45,24 +60,46 @@ public class ConfigurationProfileItemDao {
   }
 
 
+  /**
+   * Inserts configuration profile item entity into database.
+   *
+   * @param item configuration profile item entity which will be inserted into database.
+   */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void addItem(ConfigurationProfileItem item) {
     em.persist(item);
   }
 
 
+  /**
+   * Updates entered configuration profile item entity.
+   *
+   * @param item configuration profile item entity which will be updated.
+   * @return Updated instance of configuration profile item entity.
+   */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public ConfigurationProfileItem updateItem(ConfigurationProfileItem item) {
     return em.merge(item);
   }
 
 
+  /**
+   * Deletes entered configuration profile item entity.
+   *
+   * @param item configuration profile item entity which will be deleted.
+   */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public void removeItem(ConfigurationProfileItem item) {
     em.remove(em.getReference(ConfigurationProfileItem.class, item.getId()));
   }
 
 
+  /**
+   * Save changes in configuration profile.
+   *
+   * @param profileItems configuration profile items entity that will be saved.
+   * @return List of configuration profile items entity.
+   */
   @TransactionAttribute(TransactionAttributeType.REQUIRED)
   public List<ConfigurationProfileItem> saveChanges(Map<String, ConfigurationProfileItem> profileItems) {
     List<ConfigurationProfileItem> updatedItems = new ArrayList<>(profileItems.size());
@@ -80,6 +117,12 @@ public class ConfigurationProfileItemDao {
   }
 
 
+  /**
+   * Returns map of entered list of configuration profile items.
+   *
+   * @param items list of configuration profile items for put to map.
+   * @return Map of entered list of configuration profile items.
+   */
   public static Map<String, ConfigurationProfileItem> getItemMap(List<ConfigurationProfileItem> items) {
     Map<String, ConfigurationProfileItem> itemMap = new HashMap<>();
     for (ConfigurationProfileItem item : items) {

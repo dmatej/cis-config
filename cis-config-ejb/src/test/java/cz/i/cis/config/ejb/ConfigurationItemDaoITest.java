@@ -9,8 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.ejb.EJB;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 
 import org.junit.After;
 import org.junit.Before;
@@ -150,9 +148,9 @@ public class ConfigurationItemDaoITest extends ArquillianITest {
     final ConfigurationProfileItem profileItem = profileHelper.createConfigurationProfileItem();
     List<ConfigurationProfileItem> list = new LinkedList<ConfigurationProfileItem>();
     list.add(profileItem);
-    final CisUser user0 = userHelper.createUser();
+    final CisUser user = userHelper.createUser();
     configurationItemHelper.createConfigurationItem();
-    configurationItemDao.activateProfile(list, user0);
+    configurationItemDao.activateProfile(list, user);
   }
 
 

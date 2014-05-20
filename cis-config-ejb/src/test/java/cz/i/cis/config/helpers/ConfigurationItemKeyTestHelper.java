@@ -11,7 +11,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -32,14 +31,14 @@ public class ConfigurationItemKeyTestHelper {
   private Set<ConfigurationItemKey> keys = new HashSet<>();
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryTestHelper")
-  private ConfigurationCategoryTestHelper category_helper;
+  private ConfigurationCategoryTestHelper categorHelper;
 
   public ConfigurationItemKeyTestHelper() {
   }
 
 
   public ConfigurationItemKey createConfigurationKey() {
-    ConfigurationItemCategory configuration_category =  category_helper.createConfigurationCategory();
+    ConfigurationItemCategory configuration_category =  categorHelper.createConfigurationCategory();
     ConfigurationItemKey key = new ConfigurationItemKey();
     key.setKey((RandomStringUtils.random(3, true, true)));
     key.setDescription("my key");
@@ -51,8 +50,8 @@ public class ConfigurationItemKeyTestHelper {
     return key;
   }
 
-  public void addToDelete(ConfigurationItemKey  k) {
-   keys.add(k);
+  public void addToDelete(ConfigurationItemKey configItemKey) {
+   keys.add(configItemKey);
   }
 
 

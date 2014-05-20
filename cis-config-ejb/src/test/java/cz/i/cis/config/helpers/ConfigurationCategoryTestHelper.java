@@ -10,7 +10,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -25,7 +24,7 @@ public class ConfigurationCategoryTestHelper {
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurationCategoryTestHelper.class);
   @PersistenceContext(unitName = "cis-jta")
   private EntityManager em;
-  private Set<ConfigurationItemCategory> configuration_categories = new HashSet<>();
+  private Set<ConfigurationItemCategory> configurationCategories = new HashSet<>();
 
 
   public ConfigurationCategoryTestHelper() {
@@ -33,17 +32,17 @@ public class ConfigurationCategoryTestHelper {
 
 
   public ConfigurationItemCategory createConfigurationCategory() {
-    final ConfigurationItemCategory configuration_category = new ConfigurationItemCategory();
-    configuration_category.setName((RandomStringUtils.random(10, true, true)));
-    em.persist(configuration_category);
+    final ConfigurationItemCategory configurationCategory = new ConfigurationItemCategory();
+    configurationCategory.setName((RandomStringUtils.random(10, true, true)));
+    em.persist(configurationCategory);
     em.flush();
-    configuration_categories.add(configuration_category);
-    return configuration_category;
+    configurationCategories.add(configurationCategory);
+    return configurationCategory;
   }
 
 
-  public void addToDelete(ConfigurationItemCategory configuration_category) {
-    configuration_categories.add(configuration_category);
+  public void addToDelete(ConfigurationItemCategory configurationCategory) {
+    configurationCategories.add(configurationCategory);
   }
 
 

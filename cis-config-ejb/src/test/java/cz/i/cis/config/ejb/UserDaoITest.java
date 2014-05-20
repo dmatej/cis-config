@@ -10,6 +10,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.time.DateUtils;
@@ -180,7 +182,7 @@ public class UserDaoITest extends ArquillianITest {
     userFirst.setLastName("ZXTMatějka");
     userFirst.setLogin("xyz");
     userFirst.setFirstName("ZTAfanasi");
-    userFirst.setBirthDate(new Date());
+    userFirst.setBirthDate(DateUtils.round(new Date(), Calendar.DATE));
 
     final CisUser userSecond = new CisUser();
     userSecond.setId(1);

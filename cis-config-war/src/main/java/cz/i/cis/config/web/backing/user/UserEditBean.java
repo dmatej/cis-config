@@ -99,7 +99,6 @@ public class UserEditBean {
     try {
       user = userDao.updateUser(user);
 
-      // FacesUtils.addMessage(FacesMessage.SEVERITY_INFO, "Změny byly uloženy.");
       link = "list.xhtml#user-" + user.getId();
       FacesUtils.redirectToURL(link);
     } catch (IOException e) {

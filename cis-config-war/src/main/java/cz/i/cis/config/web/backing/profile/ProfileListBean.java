@@ -5,7 +5,6 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.persistence.NoResultException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +18,8 @@ import cz.i.cis.config.jpa.ConfigurationProfile;
 import cz.i.cis.config.jpa.ConfigurationProfileItem;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
+import cz.i.cis.config.web.exceptions.NonExistentCategoryException;
+import cz.i.cis.config.web.exceptions.UserNotFoundException;
 
 /**
  * Backing bean for profile listing.
@@ -83,19 +84,20 @@ public class ProfileListBean {
     try {
       String login = FacesUtils.getRemoteUser();
       if (login == null || login.isEmpty()) {
-        throw new NullPointerException(
-            "Somehow no user is not logged in and phantoms are not allowed to create configuration profiles.");
+        throw new NonExistentCategoryException();
       }
 
       CisUser editor = userDao.getUser(login);
       if (editor == null) {
-        throw new NoResultException("Logged in user has not been found in the database.");
+        throw new UserNotFoundException();
       }
 
       Integer profileID = Integer.valueOf(id);
       List<ConfigurationProfileItem> profileItems = profileItemDao.listItems(profileID);
       itemDao.activateProfile(profileItems, editor);
       FacesMessagesUtils.addInfoMessage("form", "Profil byl aktivován", "");
+    } catch (NonExistentCategoryException | UserNotFoundException e) { // only JRE7
+      FacesMessagesUtils.addErrorMessage(FacesMessagesUtils.getRootMessage(e), "");
     } catch (Exception e) {
       LOG.error("Failed to activate profile: ID = " + id, e);
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se aktivovat profil", e);

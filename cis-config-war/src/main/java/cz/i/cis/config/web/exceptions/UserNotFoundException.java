@@ -1,5 +1,8 @@
 package cz.i.cis.config.web.exceptions;
 
+/**
+ * This exception serves for baking beans for user which was not found in database.
+ */
 public class UserNotFoundException extends Exception {
 
   /**
@@ -18,7 +21,7 @@ public class UserNotFoundException extends Exception {
    * Constructs a new exception with default detail message.
    */
   public UserNotFoundException() {
-    super("Nepřihlášený uživatel nemá povoleno dělat jakékoliv změny");
+    super("Přihlášený uživatel nebyl nalezen v databázi");
   }
 
 

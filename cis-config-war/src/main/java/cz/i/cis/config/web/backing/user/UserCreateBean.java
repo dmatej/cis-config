@@ -25,7 +25,7 @@ public class UserCreateBean {
   /** Logger object used for logging. */
   private static final Logger LOG = LoggerFactory.getLogger(UserCreateBean.class);
 
-  /**Data access object for user manipulation.*/
+  /** Data access object for user manipulation. */
   @EJB
   private CisUserDao userDao;
 
@@ -48,7 +48,7 @@ public class UserCreateBean {
     LOG.debug("actionAddUser()");
 
     CisUser newUser = userDao.getUser(login);
-    if(newUser != null) {
+    if (newUser != null) {
       FacesMessagesUtils.addErrorMessage("form:login", "Uživatel se zadaným loginem již existuje", "");
       return null;
     }

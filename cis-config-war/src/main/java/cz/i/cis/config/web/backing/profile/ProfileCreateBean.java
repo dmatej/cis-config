@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.persistence.NoResultException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +15,8 @@ import cz.i.cis.config.jpa.CisUser;
 import cz.i.cis.config.jpa.ConfigurationProfile;
 import cz.i.cis.config.web.FacesMessagesUtils;
 import cz.i.cis.config.web.FacesUtils;
+import cz.i.cis.config.web.exceptions.NonExistentCategoryException;
+import cz.i.cis.config.web.exceptions.UserNotFoundException;
 
 /**
  * Backing bean for profile creation.
@@ -50,11 +51,11 @@ public class ProfileCreateBean {
     try {
       String login = FacesUtils.getRemoteUser();
       if (login == null || login.isEmpty()) {
-        throw new NullPointerException("Nepřihlášený uživatel nemá povoleno vytvářet konfigurační profily");
+        throw new NonExistentCategoryException();
       }
       CisUser editor = userDao.getUser(login);
       if (editor == null) {
-        throw new NoResultException("Přihlášený uživatel nebyl nalezen v databázi");
+        throw new UserNotFoundException();
       }
 
       ConfigurationProfile newProfile = profileDao.getProfile(name);
@@ -64,16 +65,16 @@ public class ProfileCreateBean {
       }
 
       newProfile = new ConfigurationProfile();
-        newProfile.setName(name);
-        newProfile.setDescription(description);
-        newProfile.setUser(editor);
-        newProfile.setUpdate(new Date());
+      newProfile.setName(name);
+      newProfile.setDescription(description);
+      newProfile.setUser(editor);
+      newProfile.setUpdate(new Date());
 
       profileDao.addProfile(newProfile);
 
       return "edit?faces-redirect=true&includeViewParams=true&id=" + newProfile.getId();
       // FacesUtils.redirect("list.xhtml#user-" + profile.getId());
-    } catch (NullPointerException | NoResultException e) { // only JRE7
+    } catch (NonExistentCategoryException | UserNotFoundException e) { // only JRE7
       FacesMessagesUtils.addErrorMessage(FacesMessagesUtils.getRootMessage(e), "");
     } catch (Exception e) {
       FacesMessagesUtils.addErrorMessage("form", "Nepodařilo se přidat nový profil", e);

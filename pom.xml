@@ -18,7 +18,7 @@ V praxi by se jpa modul mohl pouzit i jinde, proto by bylo i pod jinym pomem - t
   </modules>
 
   <scm>
-    <developerConnection>git@github.com:dmatej/cis-config.git</developerConnection>
+    <developerConnection>scm:git:git@github.com:dmatej/cis-config.git</developerConnection>
   </scm>
 
   <properties>

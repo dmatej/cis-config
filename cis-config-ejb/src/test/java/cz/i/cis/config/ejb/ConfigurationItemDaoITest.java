@@ -135,11 +135,29 @@ public class ConfigurationItemDaoITest extends ArquillianITest {
   }
 
 
+  @Test(expected = ConfigurationItemDaoException.class)
+  public void testWrongUpdateItem() throws Exception {
+    final ConfigurationItem configuration = configurationItemHelper.createConfigurationItem();
+    configuration.setId(1);
+    configurationItemDao.updateItem(configuration);
+  }
+
+
   @Test
-  public void testRemoveItem() throws ConfigurationItemDaoException {
+  public void testRemoveItem() throws Exception {
     final ConfigurationItem configuration = configurationItemHelper.createConfigurationItem();
     configurationItemDao.removeItem(configuration.getId());
     assertTrue(configurationItemDao.listItems().size() == 0);
+  }
+
+
+  @Test
+  public void testGetItem() {
+    final ConfigurationItem configuration0 = configurationItemHelper.createConfigurationItem();
+    int idConfiguration = configuration0.getId();
+    final ConfigurationItem configuration1 = configurationItemDao.getItem(idConfiguration);
+    assertEquals(configuration0.hashCode(), configuration1.hashCode());
+
   }
 
 
@@ -156,10 +174,14 @@ public class ConfigurationItemDaoITest extends ArquillianITest {
 
   @Test
   public void listConfigurationItems() {
-    final List<ConfigurationItem> items = configurationItemDao.listItems();
-    LOG.debug("list configuration items: {}", items);
-    assertNotNull("configuration items", items);
-    assertTrue("items.empty", items.isEmpty());
+    final List<ConfigurationItem> listItems0 = configurationItemDao.listItems();
+    LOG.debug("list configuration  listItems0: {}", listItems0);
+    assertNotNull("configuration  listItems0", listItems0);
+    assertTrue("items.empty", listItems0.isEmpty());
+    ConfigurationItemCategory category = categoryHelper.createConfigurationCategory();
+    final List<ConfigurationItem> listItems1 = configurationItemDao.listItems(category);
+    assertNotNull("configuration  listItems1", listItems1);
+    assertTrue(" listItems1.empty", listItems1.isEmpty());
   }
 
 

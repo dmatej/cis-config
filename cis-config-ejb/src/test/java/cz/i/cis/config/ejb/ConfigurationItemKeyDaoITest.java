@@ -6,7 +6,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.ejb.TransactionAttribute;
@@ -83,8 +85,9 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
     assertTrue(configurationItemKeyDao.listItemKeys().get(0).getType().equals(ConfigurationItemKeyType.URL));
   }
 
+
   @Test(expected = ConfigurationItemKeyDaoException.class)
-  public void creatAlreadyExistingConfigurationKey() throws ConfigurationItemKeyDaoException {
+  public void creatAlreadyExistingConfigurationKey() throws Exception {
     final ConfigurationItemKey key = configurationItemKeyHelper.createConfigurationKey();
     final ConfigurationItemKey keyCopy = new ConfigurationItemKey();
     keyCopy.setCategory(key.getCategory());
@@ -92,6 +95,40 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
     keyCopy.setType(key.getType());
     keyCopy.setKey(key.getKey());
     configurationItemKeyDao.addItemKey(keyCopy);
+  }
+
+
+  @Test(expected = ConfigurationItemKeyDaoException.class)
+  public void testWrongUpdateConfigurationKey() throws Exception {
+    final ConfigurationItemKey key = configurationItemKeyHelper.createConfigurationKey();
+    key.setId(2);
+    configurationItemKeyDao.updateItemKey(key);
+  }
+
+
+  @Test
+  public void testGetItemKey() {
+    final ConfigurationItemKey key0 = configurationItemKeyHelper.createConfigurationKey();
+    int idKey = key0.getId();
+    final ConfigurationItemKey key1 = configurationItemKeyDao.getItemKey(idKey);
+    assertEquals(key0.hashCode(), key1.hashCode());
+    String nameKey = key0.getKey();
+    final ConfigurationItemKey key2 = configurationItemKeyDao.getItemKey(nameKey);
+    assertEquals(key0.hashCode(), key2.hashCode());
+  }
+
+
+  @Test
+  public void testGetItemKeyMap() {
+    final List<ConfigurationItemKey> itemKeys0 = new ArrayList<ConfigurationItemKey>();
+    final Map<String, ConfigurationItemKey> map0 = ConfigurationItemKeyDao.getItemKeyMap(itemKeys0);
+    assertTrue("map0.isEmpty", map0.isEmpty());
+    final ConfigurationItemKey key = configurationItemKeyHelper.createConfigurationKey();
+    final List<ConfigurationItemKey> itemKeys1 = new ArrayList<ConfigurationItemKey>();
+    itemKeys1.add(key);
+    final Map<String, ConfigurationItemKey> map1 = ConfigurationItemKeyDao.getItemKeyMap(itemKeys1);
+    assertFalse("map1.isEmpty", map1.isEmpty());
+    assertTrue("map1.size == 1", map1.size() == 1);
   }
 
 
@@ -114,14 +151,14 @@ public class ConfigurationItemKeyDaoITest extends ArquillianITest {
     assertNull(keyNull);
   }
 
-//  @Test
-//  public void testRemoveItemKey() throws Exception{
-//    final ConfigurationItemKey key = configurationItemKeyHelper.createConfigurationKey();
-//    configurationItemKeyDao.addItemKey(key);
-//    configurationItemKeyDao.removeItemKey(key.getId());
-//    assertTrue(configurationItemKeyDao.getItemKeyMap(itemKeys));
-//
-//  }
+
+  @Test
+  public void testRemoveItemKey() throws Exception {
+    final ConfigurationItemKey key = configurationItemKeyHelper.createConfigurationKey();
+    configurationItemKeyDao.removeItemKey(key.getId());
+    assertTrue(configurationItemKeyDao.listItemKeys().isEmpty());
+  }
+
 
   @Test
   public void testComparationKeys() {

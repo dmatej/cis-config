@@ -34,7 +34,8 @@ public class ConfigurationItemTestHelper {
   private UserTestHelper userHelper;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemKeyTestHelper")
-  private   ConfigurationItemKeyTestHelper keyHelper;
+  private ConfigurationItemKeyTestHelper keyHelper;
+
 
   public ConfigurationItemTestHelper() {
   }
@@ -62,14 +63,8 @@ public class ConfigurationItemTestHelper {
 
 
   public void cleanup() {
-//    if (configuration_items.isEmpty()) {
-//      return;
-//    }
     CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-    CriteriaDelete<ConfigurationItem> delete = criteriaBuilder
-        .createCriteriaDelete(ConfigurationItem.class);
-//    Root<ConfigurationItem> root = delete.from(ConfigurationItem.class);
-//    delete.where(root.in(configuration_items));
+    CriteriaDelete<ConfigurationItem> delete = criteriaBuilder.createCriteriaDelete(ConfigurationItem.class);
     Query query = em.createQuery(delete);
     int cnt = query.executeUpdate();
     LOG.debug("Deleted configuration items: {}", cnt);

@@ -33,12 +33,13 @@ public class ConfigurationItemKeyTestHelper {
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationCategoryTestHelper")
   private ConfigurationCategoryTestHelper categorHelper;
 
+
   public ConfigurationItemKeyTestHelper() {
   }
 
 
   public ConfigurationItemKey createConfigurationKey() {
-    ConfigurationItemCategory configuration_category =  categorHelper.createConfigurationCategory();
+    ConfigurationItemCategory configuration_category = categorHelper.createConfigurationCategory();
     ConfigurationItemKey key = new ConfigurationItemKey();
     key.setKey((RandomStringUtils.random(3, true, true)));
     key.setDescription("my key");
@@ -50,24 +51,17 @@ public class ConfigurationItemKeyTestHelper {
     return key;
   }
 
+
   public void addToDelete(ConfigurationItemKey configItemKey) {
-   keys.add(configItemKey);
+    keys.add(configItemKey);
   }
 
 
   public void cleanup() {
-//    if (keys.isEmpty()) {
-//      return;
-//    }
-
     CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-    CriteriaDelete<ConfigurationItemKey> delete = criteriaBuilder
-        .createCriteriaDelete(ConfigurationItemKey.class);
-//    Root<ConfigurationItemKey> root = delete.from(ConfigurationItemKey.class);
-//    delete.where(root.in(keys));
+    CriteriaDelete<ConfigurationItemKey> delete = criteriaBuilder.createCriteriaDelete(ConfigurationItemKey.class);
     Query query = em.createQuery(delete);
     int cnt = query.executeUpdate();
     LOG.debug("Deleted configuration item keys: {}", cnt);
   }
 }
-

@@ -51,13 +51,8 @@ public class UserTestHelper {
 
 
   public void cleanup() {
-//    if (users.isEmpty()) {
-//      return;
-//    }
     CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
     CriteriaDelete<CisUser> delete = criteriaBuilder.createCriteriaDelete(CisUser.class);
-//    Root<CisUser> root = delete.from(CisUser.class);
-//    delete.where(root.in(users));
     Query query = em.createQuery(delete);
     int cnt = query.executeUpdate();
     LOG.debug("Deleted users: {}", cnt);

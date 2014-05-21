@@ -62,15 +62,9 @@ public class ConfigurationProfileItemTestHelper {
 
 
   public void cleanup() {
-    LOG.debug("cleanup()");
-//    if (profile_items.isEmpty()) {
-//      return;
-//    }
     CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
     CriteriaDelete<ConfigurationProfileItem> delete = criteriaBuilder
         .createCriteriaDelete(ConfigurationProfileItem.class);
-//    Root<ConfigurationProfileItem> root = delete.from(ConfigurationProfileItem.class);
-//    delete.where(root.in(profile_items));
     Query query = em.createQuery(delete);
     int cnt = query.executeUpdate();
     LOG.debug("Deleted configuration profile items: {}", cnt);

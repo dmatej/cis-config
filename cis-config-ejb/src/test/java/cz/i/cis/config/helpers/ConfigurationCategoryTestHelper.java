@@ -47,14 +47,9 @@ public class ConfigurationCategoryTestHelper {
 
 
   public void cleanup() {
-//    if (configuration_categories.isEmpty()) {
-//      return;
-//    }
     CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
     CriteriaDelete<ConfigurationItemCategory> delete = criteriaBuilder
         .createCriteriaDelete(ConfigurationItemCategory.class);
-//    Root<ConfigurationItemCategory> root = delete.from(ConfigurationItemCategory.class);
-//    delete.where(root.in(configuration_categories));
     Query query = em.createQuery(delete);
     int cnt = query.executeUpdate();
     LOG.debug("Deleted configuration categorys: {}", cnt);

@@ -21,7 +21,6 @@ V praxi by se jpa modul mohl pouzit i jinde, proto by bylo i pod jinym pomem - t
     <ejb.ejbVersion>3.1</ejb.ejbVersion>
     <maven.ear.skinnyWars>true</maven.ear.skinnyWars>
     <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
-    <JET.repository.directory>${basedir}/maven-repo</JET.repository.directory>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
@@ -126,10 +125,6 @@ V praxi by se jpa modul mohl pouzit i jinde, proto by bylo i pod jinym pomem - t
 
 
   <repositories>
-    <repository>
-      <id>JET</id>
-      <url>file://${JET.repository.directory}</url>
-    </repository>
     <repository>
       <id>central</id>
       <url>http://repo1.maven.org/maven2</url>

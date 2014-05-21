@@ -17,6 +17,10 @@ V praxi by se jpa modul mohl pouzit i jinde, proto by bylo i pod jinym pomem - t
     <module>cis-config-ear</module>
   </modules>
 
+  <scm>
+    <developerConnection>git@github.com:dmatej/cis-config.git</developerConnection>
+  </scm>
+
   <properties>
     <ejb.ejbVersion>3.1</ejb.ejbVersion>
     <maven.ear.skinnyWars>true</maven.ear.skinnyWars>

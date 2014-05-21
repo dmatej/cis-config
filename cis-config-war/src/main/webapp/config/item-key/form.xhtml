@@ -1,87 +1,84 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
  xmlns:h="http://xmlns.jcp.org/jsf/html"
  xmlns:f="http://xmlns.jcp.org/jsf/core"
- xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
- xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+ xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
- <c:choose>
-  <c:when test="${not empty itemKeyList.allCategories}">
-   <h:form id="form">
-    <h:messages for="form" infoClass="form-info-message" warnClass="form-warning-message" errorClass="form-error-message" />
+ <ui:fragment rendered="${not empty itemKeyList.allCategories}">
+  <h:form id="form">
+   <h:messages for="form" infoClass="form-info-message" warnClass="form-warning-message" errorClass="form-error-message" />
 
-    <h:panelGrid columns="3" id="table">
-     <h:panelGroup>
-      <h:outputLabel for="key" value="Klíč" />
-     </h:panelGroup>
+   <h:panelGrid columns="3" id="table">
+    <h:panelGroup>
+     <h:outputLabel for="key" value="Klíč" />
+    </h:panelGroup>
 
-     <h:panelGroup>
-      <h:inputText id="key" styleClass="important" required="true" requiredMessage="Nebyl vyplněn klíč" value="#{itemKey.key}" maxlength="100" />
-     </h:panelGroup>
+    <h:panelGroup>
+     <h:inputText id="key" styleClass="important" required="true" requiredMessage="Nebyl vyplněn klíč" value="#{itemKey.key}" maxlength="100" />
+    </h:panelGroup>
 
-     <h:panelGroup>
-      <h:messages for="key" styleClass="form:table:error" />
-     </h:panelGroup>
+    <h:panelGroup>
+     <h:messages for="key" styleClass="form:table:error" />
+    </h:panelGroup>
 
-     <h:panelGroup>
-      <h:outputLabel for="type" value="Typ" />
-     </h:panelGroup>
+    <h:panelGroup>
+     <h:outputLabel for="type" value="Typ" />
+    </h:panelGroup>
 
-     <h:panelGroup>
-      <h:selectOneMenu id="type" value="#{itemKey.type}">
-       <f:selectItems value="#{itemKey.allTypes}" />
-      </h:selectOneMenu>
-     </h:panelGroup>
+    <h:panelGroup>
+     <h:selectOneMenu id="type" value="#{itemKey.type}">
+      <f:selectItems value="#{itemKey.allTypes}" />
+     </h:selectOneMenu>
+    </h:panelGroup>
 
-     <h:panelGroup>
-      <h:messages for="type" styleClass="form:table:error" />
-     </h:panelGroup>
+    <h:panelGroup>
+     <h:messages for="type" styleClass="form:table:error" />
+    </h:panelGroup>
 
-     <h:panelGroup>
-      <h:outputLabel for="category" value="Kategorie" />
-     </h:panelGroup>
+    <h:panelGroup>
+     <h:outputLabel for="category" value="Kategorie" />
+    </h:panelGroup>
 
-     <h:panelGroup>
-      <h:selectOneMenu id="category" value="#{itemKey.selectedCategory}">
-       <f:selectItems value="#{itemKey.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
-      </h:selectOneMenu>
-     </h:panelGroup>
+    <h:panelGroup>
+     <h:selectOneMenu id="category" value="#{itemKey.selectedCategory}">
+      <f:selectItems value="#{itemKey.allCategories}" var="category" itemLabel="#{category.name}" itemValue="#{category.id}" />
+     </h:selectOneMenu>
+    </h:panelGroup>
 
-     <h:panelGroup>
-      <h:messages for="category" styleClass="form:table:error" />
-     </h:panelGroup>
+    <h:panelGroup>
+     <h:messages for="category" styleClass="form:table:error" />
+    </h:panelGroup>
 
-     <h:panelGroup>
-      <h:outputLabel for="description" value="Popis" />
-     </h:panelGroup>
+    <h:panelGroup>
+     <h:outputLabel for="description" value="Popis" />
+    </h:panelGroup>
 
-     <h:panelGroup>
-      <h:inputTextarea id="description" required="false" value="#{itemKey.description}" rows="4" cols="40">
-        <f:validateLength maximum="100" />
-      </h:inputTextarea>
-     </h:panelGroup>
+    <h:panelGroup>
+     <h:inputTextarea id="description" required="false" value="#{itemKey.description}" rows="4" cols="40">
+      <f:validateLength maximum="100" />
+     </h:inputTextarea>
+    </h:panelGroup>
 
-     <h:panelGroup>
-      <h:messages for="description" styleClass="form:table:error" />
-     </h:panelGroup>
+    <h:panelGroup>
+     <h:messages for="description" styleClass="form:table:error" />
+    </h:panelGroup>
 
-     <h:panelGroup />
+    <h:panelGroup />
 
-     <h:panelGroup styleClass="form:table:buttonline">
-      <h:commandButton action="#{itemKey[itemKeyAction]}" type="submit" value="#{itemKeyButtonName}" />
-      <h:button outcome="list" value="Storno" />
-     </h:panelGroup>
+    <h:panelGroup styleClass="form:table:buttonline">
+     <h:commandButton action="#{itemKey[itemKeyAction]}" type="submit" value="#{itemKeyButtonName}" />
+     <h:button outcome="list" value="Storno" />
+    </h:panelGroup>
 
-     <h:panelGroup />
+    <h:panelGroup />
 
-    </h:panelGrid>
-   </h:form>
-  </c:when>
-  <c:otherwise>
-   <p>
-    Nebyla vytvořena žádná kategorie. Pokud chcete vytvořit vytvořit konfigurační klíče,
-    <h:link outcome="/config/category/create" value="vytvořte" />
-    nejprve nějakou.
-   </p>
-  </c:otherwise>
- </c:choose>
+   </h:panelGrid>
+  </h:form>
+ </ui:fragment>
+ <ui:fragment rendered="${not empty itemKeyList.allCategories}">
+  <p>
+   Nebyla vytvořena žádná kategorie. Pokud chcete vytvořit vytvořit konfigurační klíče,
+   <h:link outcome="/config/category/create" value="vytvořte" />
+   nejprve nějakou.
+  </p>
+ </ui:fragment>
 </ui:composition>

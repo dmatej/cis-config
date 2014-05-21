@@ -12,7 +12,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -28,10 +27,10 @@ public class ConfigurationProfileTestHelper {
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurationProfileTestHelper.class);
   @PersistenceContext(unitName = "cis-jta")
   private EntityManager em;
-  private Set<ConfigurationProfile> configuration_profiles = new HashSet<>();
+  private Set<ConfigurationProfile> configurationProfiles = new HashSet<>();
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/UserTestHelper")
-  private UserTestHelper user_helper;
+  private UserTestHelper userHelper;
 
 
   public ConfigurationProfileTestHelper() {
@@ -39,22 +38,22 @@ public class ConfigurationProfileTestHelper {
 
 
   public ConfigurationProfile createConfigurationProfile() {
-    final CisUser user = user_helper.createUser();
+    final CisUser user = userHelper.createUser();
 
-    final ConfigurationProfile configuration_profile = new ConfigurationProfile();
-    configuration_profile.setDescription("description");
-    configuration_profile.setName((RandomStringUtils.random(10, true, true)));
-    configuration_profile.setUpdate(new Date());
-    configuration_profile.setUser(user);
-    em.persist(configuration_profile);
+    final ConfigurationProfile configurationProfile = new ConfigurationProfile();
+    configurationProfile.setDescription("description");
+    configurationProfile.setName((RandomStringUtils.random(10, true, true)));
+    configurationProfile.setUpdate(new Date());
+    configurationProfile.setUser(user);
+    em.persist(configurationProfile);
     em.flush();
-    configuration_profiles.add(configuration_profile);
-    return configuration_profile;
+    configurationProfiles.add(configurationProfile);
+    return configurationProfile;
   }
 
 
-  public void addToDelete(ConfigurationProfile configuration_profile) {
-    configuration_profiles.add(configuration_profile);
+  public void addToDelete(ConfigurationProfile configurationProfile) {
+    configurationProfiles.add(configurationProfile);
   }
 
 

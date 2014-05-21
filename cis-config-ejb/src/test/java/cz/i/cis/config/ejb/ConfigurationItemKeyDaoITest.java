@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import cz.i.cis.config.ejb.dao.ConfigurationItemCategoryDao;
 import cz.i.cis.config.ejb.dao.ConfigurationItemKeyDao;
-import cz.i.cis.config.ejb.dao.exceptions.ActiveItemKeyException;
 import cz.i.cis.config.ejb.dao.exceptions.ConfigurationItemKeyDaoException;
 import cz.i.cis.config.helpers.ConfigurationCategoryTestHelper;
 import cz.i.cis.config.helpers.ConfigurationItemKeyTestHelper;

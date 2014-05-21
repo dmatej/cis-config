@@ -18,9 +18,9 @@
       <h:outputText rendered="#{empty items}" escape="false" value="&lt;p&gt;Nebyli nalezeni žádní uživatelé.&lt;/p&gt;" />
 
       <h:dataTable id="data-table" value="#{items}" var="cisUser" rendered="#{not empty items}" rowClasses="#{userList.rowClasses}">
-        <h:column id="user-#{cisUser.id}">
+        <h:column>
           <f:facet name="header">Login</f:facet>
-          <h:outputText value="#{cisUser.login}" />
+          <a id="user-#{cisUser.id}" class="bookmark"><h:outputText value="#{cisUser.login}" /></a>
         </h:column>
         <h:column>
           <f:facet name="header">Jméno</f:facet>

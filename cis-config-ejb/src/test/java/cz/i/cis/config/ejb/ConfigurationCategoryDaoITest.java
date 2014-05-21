@@ -65,7 +65,7 @@ public class ConfigurationCategoryDaoITest extends ArquillianITest {
     final List<ConfigurationItemCategory> configurationCategories = dao.listCategories();
     LOG.debug("list configuration categories: {}", configurationCategories);
     assertNotNull("configuration categories", configurationCategories);
-    assertTrue("configuration_categories.empty", configurationCategories.isEmpty());
+    assertTrue("configurationCategories.empty", configurationCategories.isEmpty());
   }
 
 
@@ -79,8 +79,8 @@ public class ConfigurationCategoryDaoITest extends ArquillianITest {
     category.setName("some new category");
     dao.updateCategory(category);
     LOG.debug("updated category: {}", category);
-    final ConfigurationItemCategory c = dao.getCategory(category.getId());
-    assertNotNull("c.id", c.getId());
+    final ConfigurationItemCategory configItemCategory = dao.getCategory(category.getId());
+    assertNotNull("configItemCategory.id", configItemCategory.getId());
   }
 
 

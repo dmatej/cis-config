@@ -220,10 +220,11 @@ input.login,input.short,select.short {
  border: 1px black solid;
 }
 
-#form\:data-table a.id {
+#form\:data-table a.bookmark, #form\:data-table a.bookmark:link {
  color: black;
  text-decoration: none;
 }
+
 
 #page-messages-box {
  width: 1018px;

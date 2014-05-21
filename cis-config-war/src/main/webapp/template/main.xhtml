@@ -25,9 +25,9 @@
     <ui:fragment rendered="#{userManager.valid}">
      <h:link outcome="/config/user/list" value="Uživatelé" />
      <h:link outcome="/config/active/list" value="Aktivní konfigurace" />
-     <h:link outcome="/config/profile/list" value="Profily konfigurací" />
-     <h:link outcome="/config/category/list" value="Kategorie položek" />
-     <h:link outcome="/config/item-key/list" value="Konfigurační položky" />
+     <h:link outcome="/config/profile/list" value="Konfigurační profily" />
+     <h:link outcome="/config/category/list" value="Kategorie konfiguračních položek" />
+     <h:link outcome="/config/item-key/list" value="Klíče konfiguračních položek" />
     </ui:fragment>
     <!-- TODO h:link outcome="/cis/login/logout" value="Odhlásit 2" rendered="#{not empty request.remoteUser}" /-->
 
@@ -35,11 +35,11 @@
    </div>
   </ui:fragment>
 
-  <ui:fragment rendered="#{not empty facesContext.messageList}">
+  <ui:fragment rendered="#{facesMessagesHelper.globalMessagesExists()}">
    <div id="page-messages-box">
-     <div id="page-messages-box-header">
-      <h2>Upozornění</h2>
-     </div>
+    <div id="page-messages-box-header">
+     <h2>Zprávy</h2>
+    </div>
 
     <h:messages id="page-messages" globalOnly="true" layout="table" showSummary="true" infoClass="info-message" warnClass="warning-message" errorClass="error-message" />
    </div>
@@ -48,14 +48,18 @@
   <div id="page-body">
    <ui:fragment rendered="#{not empty pageName}">
     <div id="page-body-header">
-     <h1><h:outputText value="#{pageName}" /></h1>
+     <h1>
+      <h:outputText value="#{pageName}" />
+     </h1>
     </div>
    </ui:fragment>
 
    <div id="page-body-content">
     <ui:fragment rendered="#{not empty pageTitle}">
      <div id="page-body-content-header">
-      <h2><h:outputText value="#{pageTitle}" /></h2>
+      <h2>
+       <h:outputText value="#{pageTitle}" />
+      </h2>
      </div>
     </ui:fragment>
 

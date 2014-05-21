@@ -87,7 +87,7 @@ public class ConfigurationItemDao {
       em.persist(item);
       em.flush();
     } catch (PersistenceException e) {
-      throw new ConfigurationItemDaoException("Cannot insert item : " + item.toString(), e);
+      throw new ConfigurationItemDaoException("Cannot insert configuration item : " + item, e);
     }
   }
 

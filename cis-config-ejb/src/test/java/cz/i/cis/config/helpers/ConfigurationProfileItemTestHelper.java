@@ -11,10 +11,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.After;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,13 +27,13 @@ public class ConfigurationProfileItemTestHelper {
   private static final Logger LOG = LoggerFactory.getLogger(ConfigurationProfileItemTestHelper.class);
   @PersistenceContext(unitName = "cis-jta")
   private EntityManager em;
-  private Set<ConfigurationProfileItem> profile_items = new HashSet<>();
+  private Set<ConfigurationProfileItem> profileItems = new HashSet<>();
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationItemKeyTestHelper")
-  private ConfigurationItemKeyTestHelper key_helper;
+  private ConfigurationItemKeyTestHelper keyHelper;
 
   @EJB(mappedName = "java:global/cis-config-test/cis-config-test-ejb/ConfigurationProfileTestHelper")
-  private ConfigurationProfileTestHelper profile_helper;
+  private ConfigurationProfileTestHelper profileHelper;
 
 
   public ConfigurationProfileItemTestHelper() {
@@ -43,23 +41,23 @@ public class ConfigurationProfileItemTestHelper {
 
 
   public ConfigurationProfileItem createConfigurationProfileItem() {
-    final ConfigurationItemKey key = key_helper.createConfigurationKey();
-    final ConfigurationProfile profile = profile_helper.createConfigurationProfile();
+    final ConfigurationItemKey key = keyHelper.createConfigurationKey();
+    final ConfigurationProfile profile = profileHelper.createConfigurationProfile();
 
-    final ConfigurationProfileItem profile_item = new ConfigurationProfileItem();
-    profile_item.setKey(key);
-    profile_item.setProfile(profile);
-    profile_item.setValue((RandomStringUtils.random(5, true, true)));
+    final ConfigurationProfileItem profileItem = new ConfigurationProfileItem();
+    profileItem.setKey(key);
+    profileItem.setProfile(profile);
+    profileItem.setValue((RandomStringUtils.random(5, true, true)));
 
-    em.persist(profile_item);
+    em.persist(profileItem);
     em.flush();
-    profile_items.add(profile_item);
-    return profile_item;
+    profileItems.add(profileItem);
+    return profileItem;
   }
 
 
-  public void addToDelete(ConfigurationProfileItem profile_item) {
-    profile_items.add(profile_item);
+  public void addToDelete(ConfigurationProfileItem profileItem) {
+    profileItems.add(profileItem);
   }
 
 

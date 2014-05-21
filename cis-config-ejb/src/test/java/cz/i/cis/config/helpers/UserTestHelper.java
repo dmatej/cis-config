@@ -11,7 +11,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -34,15 +33,15 @@ public class UserTestHelper {
 
 
   public CisUser createUser() {
-    final CisUser user0 = new CisUser();
-    user0.setLastName("XTMatějka");
-    user0.setLogin(RandomStringUtils.random(6, true, true));
-    user0.setFirstName("XTAfanasi");
-    user0.setBirthDate(new Date());
-    em.persist(user0);
+    final CisUser user = new CisUser();
+    user.setLastName("XTMatějka");
+    user.setLogin(RandomStringUtils.random(6, true, true));
+    user.setFirstName("XTAfanasi");
+    user.setBirthDate(new Date());
+    em.persist(user);
     em.flush();
-    users.add(user0);
-    return user0;
+    users.add(user);
+    return user;
   }
 
 
